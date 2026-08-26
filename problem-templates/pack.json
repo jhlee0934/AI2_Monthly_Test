@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "id": "my-pack",
+  "title": "새 문제 팩",
+  "description": "이 문제 팩에 대한 짧은 설명",
+  "problemDirectory": "questions"
+}

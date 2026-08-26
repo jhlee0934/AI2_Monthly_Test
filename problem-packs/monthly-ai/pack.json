@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "id": "monthly-ai",
+  "title": "AI 월말평가 대비",
+  "description": "기존 단원별 Markdown 연습문제를 변환한 기본 문제 팩",
+  "problemFile": "problems.json"
+}

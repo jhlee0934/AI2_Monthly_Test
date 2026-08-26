@@ -1,0 +1,30 @@
+{
+  "name": "monthly-ai-practice",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/build-data.mjs && node scripts/validate-pack.mjs && node scripts/build-client.mjs && node --watch server.mjs",
+    "start": "node server.mjs",
+    "data": "node scripts/build-data.mjs",
+    "pack:validate": "node scripts/validate-pack.mjs",
+    "lint": "node scripts/check.mjs",
+    "typecheck": "node --check server.mjs && node --check public/app.js && node --check scripts/build-data.mjs && node --check scripts/build-client.mjs && node --check scripts/problem-pack.mjs && node --check scripts/validate-pack.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.20.3",
+    "@codemirror/commands": "^6.11.0",
+    "@codemirror/lang-python": "^6.2.1",
+    "@codemirror/language": "^6.12.4",
+    "@codemirror/state": "^6.7.1",
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "@codemirror/view": "^6.43.9",
+    "codemirror": "^6.0.2",
+    "esbuild": "^0.28.2"
+  }
+}

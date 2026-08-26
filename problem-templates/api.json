@@ -1,0 +1,24 @@
+{
+  "id": "api-example-001",
+  "unit": "예시 단원",
+  "type": "api",
+  "title": "API 빈칸 문제 제목",
+  "content": "코드의 각 빈칸에 들어갈 API를 선택하세요.",
+  "requirements": [],
+  "skeleton": "result = client.①(data)\nresult.②()",
+  "blanks": [
+    {
+      "id": "blank-1",
+      "answer": "create",
+      "choices": ["create", "delete", "close", "clear"]
+    },
+    {
+      "id": "blank-2",
+      "answer": "save",
+      "choices": ["load", "save", "open", "reset"]
+    }
+  ],
+  "solution": "result = client.create(data)\nresult.save()",
+  "explanation": "각 API를 선택하는 이유를 설명합니다.",
+  "example": ""
+}
