@@ -1,0 +1,130 @@
+{
+  "problems": [
+    {
+      "id": "flow-generated-001",
+      "unit": "1-2",
+      "type": "flow",
+      "title": "autograd 기울기 누적",
+      "content": "autograd 기울기 누적에서 `기울기 누적`와 `optimizer.zero_grad()`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `기울기 누적`와 `optimizer.zero_grad()`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "PyTorch의 기울기는 기본적으로 누적되므로 배치마다 optimizer.zero_grad()로 초기화한 뒤 순전파, 손실 계산, loss.backward(), optimizer.step() 순서로 처리해야 합니다."
+      ],
+      "keywords": [
+        "기울기 누적",
+        "optimizer.zero_grad()"
+      ],
+      "solution": "PyTorch의 기울기는 기본적으로 누적되므로 배치마다 optimizer.zero_grad()로 초기화한 뒤 순전파, 손실 계산, loss.backward(), optimizer.step() 순서로 처리해야 합니다.",
+      "explanation": "PyTorch의 기울기는 기본적으로 누적되므로 배치마다 optimizer.zero_grad()로 초기화한 뒤 순전파, 손실 계산, loss.backward(), optimizer.step() 순서로 처리해야 합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `기울기 누적`와 `optimizer.zero_grad()`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-010",
+      "unit": "1-2",
+      "type": "flow",
+      "title": "학습과 평가 모드",
+      "content": "학습과 평가 모드에서 `model.train()`와 `model.eval()`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `model.train()`와 `model.eval()`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "model.train()은 Dropout 같은 계층을 학습 동작으로 두고, model.eval()은 이를 평가 동작으로 전환합니다. 검증에서는 torch.no_grad()도 함께 사용해 기울기 추적을 끕니다."
+      ],
+      "keywords": [
+        "model.train()",
+        "model.eval()"
+      ],
+      "solution": "model.train()은 Dropout 같은 계층을 학습 동작으로 두고, model.eval()은 이를 평가 동작으로 전환합니다. 검증에서는 torch.no_grad()도 함께 사용해 기울기 추적을 끕니다.",
+      "explanation": "model.train()은 Dropout 같은 계층을 학습 동작으로 두고, model.eval()은 이를 평가 동작으로 전환합니다. 검증에서는 torch.no_grad()도 함께 사용해 기울기 추적을 끕니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `model.train()`와 `model.eval()`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-019",
+      "unit": "1-2",
+      "type": "flow",
+      "title": "훈련 데이터 기준 표준화",
+      "content": "훈련 데이터 기준 표준화에서 `데이터 누수`와 `fit_transform`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `데이터 누수`와 `fit_transform`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "검증·테스트 통계로 scaler를 다시 학습하면 데이터 누수가 생깁니다. 훈련 데이터에만 fit_transform하고 나머지에는 같은 scaler의 transform을 적용해야 합니다."
+      ],
+      "keywords": [
+        "데이터 누수",
+        "fit_transform"
+      ],
+      "solution": "검증·테스트 통계로 scaler를 다시 학습하면 데이터 누수가 생깁니다. 훈련 데이터에만 fit_transform하고 나머지에는 같은 scaler의 transform을 적용해야 합니다.",
+      "explanation": "검증·테스트 통계로 scaler를 다시 학습하면 데이터 누수가 생깁니다. 훈련 데이터에만 fit_transform하고 나머지에는 같은 scaler의 transform을 적용해야 합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `데이터 누수`와 `fit_transform`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-028",
+      "unit": "1-2",
+      "type": "flow",
+      "title": "CrossEntropyLoss 출력",
+      "content": "CrossEntropyLoss 출력에서 `logits`와 `클래스 인덱스`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `logits`와 `클래스 인덱스`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "모델은 클래스별 원시 logits를 내고 정답은 클래스 인덱스 long 텐서여야 합니다. 모델에서 softmax를 미리 적용하지 않습니다."
+      ],
+      "keywords": [
+        "logits",
+        "클래스 인덱스"
+      ],
+      "solution": "모델은 클래스별 원시 logits를 내고 정답은 클래스 인덱스 long 텐서여야 합니다. 모델에서 softmax를 미리 적용하지 않습니다.",
+      "explanation": "모델은 클래스별 원시 logits를 내고 정답은 클래스 인덱스 long 텐서여야 합니다. 모델에서 softmax를 미리 적용하지 않습니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `logits`와 `클래스 인덱스`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-037",
+      "unit": "1-2",
+      "type": "flow",
+      "title": "DataLoader shuffle",
+      "content": "DataLoader shuffle에서 `shuffle=True`와 `순서 편향`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `shuffle=True`와 `순서 편향`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "훈련 배치 순서를 섞으면 순서 편향을 줄여 학습에 도움이 되지만 검증은 파라미터를 갱신하지 않으므로 재현 가능한 평가를 위해 섞을 필요가 없습니다."
+      ],
+      "keywords": [
+        "shuffle=True",
+        "순서 편향"
+      ],
+      "solution": "훈련 배치 순서를 섞으면 순서 편향을 줄여 학습에 도움이 되지만 검증은 파라미터를 갱신하지 않으므로 재현 가능한 평가를 위해 섞을 필요가 없습니다.",
+      "explanation": "훈련 배치 순서를 섞으면 순서 편향을 줄여 학습에 도움이 되지만 검증은 파라미터를 갱신하지 않으므로 재현 가능한 평가를 위해 섞을 필요가 없습니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `shuffle=True`와 `순서 편향`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-046",
+      "unit": "1-2",
+      "type": "flow",
+      "title": "MLP 텐서 shape",
+      "content": "MLP 텐서 shape에서 `hidden_dim`와 `ReLU`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `hidden_dim`와 `ReLU`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "첫 Linear는 마지막 차원을 hidden_dim으로 바꾸고 ReLU는 shape를 유지하며 마지막 Linear가 num_classes로 바꾸므로 출력은 (batch, num_classes)입니다."
+      ],
+      "keywords": [
+        "hidden_dim",
+        "ReLU"
+      ],
+      "solution": "첫 Linear는 마지막 차원을 hidden_dim으로 바꾸고 ReLU는 shape를 유지하며 마지막 Linear가 num_classes로 바꾸므로 출력은 (batch, num_classes)입니다.",
+      "explanation": "첫 Linear는 마지막 차원을 hidden_dim으로 바꾸고 ReLU는 shape를 유지하며 마지막 Linear가 num_classes로 바꾸므로 출력은 (batch, num_classes)입니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `hidden_dim`와 `ReLU`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    }
+  ]
+}

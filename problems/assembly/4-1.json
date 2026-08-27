@@ -1,0 +1,1221 @@
+{
+  "problems": [
+    {
+      "id": "assembly-4-1-09-01",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "PDF 문서 로드: PDF 문서 로더로 \"data/총알배송서비스 혜택 - ",
+      "content": "PDF 문서 로더로 \"data/총알배송서비스 혜택 - 예스24.pdf\"를 로드하여 documents에 저장하고, 페이지 수, 첫 페이지 내용(100자), 메타데이터를 출력해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: PDF 문서 로더로 \"data/총알배송서비스 혜택 - 예스24.pdf\"를 로드하여 documents에 저장하고, 페이지 수, 첫 페이지 내용(100자), 메타데이터를 출력해봅시다.\nfrom ____[1].____[2] import ____[3]\n\nloader = ____[4](____[5])\ndocuments = loader.____[6]()\n\n____[7](f____[8])\n____[9](f____[10])\n____[11](f____[12])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "langchain_community"
+        },
+        {
+          "id": "slot-2",
+          "answer": "document_loaders"
+        },
+        {
+          "id": "slot-3",
+          "answer": "PyMuPDFLoader"
+        },
+        {
+          "id": "slot-4",
+          "answer": "PyMuPDFLoader"
+        },
+        {
+          "id": "slot-5",
+          "answer": "\"data/총알배송_서비스 혜택 - 예스24.pdf\""
+        },
+        {
+          "id": "slot-6",
+          "answer": "load"
+        },
+        {
+          "id": "slot-7",
+          "answer": "print"
+        },
+        {
+          "id": "slot-8",
+          "answer": "\"페이지 수: {len(documents)}\""
+        },
+        {
+          "id": "slot-9",
+          "answer": "print"
+        },
+        {
+          "id": "slot-10",
+          "answer": "\"첫 페이지 내용 (100자): {documents[0].page_content[:100]}...\""
+        },
+        {
+          "id": "slot-11",
+          "answer": "print"
+        },
+        {
+          "id": "slot-12",
+          "answer": "\"메타데이터: {documents[0].metadata}\""
+        }
+      ],
+      "tokens": [
+        "langchain_community",
+        "document_loaders",
+        "PyMuPDFLoader",
+        "\"data/총알배송_서비스 혜택 - 예스24.pdf\"",
+        "load",
+        "print",
+        "\"페이지 수: {len(documents)}\"",
+        "\"첫 페이지 내용 (100자): {documents[0].page_content[:100]}...\"",
+        "\"메타데이터: {documents[0].metadata}\"",
+        "True",
+        "\"auto\"",
+        "0"
+      ],
+      "solution": "# TODO 1: PDF 문서 로더로 \"data/총알배송서비스 혜택 - 예스24.pdf\"를 로드하여 documents에 저장하고, 페이지 수, 첫 페이지 내용(100자), 메타데이터를 출력해봅시다.\nfrom langchain_community.document_loaders import PyMuPDFLoader\n\nloader = PyMuPDFLoader(\"data/총알배송_서비스 혜택 - 예스24.pdf\")\ndocuments = loader.load()\n\nprint(f\"페이지 수: {len(documents)}\")\nprint(f\"첫 페이지 내용 (100자): {documents[0].page_content[:100]}...\")\nprint(f\"메타데이터: {documents[0].metadata}\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 110
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 1 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_002_자료 기반 응답.ipynb"
+    },
+    {
+      "id": "assembly-4-1-09-02",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "PDF 문서 로드: data/ 폴더의 모든 PDF를 로드하여 alldocu",
+      "content": "data/ 폴더의 모든 PDF를 로드하여 alldocuments에 저장하고, 전체 문서 수와 파일 목록을 출력해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: data/ 폴더의 모든 PDF를 로드하여 alldocuments에 저장하고, 전체 문서 수와 파일 목록을 출력해봅시다.\nimport ____[1], ____[2]\n\nall_documents = []\nfor pdf_path in ____[3](glob.____[4](____[5])):\n    loader = ____[6](pdf_path)\n    docs = loader.____[7]()\n    for doc in docs:\n        doc.____[8][____[9]] = os.____[10].____[11](pdf_path)\n    all_documents.____[12](docs)\n    ____[13](f____[14])\n\n____[15](f____[16])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "os"
+        },
+        {
+          "id": "slot-2",
+          "answer": "glob"
+        },
+        {
+          "id": "slot-3",
+          "answer": "sorted"
+        },
+        {
+          "id": "slot-4",
+          "answer": "glob"
+        },
+        {
+          "id": "slot-5",
+          "answer": "\"data/*.pdf\""
+        },
+        {
+          "id": "slot-6",
+          "answer": "PyMuPDFLoader"
+        },
+        {
+          "id": "slot-7",
+          "answer": "load"
+        },
+        {
+          "id": "slot-8",
+          "answer": "metadata"
+        },
+        {
+          "id": "slot-9",
+          "answer": "\"source_file\""
+        },
+        {
+          "id": "slot-10",
+          "answer": "path"
+        },
+        {
+          "id": "slot-11",
+          "answer": "basename"
+        },
+        {
+          "id": "slot-12",
+          "answer": "extend"
+        },
+        {
+          "id": "slot-13",
+          "answer": "print"
+        },
+        {
+          "id": "slot-14",
+          "answer": "\"  {os.path.basename(pdf_path)}: {len(docs)}페이지\""
+        },
+        {
+          "id": "slot-15",
+          "answer": "print"
+        },
+        {
+          "id": "slot-16",
+          "answer": "\"\\n전체: PDF {len(glob.glob('data/*.pdf'))}개 → {len(all_documents)}페이지 로드 완료\""
+        }
+      ],
+      "tokens": [
+        "os",
+        "glob",
+        "sorted",
+        "\"data/*.pdf\"",
+        "PyMuPDFLoader",
+        "load",
+        "metadata",
+        "\"source_file\"",
+        "path",
+        "basename",
+        "extend",
+        "print",
+        "\"  {os.path.basename(pdf_path)}: {len(docs)}페이지\"",
+        "\"\\n전체: PDF {len(glob.glob('data/*.pdf'))}개 → {len(all_documents)}페이지 로드 완료\"",
+        "False",
+        "0",
+        "invoke",
+        "True"
+      ],
+      "solution": "# TODO 1: data/ 폴더의 모든 PDF를 로드하여 alldocuments에 저장하고, 전체 문서 수와 파일 목록을 출력해봅시다.\nimport os, glob\n\nall_documents = []\nfor pdf_path in sorted(glob.glob(\"data/*.pdf\")):\n    loader = PyMuPDFLoader(pdf_path)\n    docs = loader.load()\n    for doc in docs:\n        doc.metadata[\"source_file\"] = os.path.basename(pdf_path)\n    all_documents.extend(docs)\n    print(f\"  {os.path.basename(pdf_path)}: {len(docs)}페이지\")\n\nprint(f\"\\n전체: PDF {len(glob.glob('data/*.pdf'))}개 → {len(all_documents)}페이지 로드 완료\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 76
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 2 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_002_자료 기반 응답.ipynb"
+    },
+    {
+      "id": "assembly-4-1-09-03",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "자료 기반 응답: 프롬프트 템플릿에 {context}와 {question",
+      "content": "프롬프트 템플릿에 {context}와 {question} 플레이스홀더를 설정하고, documents의 텍스트 내용을 context로, \"총알배송 혜택은?\"을 question으로 전달하여 체인을 실행해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: 프롬프트 템플릿에 {context}와 {question} 플레이스홀더를 설정하고, documents의 텍스트 내용을 context로, \"총알배송 혜택은?\"을 question으로 전달하여 체인을 실행해봅시다.\nfrom ____[1].____[2] import ____[3]\n\nprompt = ChatPromptTemplate.____[4](\"\"\"\n다음 자료를 기반으로 질문에 답변하세요.\n\n자료:\n{context}\n\n질문: {question}\n\"\"\")\n\ncontext = ____[5].____[6]([doc.____[7] for doc in documents])\nchain = prompt | llm\nresponse = chain.____[8]({____[9]: context, ____[10]: ____[11]})\n____[12](response.____[13])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "langchain_core"
+        },
+        {
+          "id": "slot-2",
+          "answer": "prompts"
+        },
+        {
+          "id": "slot-3",
+          "answer": "ChatPromptTemplate"
+        },
+        {
+          "id": "slot-4",
+          "answer": "from_template"
+        },
+        {
+          "id": "slot-5",
+          "answer": "\"\\n\""
+        },
+        {
+          "id": "slot-6",
+          "answer": "join"
+        },
+        {
+          "id": "slot-7",
+          "answer": "page_content"
+        },
+        {
+          "id": "slot-8",
+          "answer": "invoke"
+        },
+        {
+          "id": "slot-9",
+          "answer": "\"context\""
+        },
+        {
+          "id": "slot-10",
+          "answer": "\"question\""
+        },
+        {
+          "id": "slot-11",
+          "answer": "\"총알배송 혜택은?\""
+        },
+        {
+          "id": "slot-12",
+          "answer": "print"
+        },
+        {
+          "id": "slot-13",
+          "answer": "content"
+        }
+      ],
+      "tokens": [
+        "langchain_core",
+        "prompts",
+        "ChatPromptTemplate",
+        "from_template",
+        "\"\\n\"",
+        "join",
+        "page_content",
+        "invoke",
+        "\"context\"",
+        "\"question\"",
+        "\"총알배송 혜택은?\"",
+        "print",
+        "content",
+        "None",
+        "True",
+        "fit",
+        "load"
+      ],
+      "solution": "# TODO 1: 프롬프트 템플릿에 {context}와 {question} 플레이스홀더를 설정하고, documents의 텍스트 내용을 context로, \"총알배송 혜택은?\"을 question으로 전달하여 체인을 실행해봅시다.\nfrom langchain_core.prompts import ChatPromptTemplate\n\nprompt = ChatPromptTemplate.from_template(\"\"\"\n다음 자료를 기반으로 질문에 답변하세요.\n\n자료:\n{context}\n\n질문: {question}\n\"\"\")\n\ncontext = \"\\n\".join([doc.page_content for doc in documents])\nchain = prompt | llm\nresponse = chain.invoke({\"context\": context, \"question\": \"총알배송 혜택은?\"})\nprint(response.content)",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 125
+        },
+        {
+          "start": 223,
+          "end": 284
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 3 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_002_자료 기반 응답.ipynb"
+    },
+    {
+      "id": "assembly-4-1-10-01",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "키워드 검색: 키워드 검색 함수를 정의하여 문서의 텍스트에 키워드가 ",
+      "content": "키워드 검색 함수를 정의하여 문서의 텍스트에 키워드가 포함된 문서를 리스트로 반환하고, \"총알배송\" 키워드로 검색 결과를 출력해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: 키워드 검색 함수를 정의하여 문서의 텍스트에 키워드가 포함된 문서를 리스트로 반환하고, \"총알배송\" 키워드로 검색 결과를 출력해봅시다.\ndef ____[1](all_documents, keyword):\n    \"\"\"키워드가 포함된 문서를 검색\"\"\"\n    results = []\n    for doc in all_documents:\n        if keyword in doc.____[2]:\n            results.____[3](doc)\n    return results\n\nresults = ____[4](all_documents, ____[5])\n____[6](f____[7])\nfor doc in results[:____[8]]:\n    ____[9](f____[10])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "keyword_search"
+        },
+        {
+          "id": "slot-2",
+          "answer": "page_content"
+        },
+        {
+          "id": "slot-3",
+          "answer": "append"
+        },
+        {
+          "id": "slot-4",
+          "answer": "keyword_search"
+        },
+        {
+          "id": "slot-5",
+          "answer": "\"총알배송\""
+        },
+        {
+          "id": "slot-6",
+          "answer": "print"
+        },
+        {
+          "id": "slot-7",
+          "answer": "\"검색 결과: {len(results)}건\""
+        },
+        {
+          "id": "slot-8",
+          "answer": "2"
+        },
+        {
+          "id": "slot-9",
+          "answer": "print"
+        },
+        {
+          "id": "slot-10",
+          "answer": "\"  [p.{doc.metadata.get('page', '?')}] {doc.page_content[:80]}...\""
+        }
+      ],
+      "tokens": [
+        "keyword_search",
+        "page_content",
+        "append",
+        "\"총알배송\"",
+        "print",
+        "\"검색 결과: {len(results)}건\"",
+        "2",
+        "\"  [p.{doc.metadata.get('page', '?')}] {doc.page_content[:80]}...\"",
+        "True",
+        "invoke"
+      ],
+      "solution": "# TODO 1: 키워드 검색 함수를 정의하여 문서의 텍스트에 키워드가 포함된 문서를 리스트로 반환하고, \"총알배송\" 키워드로 검색 결과를 출력해봅시다.\ndef keyword_search(all_documents, keyword):\n    \"\"\"키워드가 포함된 문서를 검색\"\"\"\n    results = []\n    for doc in all_documents:\n        if keyword in doc.page_content:\n            results.append(doc)\n    return results\n\nresults = keyword_search(all_documents, \"총알배송\")\nprint(f\"검색 결과: {len(results)}건\")\nfor doc in results[:2]:\n    print(f\"  [p.{doc.metadata.get('page', '?')}] {doc.page_content[:80]}...\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 85
+        },
+        {
+          "start": 134,
+          "end": 155
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 1 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_003_키워드 검색.ipynb"
+    },
+    {
+      "id": "assembly-4-1-10-02",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "키워드 검색: 검색어 리스트에 \"총알배송\", \"수익\", \"revenu",
+      "content": "검색어 리스트에 \"총알배송\", \"수익\", \"revenue\", \"실적\"을 저장하고, 각 키워드로 검색을 실행하여 검색 건수를 비교해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: 검색어 리스트에 \"총알배송\", \"수익\", \"revenue\", \"실적\"을 저장하고, 각 키워드로 검색을 실행하여 검색 건수를 비교해봅시다.\nqueries = [____[1], ____[2], ____[3], ____[4]]\nfor query in queries:\n    result = ____[5](all_documents, query)\n    ____[6](f____[7])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "\"총알배송\""
+        },
+        {
+          "id": "slot-2",
+          "answer": "\"수익\""
+        },
+        {
+          "id": "slot-3",
+          "answer": "\"revenue\""
+        },
+        {
+          "id": "slot-4",
+          "answer": "\"실적\""
+        },
+        {
+          "id": "slot-5",
+          "answer": "keyword_search"
+        },
+        {
+          "id": "slot-6",
+          "answer": "print"
+        },
+        {
+          "id": "slot-7",
+          "answer": "\"'{query}' → {len(result)}건 {'✓' if result else '✗'}\""
+        }
+      ],
+      "tokens": [
+        "\"총알배송\"",
+        "\"수익\"",
+        "\"revenue\"",
+        "\"실적\"",
+        "keyword_search",
+        "print",
+        "\"'{query}' → {len(result)}건 {'✓' if result else '✗'}\"",
+        "fit",
+        "True"
+      ],
+      "solution": "# TODO 1: 검색어 리스트에 \"총알배송\", \"수익\", \"revenue\", \"실적\"을 저장하고, 각 키워드로 검색을 실행하여 검색 건수를 비교해봅시다.\nqueries = [\"총알배송\", \"수익\", \"revenue\", \"실적\"]\nfor query in queries:\n    result = keyword_search(all_documents, query)\n    print(f\"'{query}' → {len(result)}건 {'✓' if result else '✗'}\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 86
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 2 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_003_키워드 검색.ipynb"
+    },
+    {
+      "id": "assembly-4-1-11-01",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "벡터 검색 구성: 임베딩 모델을 text-embedding-3-small",
+      "content": "임베딩 모델을 text-embedding-3-small로 초기화하고, \"빠른 배송 서비스\"의 벡터를 생성하여 차원과 앞 5개 값을 출력해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: 임베딩 모델을 text-embedding-3-small로 초기화하고, \"빠른 배송 서비스\"의 벡터를 생성하여 차원과 앞 5개 값을 출력해봅시다.\nfrom ____[1] import ____[2]\n\nembeddings = ____[3](\n    model=____[4],\n    api_key=os.____[5][____[6]],\n    base_url=____[7]\n)\n\nvector = embeddings.____[8](____[9])\n____[10](f____[11])\n____[12](f____[13])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "langchain_openai"
+        },
+        {
+          "id": "slot-2",
+          "answer": "OpenAIEmbeddings"
+        },
+        {
+          "id": "slot-3",
+          "answer": "OpenAIEmbeddings"
+        },
+        {
+          "id": "slot-4",
+          "answer": "\"text-embedding-3-small\""
+        },
+        {
+          "id": "slot-5",
+          "answer": "environ"
+        },
+        {
+          "id": "slot-6",
+          "answer": "\"GMS_KEY\""
+        },
+        {
+          "id": "slot-7",
+          "answer": "\"https://gms.ssafy.io/gmsapi/api.openai.com/v1/\""
+        },
+        {
+          "id": "slot-8",
+          "answer": "embed_query"
+        },
+        {
+          "id": "slot-9",
+          "answer": "\"빠른 배송 서비스\""
+        },
+        {
+          "id": "slot-10",
+          "answer": "print"
+        },
+        {
+          "id": "slot-11",
+          "answer": "\"벡터 차원: {len(vector)}\""
+        },
+        {
+          "id": "slot-12",
+          "answer": "print"
+        },
+        {
+          "id": "slot-13",
+          "answer": "\"벡터 샘플 (앞 5개): {[round(v, 4) for v in vector[:5]]}\""
+        }
+      ],
+      "tokens": [
+        "langchain_openai",
+        "OpenAIEmbeddings",
+        "\"text-embedding-3-small\"",
+        "environ",
+        "\"GMS_KEY\"",
+        "\"https://gms.ssafy.io/gmsapi/api.openai.com/v1/\"",
+        "embed_query",
+        "\"빠른 배송 서비스\"",
+        "print",
+        "\"벡터 차원: {len(vector)}\"",
+        "\"벡터 샘플 (앞 5개): {[round(v, 4) for v in vector[:5]]}\"",
+        "fit",
+        "True",
+        "invoke"
+      ],
+      "solution": "# TODO 1: 임베딩 모델을 text-embedding-3-small로 초기화하고, \"빠른 배송 서비스\"의 벡터를 생성하여 차원과 앞 5개 값을 출력해봅시다.\nfrom langchain_openai import OpenAIEmbeddings\n\nembeddings = OpenAIEmbeddings(\n    model=\"text-embedding-3-small\",\n    api_key=os.environ[\"GMS_KEY\"],\n    base_url=\"https://gms.ssafy.io/gmsapi/api.openai.com/v1/\"\n)\n\nvector = embeddings.embed_query(\"빠른 배송 서비스\")\nprint(f\"벡터 차원: {len(vector)}\")\nprint(f\"벡터 샘플 (앞 5개): {[round(v, 4) for v in vector[:5]]}\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 90
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 1 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_004_의미 기반 검색_VectorDB.ipynb"
+    },
+    {
+      "id": "assembly-4-1-11-02",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "벡터 검색 구성: 문서 리스트와 임베딩을 전달하여 벡터 데이터베이스를 생",
+      "content": "문서 리스트와 임베딩을 전달하여 벡터 데이터베이스를 생성하고, 저장된 문서 수를 출력해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: 문서 리스트와 임베딩을 전달하여 벡터 데이터베이스를 생성하고, 저장된 문서 수를 출력해봅시다.\nfrom ____[1] import ____[2]\n\nvectorstore = Chroma.____[3](\n    documents=all_documents,\n    embedding=embeddings\n)\n____[4](f____[5])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "langchain_chroma"
+        },
+        {
+          "id": "slot-2",
+          "answer": "Chroma"
+        },
+        {
+          "id": "slot-3",
+          "answer": "from_documents"
+        },
+        {
+          "id": "slot-4",
+          "answer": "print"
+        },
+        {
+          "id": "slot-5",
+          "answer": "\"저장된 문서 수: {vectorstore._collection.count()}\""
+        }
+      ],
+      "tokens": [
+        "langchain_chroma",
+        "Chroma",
+        "from_documents",
+        "print",
+        "\"저장된 문서 수: {vectorstore._collection.count()}\"",
+        "False",
+        "True"
+      ],
+      "solution": "# TODO 1: 문서 리스트와 임베딩을 전달하여 벡터 데이터베이스를 생성하고, 저장된 문서 수를 출력해봅시다.\nfrom langchain_chroma import Chroma\n\nvectorstore = Chroma.from_documents(\n    documents=all_documents,\n    embedding=embeddings\n)\nprint(f\"저장된 문서 수: {vectorstore._collection.count()}\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 62
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 2 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_004_의미 기반 검색_VectorDB.ipynb"
+    },
+    {
+      "id": "assembly-4-1-11-03",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "벡터 검색 구성: 벡터 데이터베이스에서 상위 3개를 반환하는 검색기를 생",
+      "content": "벡터 데이터베이스에서 상위 3개를 반환하는 검색기를 생성하고, \"배송 혜택은?\"으로 검색하여 결과를 출력해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: 벡터 데이터베이스에서 상위 3개를 반환하는 검색기를 생성하고, \"배송 혜택은?\"으로 검색하여 결과를 출력해봅시다.\nretriever = vectorstore.____[1](\n    search_kwargs={____[2]: ____[3]}\n)\n\nresults = retriever.____[4](____[5])\n____[6](f____[7])\nfor doc in results:\n    ____[8](f____[9])\n    ____[10](____[11]*____[12])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "as_retriever"
+        },
+        {
+          "id": "slot-2",
+          "answer": "\"k\""
+        },
+        {
+          "id": "slot-3",
+          "answer": "3"
+        },
+        {
+          "id": "slot-4",
+          "answer": "invoke"
+        },
+        {
+          "id": "slot-5",
+          "answer": "\"배송 혜택은?\""
+        },
+        {
+          "id": "slot-6",
+          "answer": "print"
+        },
+        {
+          "id": "slot-7",
+          "answer": "\"검색 결과: {len(results)}건\""
+        },
+        {
+          "id": "slot-8",
+          "answer": "print"
+        },
+        {
+          "id": "slot-9",
+          "answer": "\"{doc.page_content[100:200]}...\""
+        },
+        {
+          "id": "slot-10",
+          "answer": "print"
+        },
+        {
+          "id": "slot-11",
+          "answer": "\"-\""
+        },
+        {
+          "id": "slot-12",
+          "answer": "20"
+        }
+      ],
+      "tokens": [
+        "as_retriever",
+        "\"k\"",
+        "3",
+        "invoke",
+        "\"배송 혜택은?\"",
+        "print",
+        "\"검색 결과: {len(results)}건\"",
+        "\"{doc.page_content[100:200]}...\"",
+        "\"-\"",
+        "20",
+        "\"auto\"",
+        "fit",
+        "None"
+      ],
+      "solution": "# TODO 1: 벡터 데이터베이스에서 상위 3개를 반환하는 검색기를 생성하고, \"배송 혜택은?\"으로 검색하여 결과를 출력해봅시다.\nretriever = vectorstore.as_retriever(\n    search_kwargs={\"k\": 3}\n)\n\nresults = retriever.invoke(\"배송 혜택은?\")\nprint(f\"검색 결과: {len(results)}건\")\nfor doc in results:\n    print(f\"{doc.page_content[100:200]}...\")\n    print(\"-\"*20)",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 73
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 3 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_004_의미 기반 검색_VectorDB.ipynb"
+    },
+    {
+      "id": "assembly-4-1-12-01",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "학습·평가 데이터 분할: 재귀적 텍스트 분할기를 chunksize=500, ch",
+      "content": "재귀적 텍스트 분할기를 chunksize=500, chunkoverlap=50, 구분자 우선순위 [\"\\n\\n\", \"\\n\", \".\", \" \"]로 초기화하고, 문서를 분할하여 청크 개수와 크기 통계를 출력해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: 재귀적 텍스트 분할기를 chunksize=500, chunkoverlap=50, 구분자 우선순위 [\"\\n\\n\", \"\\n\", \".\", \" \"]로 초기화하고, 문서를 분할하여 청크 개수와 크기 통계를 출력해봅시다.\nfrom ____[1] import ____[2]\n\nsplitter = ____[3](\n    chunk_size=____[4],\n    chunk_overlap=____[5],\n    separators=[____[6], ____[7], ____[8], ____[9]]\n)\n\nchunks = splitter.____[10](all_documents)\n____[11](f____[12])\n\nsizes = [____[13](c.____[14]) for c in chunks]\n____[15](f____[16])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "langchain_text_splitters"
+        },
+        {
+          "id": "slot-2",
+          "answer": "RecursiveCharacterTextSplitter"
+        },
+        {
+          "id": "slot-3",
+          "answer": "RecursiveCharacterTextSplitter"
+        },
+        {
+          "id": "slot-4",
+          "answer": "500"
+        },
+        {
+          "id": "slot-5",
+          "answer": "50"
+        },
+        {
+          "id": "slot-6",
+          "answer": "\"\\n\\n\""
+        },
+        {
+          "id": "slot-7",
+          "answer": "\"\\n\""
+        },
+        {
+          "id": "slot-8",
+          "answer": "\".\""
+        },
+        {
+          "id": "slot-9",
+          "answer": "\" \""
+        },
+        {
+          "id": "slot-10",
+          "answer": "split_documents"
+        },
+        {
+          "id": "slot-11",
+          "answer": "print"
+        },
+        {
+          "id": "slot-12",
+          "answer": "\"원본: {len(all_documents)}개 → 청크: {len(chunks)}개\""
+        },
+        {
+          "id": "slot-13",
+          "answer": "len"
+        },
+        {
+          "id": "slot-14",
+          "answer": "page_content"
+        },
+        {
+          "id": "slot-15",
+          "answer": "print"
+        },
+        {
+          "id": "slot-16",
+          "answer": "\"청크 크기 — 평균: {sum(sizes)/len(sizes):.0f}, 최소: {min(sizes)}, 최대: {max(sizes)}\""
+        }
+      ],
+      "tokens": [
+        "langchain_text_splitters",
+        "RecursiveCharacterTextSplitter",
+        "500",
+        "50",
+        "\"\\n\\n\"",
+        "\"\\n\"",
+        "\".\"",
+        "\" \"",
+        "split_documents",
+        "print",
+        "\"원본: {len(all_documents)}개 → 청크: {len(chunks)}개\"",
+        "len",
+        "page_content",
+        "\"청크 크기 — 평균: {sum(sizes)/len(sizes):.0f}, 최소: {min(sizes)}, 최대: {max(sizes)}\"",
+        "False",
+        "True",
+        "invoke",
+        "transform"
+      ],
+      "solution": "# TODO 1: 재귀적 텍스트 분할기를 chunksize=500, chunkoverlap=50, 구분자 우선순위 [\"\\n\\n\", \"\\n\", \".\", \" \"]로 초기화하고, 문서를 분할하여 청크 개수와 크기 통계를 출력해봅시다.\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\n\nsplitter = RecursiveCharacterTextSplitter(\n    chunk_size=500,\n    chunk_overlap=50,\n    separators=[\"\\n\\n\", \"\\n\", \".\", \" \"]\n)\n\nchunks = splitter.split_documents(all_documents)\nprint(f\"원본: {len(all_documents)}개 → 청크: {len(chunks)}개\")\n\nsizes = [len(c.page_content) for c in chunks]\nprint(f\"청크 크기 — 평균: {sum(sizes)/len(sizes):.0f}, 최소: {min(sizes)}, 최대: {max(sizes)}\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 127
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 1 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_005_청킹 전략.ipynb"
+    },
+    {
+      "id": "assembly-4-1-12-02",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "학습·평가 데이터 분할: chunksize를 200, 500, 1000으로 변경",
+      "content": "chunksize를 200, 500, 1000으로 변경하며 재귀적 텍스트 분할기(chunkoverlap=50)로 문서를 분할하고, 각 설정별 청크 수를 비교해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: chunksize를 200, 500, 1000으로 변경하며 재귀적 텍스트 분할기(chunkoverlap=50)로 문서를 분할하고, 각 설정별 청크 수를 비교해봅시다.\nfor size in [____[1], ____[2], ____[3]]:\n    s = ____[4](____[5]=size, ____[6]=____[7])\n    c = s.____[8](all_documents)\n    ____[9](f____[10])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "200"
+        },
+        {
+          "id": "slot-2",
+          "answer": "500"
+        },
+        {
+          "id": "slot-3",
+          "answer": "1000"
+        },
+        {
+          "id": "slot-4",
+          "answer": "RecursiveCharacterTextSplitter"
+        },
+        {
+          "id": "slot-5",
+          "answer": "chunk_size"
+        },
+        {
+          "id": "slot-6",
+          "answer": "chunk_overlap"
+        },
+        {
+          "id": "slot-7",
+          "answer": "50"
+        },
+        {
+          "id": "slot-8",
+          "answer": "split_documents"
+        },
+        {
+          "id": "slot-9",
+          "answer": "print"
+        },
+        {
+          "id": "slot-10",
+          "answer": "\"chunk_size={size:4d} → 청크 수: {len(c):3d}개\""
+        }
+      ],
+      "tokens": [
+        "200",
+        "500",
+        "1000",
+        "RecursiveCharacterTextSplitter",
+        "chunk_size",
+        "chunk_overlap",
+        "50",
+        "split_documents",
+        "print",
+        "\"chunk_size={size:4d} → 청크 수: {len(c):3d}개\"",
+        "transform",
+        "None",
+        "True"
+      ],
+      "solution": "# TODO 1: chunksize를 200, 500, 1000으로 변경하며 재귀적 텍스트 분할기(chunkoverlap=50)로 문서를 분할하고, 각 설정별 청크 수를 비교해봅시다.\nfor size in [200, 500, 1000]:\n    s = RecursiveCharacterTextSplitter(chunk_size=size, chunk_overlap=50)\n    c = s.split_documents(all_documents)\n    print(f\"chunk_size={size:4d} → 청크 수: {len(c):3d}개\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 102
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 2 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_005_청킹 전략.ipynb"
+    },
+    {
+      "id": "assembly-4-1-13-01",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "RAG 파이프라인: 상태 타입을 정의하여 question(str), con",
+      "content": "상태 타입을 정의하여 question(str), context(List[Document]), answer(str) 필드를 선언한 뒤 필드 목록을 출력해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: 상태 타입을 정의하여 question(str), context(List[Document]), answer(str) 필드를 선언한 뒤 필드 목록을 출력해봅시다.\nfrom ____[1] import ____[2], ____[3]\nfrom ____[4].____[5] import ____[6]\n\nclass ____[7](TypedDict):\n    question: str\n    context: List[Document]\n    answer: str\n\n____[8](f____[9])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "typing"
+        },
+        {
+          "id": "slot-2",
+          "answer": "TypedDict"
+        },
+        {
+          "id": "slot-3",
+          "answer": "List"
+        },
+        {
+          "id": "slot-4",
+          "answer": "langchain_core"
+        },
+        {
+          "id": "slot-5",
+          "answer": "documents"
+        },
+        {
+          "id": "slot-6",
+          "answer": "Document"
+        },
+        {
+          "id": "slot-7",
+          "answer": "RAGState"
+        },
+        {
+          "id": "slot-8",
+          "answer": "print"
+        },
+        {
+          "id": "slot-9",
+          "answer": "\"RAGState 필드: {list(RAGState.__annotations__.keys())}\""
+        }
+      ],
+      "tokens": [
+        "typing",
+        "TypedDict",
+        "List",
+        "langchain_core",
+        "documents",
+        "Document",
+        "RAGState",
+        "print",
+        "\"RAGState 필드: {list(RAGState.__annotations__.keys())}\"",
+        "transform",
+        "None",
+        "True"
+      ],
+      "solution": "# TODO 1: 상태 타입을 정의하여 question(str), context(List[Document]), answer(str) 필드를 선언한 뒤 필드 목록을 출력해봅시다.\nfrom typing import TypedDict, List\nfrom langchain_core.documents import Document\n\nclass RAGState(TypedDict):\n    question: str\n    context: List[Document]\n    answer: str\n\nprint(f\"RAGState 필드: {list(RAGState.__annotations__.keys())}\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 98
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 1 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_006_RAG 파이프라인.ipynb"
+    },
+    {
+      "id": "assembly-4-1-13-02",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "Retriever 구성: retrieve 함수를 정의하세요. RAGState를 ",
+      "content": "retrieve 함수를 정의하세요. RAGState를 받아 retriever로 관련 문서를 검색하고 context를 반환하세요.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: retrieve 함수를 정의하세요. RAGState를 받아 retriever로 관련 문서를 검색하고 context를 반환하세요.\ndef ____[1](state: RAGState) -> RAGState:\n    \"\"\"질문으로 관련 문서 검색\"\"\"\n    documents = retriever.____[2](state[____[3]])\n    return {____[4]: documents}",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "retrieve"
+        },
+        {
+          "id": "slot-2",
+          "answer": "invoke"
+        },
+        {
+          "id": "slot-3",
+          "answer": "\"question\""
+        },
+        {
+          "id": "slot-4",
+          "answer": "\"context\""
+        }
+      ],
+      "tokens": [
+        "retrieve",
+        "invoke",
+        "\"question\"",
+        "\"context\"",
+        "fit",
+        "1"
+      ],
+      "solution": "# TODO 1: retrieve 함수를 정의하세요. RAGState를 받아 retriever로 관련 문서를 검색하고 context를 반환하세요.\ndef retrieve(state: RAGState) -> RAGState:\n    \"\"\"질문으로 관련 문서 검색\"\"\"\n    documents = retriever.invoke(state[\"question\"])\n    return {\"context\": documents}",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 81
+        },
+        {
+          "start": 129,
+          "end": 148
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 2 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_006_RAG 파이프라인.ipynb"
+    },
+    {
+      "id": "assembly-4-1-13-03",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "LLM 호출: generate 함수를 정의하세요. RAGState를 ",
+      "content": "generate 함수를 정의하세요. RAGState를 받아 프롬프트 템플릿과 LLM으로 답변을 생성하고 answer를 반환하세요.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: generate 함수를 정의하세요. RAGState를 받아 프롬프트 템플릿과 LLM으로 답변을 생성하고 answer를 반환하세요.\ndef ____[1](state: RAGState) -> RAGState:\n    \"\"\"검색된 문서를 기반으로 답변 생성\"\"\"\n    context = ____[2].____[3]([doc.____[4] for doc in state[____[5]]])\n    prompt = ChatPromptTemplate.____[6](\"\"\"\n    다음 자료를 기반으로 답변하세요.\n    자료: {context}\n    질문: {question}\n    \"\"\")\n    chain = prompt | llm\n    response = chain.____[7]({\n        ____[8]: context,\n        ____[9]: state[____[10]]\n    })\n    return {____[11]: response.____[12]}",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "generate"
+        },
+        {
+          "id": "slot-2",
+          "answer": "\"\\n\""
+        },
+        {
+          "id": "slot-3",
+          "answer": "join"
+        },
+        {
+          "id": "slot-4",
+          "answer": "page_content"
+        },
+        {
+          "id": "slot-5",
+          "answer": "\"context\""
+        },
+        {
+          "id": "slot-6",
+          "answer": "from_template"
+        },
+        {
+          "id": "slot-7",
+          "answer": "invoke"
+        },
+        {
+          "id": "slot-8",
+          "answer": "\"context\""
+        },
+        {
+          "id": "slot-9",
+          "answer": "\"question\""
+        },
+        {
+          "id": "slot-10",
+          "answer": "\"question\""
+        },
+        {
+          "id": "slot-11",
+          "answer": "\"answer\""
+        },
+        {
+          "id": "slot-12",
+          "answer": "content"
+        }
+      ],
+      "tokens": [
+        "generate",
+        "\"\\n\"",
+        "join",
+        "page_content",
+        "\"context\"",
+        "from_template",
+        "invoke",
+        "\"question\"",
+        "\"answer\"",
+        "content",
+        "transform",
+        "None",
+        "\"auto\""
+      ],
+      "solution": "# TODO 1: generate 함수를 정의하세요. RAGState를 받아 프롬프트 템플릿과 LLM으로 답변을 생성하고 answer를 반환하세요.\ndef generate(state: RAGState) -> RAGState:\n    \"\"\"검색된 문서를 기반으로 답변 생성\"\"\"\n    context = \"\\n\".join([doc.page_content for doc in state[\"context\"]])\n    prompt = ChatPromptTemplate.from_template(\"\"\"\n    다음 자료를 기반으로 답변하세요.\n    자료: {context}\n    질문: {question}\n    \"\"\")\n    chain = prompt | llm\n    response = chain.invoke({\n        \"context\": context,\n        \"question\": state[\"question\"]\n    })\n    return {\"answer\": response.content}",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 82
+        },
+        {
+          "start": 130,
+          "end": 154
+        },
+        {
+          "start": 273,
+          "end": 344
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 3 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_006_RAG 파이프라인.ipynb"
+    },
+    {
+      "id": "assembly-4-1-13-04",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "RAG 파이프라인: 상태 그래프를 생성하고, retrieve와 genera",
+      "content": "상태 그래프를 생성하고, retrieve와 generate 노드를 추가한 뒤 START→retrieve→generate→END로 엣지를 연결하여 컴파일 후 \"총알배송 서비스의 혜택은?\"으로 실행해봅시다.",
+      "requirements": [
+        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "# TODO 1: 상태 그래프를 생성하고, retrieve와 generate 노드를 추가한 뒤 START→retrieve→generate→END로 엣지를 연결하여 컴파일 후 \"총알배송 서비스의 혜택은?\"으로 실행해봅시다.\nfrom ____[1].____[2] import ____[3], ____[4], ____[5]\n\ngraph = ____[6](RAGState)\n\ngraph.____[7](____[8], retrieve)\ngraph.____[9](____[10], generate)\n\ngraph.____[11](START, ____[12])\ngraph.____[13](____[14], ____[15])\ngraph.____[16](____[17], END)\n\napp = graph.____[18]()\nresult = app.____[19]({____[20]: ____[21]})\n____[22](f____[23])\n____[24](f____[25])\n____[26](f____[27])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "langgraph"
+        },
+        {
+          "id": "slot-2",
+          "answer": "graph"
+        },
+        {
+          "id": "slot-3",
+          "answer": "StateGraph"
+        },
+        {
+          "id": "slot-4",
+          "answer": "START"
+        },
+        {
+          "id": "slot-5",
+          "answer": "END"
+        },
+        {
+          "id": "slot-6",
+          "answer": "StateGraph"
+        },
+        {
+          "id": "slot-7",
+          "answer": "add_node"
+        },
+        {
+          "id": "slot-8",
+          "answer": "\"retrieve\""
+        },
+        {
+          "id": "slot-9",
+          "answer": "add_node"
+        },
+        {
+          "id": "slot-10",
+          "answer": "\"generate\""
+        },
+        {
+          "id": "slot-11",
+          "answer": "add_edge"
+        },
+        {
+          "id": "slot-12",
+          "answer": "\"retrieve\""
+        },
+        {
+          "id": "slot-13",
+          "answer": "add_edge"
+        },
+        {
+          "id": "slot-14",
+          "answer": "\"retrieve\""
+        },
+        {
+          "id": "slot-15",
+          "answer": "\"generate\""
+        },
+        {
+          "id": "slot-16",
+          "answer": "add_edge"
+        },
+        {
+          "id": "slot-17",
+          "answer": "\"generate\""
+        },
+        {
+          "id": "slot-18",
+          "answer": "compile"
+        },
+        {
+          "id": "slot-19",
+          "answer": "invoke"
+        },
+        {
+          "id": "slot-20",
+          "answer": "\"question\""
+        },
+        {
+          "id": "slot-21",
+          "answer": "\"총알배송 서비스의 혜택은?\""
+        },
+        {
+          "id": "slot-22",
+          "answer": "print"
+        },
+        {
+          "id": "slot-23",
+          "answer": "\"질문: {result['question']}\""
+        },
+        {
+          "id": "slot-24",
+          "answer": "print"
+        },
+        {
+          "id": "slot-25",
+          "answer": "\"검색 문서: {len(result['context'])}건\""
+        },
+        {
+          "id": "slot-26",
+          "answer": "print"
+        },
+        {
+          "id": "slot-27",
+          "answer": "\"답변: {result['answer']}\""
+        }
+      ],
+      "tokens": [
+        "langgraph",
+        "graph",
+        "StateGraph",
+        "START",
+        "END",
+        "add_node",
+        "\"retrieve\"",
+        "\"generate\"",
+        "add_edge",
+        "compile",
+        "invoke",
+        "\"question\"",
+        "\"총알배송 서비스의 혜택은?\"",
+        "print",
+        "\"질문: {result['question']}\"",
+        "\"검색 문서: {len(result['context'])}건\"",
+        "\"답변: {result['answer']}\"",
+        "predict",
+        "True",
+        "None",
+        "0"
+      ],
+      "solution": "# TODO 1: 상태 그래프를 생성하고, retrieve와 generate 노드를 추가한 뒤 START→retrieve→generate→END로 엣지를 연결하여 컴파일 후 \"총알배송 서비스의 혜택은?\"으로 실행해봅시다.\nfrom langgraph.graph import StateGraph, START, END\n\ngraph = StateGraph(RAGState)\n\ngraph.add_node(\"retrieve\", retrieve)\ngraph.add_node(\"generate\", generate)\n\ngraph.add_edge(START, \"retrieve\")\ngraph.add_edge(\"retrieve\", \"generate\")\ngraph.add_edge(\"generate\", END)\n\napp = graph.compile()\nresult = app.invoke({\"question\": \"총알배송 서비스의 혜택은?\"})\nprint(f\"질문: {result['question']}\")\nprint(f\"검색 문서: {len(result['context'])}건\")\nprint(f\"답변: {result['answer']}\")",
+      "protectedRanges": [
+        {
+          "start": 0,
+          "end": 123
+        }
+      ],
+      "explanation": "정답 노트북의 TODO 4 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "example": "",
+      "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_006_RAG 파이프라인.ipynb"
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "problems": [
+    {
+      "unit": "3-1",
+      "title": "Optimizer 구성과 파라미터 갱신",
+      "content": "이 코드는 3-1 실습의 전체 과정 중 'Optimizer 구성과 파라미터 갱신' 단계를 구현하는 부분입니다. 같은 완성 코드에서 따로 출제되던 API 위치를 하나로 통합했습니다. 빈칸 앞에서 준비된 객체와 입력, 뒤의 반환·출력 또는 후속 연산을 확인해 실행 흐름이 유지되도록 각 API를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 다음 연산의 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "import torch.nn as nn\n\n# 1. 손실 함수는 `nn.CrossEntropyLoss()`를 사용하세요\ncriterion = nn.CrossEntropyLoss()\n\n# 2.Optimizer는 `SGD(lr=0.001, momentum=0.9)`를 사용하세요\n\n# 3. Scheduler는 `StepLR(step_size=5, gamma=0.1)`를 사용하세요\noptimizer = ____[1]\nscheduler = ____[2]\n\n# 4. 10 에포크 동안 학습하고, 각 에포크의 평균 손실을 `naive_losses` 리스트에 저장하세요\nnum_epochs = 10\nnaive_losses = []\nfor epoch in tqdm(range(num_epochs)):\n    ____[3]  # 학습 모드\n    running_loss = 0.0\n    \n    for xb, yb in tqdm(trainloader, leave=False):\n        xb, yb = xb.to(device), yb.to(device)\n        \n        # 4.1 옵티마이저의 그래디언트(gradient)를 0으로 초기화\n        optimizer.zero_grad()\n        \n        # 4.2 모델에 입력을 넣어 순전파(forward pass) 진행 및 출력(outputs) 계산\n        outputs = model(xb)\n        \n        # 4.3 모델의 출력과 실제 정답을 비교하여 손실(loss) 계산\n        loss = criterion(outputs, yb)\n        \n        # 4.4 역전파(backward pass)를 통해 각 파라미터에 대한 그래디언트 계산\n        ____[4]\n        \n        # 4.5 옵티마이저를 사용해 모델의 파라미터(가중치)를 업데이트\n        ____[5]\n        \n        # 현재 배치의 손실을 running_loss에 더함\n        running_loss += loss.item()\n    \n    avg_loss = running_loss / len(trainloader)\n    naive_losses.append(avg_loss)\n    scheduler.step()\n    print(f\"[Epoch {epoch+1}/{num_epochs}] 평균 훈련 손실: {avg_loss:.4f}\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "optim.SGD(model.parameters(), lr = 0.001, momentum=0.9)",
+          "choices": [
+            "optim.SGD(model.parameters(), lr = 0.001, momentum=0.9)",
+            "optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)",
+            "model.train()",
+            "loss.backward()"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)",
+          "choices": [
+            "optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)",
+            "optim.lr_scheduler.ReduceLROnPlateau(optimizer, step_size=5, gamma=0.1)",
+            "optim.lr_scheduler.StepLR(optimizer, step_size=5, momentum=0.1)",
+            "optim.lr_scheduler.StepLR(optimizer, patience=5, gamma=0.1)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "model.train()",
+          "choices": [
+            "model.train()",
+            "model.eval()",
+            "torch.no_grad()",
+            "model.training"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "loss.backward()",
+          "choices": [
+            "loss.backward()",
+            "loss.item()",
+            "loss.detach()",
+            "optimizer.backward()"
+          ]
+        },
+        {
+          "id": "blank-5",
+          "answer": "optimizer.step()",
+          "choices": [
+            "optimizer.step()",
+            "optimizer.zero_grad()",
+            "loss.backward()",
+            "scheduler.step()"
+          ]
+        }
+      ],
+      "solution": "import torch.nn as nn\n\n# 1. 손실 함수는 `nn.CrossEntropyLoss()`를 사용하세요\ncriterion = nn.CrossEntropyLoss()\n\n# 2.Optimizer는 `SGD(lr=0.001, momentum=0.9)`를 사용하세요\n\n# 3. Scheduler는 `StepLR(step_size=5, gamma=0.1)`를 사용하세요\noptimizer = optim.SGD(model.parameters(), lr = 0.001, momentum=0.9)\nscheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)\n\n# 4. 10 에포크 동안 학습하고, 각 에포크의 평균 손실을 `naive_losses` 리스트에 저장하세요\nnum_epochs = 10\nnaive_losses = []\nfor epoch in tqdm(range(num_epochs)):\n    model.train()  # 학습 모드\n    running_loss = 0.0\n    \n    for xb, yb in tqdm(trainloader, leave=False):\n        xb, yb = xb.to(device), yb.to(device)\n        \n        # 4.1 옵티마이저의 그래디언트(gradient)를 0으로 초기화\n        optimizer.zero_grad()\n        \n        # 4.2 모델에 입력을 넣어 순전파(forward pass) 진행 및 출력(outputs) 계산\n        outputs = model(xb)\n        \n        # 4.3 모델의 출력과 실제 정답을 비교하여 손실(loss) 계산\n        loss = criterion(outputs, yb)\n        \n        # 4.4 역전파(backward pass)를 통해 각 파라미터에 대한 그래디언트 계산\n        loss.backward()\n        \n        # 4.5 옵티마이저를 사용해 모델의 파라미터(가중치)를 업데이트\n        optimizer.step()\n        \n        # 현재 배치의 손실을 running_loss에 더함\n        running_loss += loss.item()\n    \n    avg_loss = running_loss / len(trainloader)\n    naive_losses.append(avg_loss)\n    scheduler.step()\n    print(f\"[Epoch {epoch+1}/{num_epochs}] 평균 훈련 손실: {avg_loss:.4f}\")",
+      "explanation": "빈칸 1\n정답: `optim.SGD(model.parameters(), lr = 0.001, momentum=0.9)`\n역할: 모델 전체 파라미터를 SGD로 갱신할 optimizer를 만듭니다.\n판단 근거: 뒤에서 같은 객체의 `zero_grad()`와 `step()`을 호출하므로 `model.parameters()`를 받은 optimizer가 필요합니다.\n\n빈칸 2\n정답: `optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)`\n역할: 5 epoch마다 학습률을 0.1배로 줄이는 scheduler를 optimizer에 연결합니다.\n판단 근거: `step_size=5`, `gamma=0.1` 설정과 뒤의 `scheduler.step()` 호출이 StepLR 사용을 뜻합니다.\n\n빈칸 3\n정답: `model.train()`\n역할: 학습 전에 모델을 training 모드로 전환합니다.\n판단 근거: 뒤에서 손실 역전파와 optimizer 갱신이 실행되므로 evaluation 모드가 아닌 training 모드여야 합니다.\n\n빈칸 4\n정답: `loss.backward()`\n역할: 현재 손실에서 모델 파라미터까지 역전파해 기울기를 계산합니다.\n판단 근거: 바로 뒤의 `optimizer.step()`이 `.grad` 값을 사용하므로 먼저 backward가 실행되어야 합니다.\n\n빈칸 5\n정답: `optimizer.step()`\n역할: 계산된 기울기를 이용해 모델 파라미터를 한 번 갱신합니다.\n판단 근거: 앞에서 loss를 계산하고 backward를 호출했으므로 학습 순서상 다음 단계가 optimizer 갱신입니다.\n\n완성하면 'Optimizer 구성과 파라미터 갱신' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-005",
+      "type": "api"
+    },
+    {
+      "unit": "3-1",
+      "title": "Optimizer 구성과 파라미터 갱신",
+      "content": "이 코드는 3-1 실습의 전체 과정 중 'Optimizer 구성과 파라미터 갱신' 단계를 구현하는 부분입니다. 같은 완성 코드에서 따로 출제되던 API 위치를 하나로 통합했습니다. 빈칸 앞에서 준비된 객체와 입력, 뒤의 반환·출력 또는 후속 연산을 확인해 실행 흐름이 유지되도록 각 API를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 다음 연산의 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# 1. 모델을 학습 전 상태로 되돌리세요\n\n\n# 2. Optimizer를 `Adam(lr=0.001, betas=(0.9, 0.999))`으로 변경하세요\noptimizer = ____[1]\n\n# 3. Scheduler를 `ReduceLROnPlateau(mode='min', factor=0.1, patience=2)`로 변경하세요\n# mode : 성능 개선 평가 기준, factor : 학습률을 줄일 배수, patient: 성능 개선이 없어도 기다려줄 에포크 수\nscheduler = optim.lr_scheduler.ReduceLROnPlateau(\n    optimizer,\n    mode='min', \n    factor=0.1, \n    patience=2\n)\n\n# 에포크 수 설정\nnum_epochs = 10\nnew_losses = []\n\nfor epoch in tqdm(range(num_epochs)):\n    ____[2]  # 학습 모드\n    running_loss = 0.0\n    \n    for xb, yb in tqdm(trainloader, leave=False):\n        xb, yb = xb.to(device), yb.to(device)\n        # 1. 학습루프의 경우 출력값 계산, 미분 계산 및 파라미터 업데이트를 수행해주세요.\n        model.zero_grad()\n        output = model(xb)\n        loss = criterion(output,yb)\n        ____[3]\n        ____[4]\n        \n        running_loss += loss.item()\n    \n    # Validation 루프: ReduceLROnPlateau는 validation loss를 모니터링\n    with ____[5]:\n        model.eval()\n        val_loss = 0\n        for xb, yb in valloader:\n            xb, yb = xb.to(device), yb.to(device)\n            \n            # 2. 검증루프는 출력값을 계산하고 검증 데이터셋의 `val_loss`를 계산해주세요.\n            output = model(xb)\n            loss = criterion(output,yb)\n            \n            \n            val_loss += loss.item()\n        avg_val_loss = val_loss / len(valloader)\n        \n        # 3. `scheduler`는 `val_loss`를 기반으로 업데이트하도록 코드를 추가해주세요.\n        scheduler.step(avg_val_loss)\n    \n    avg_loss = running_loss / len(trainloader)\n    new_losses.append(avg_loss)\n    print(f\"[Epoch {epoch+1}/{num_epochs}] 평균 훈련 손실: {avg_loss:.4f}\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "optim.Adam(model.parameters(), lr=0.001, betas = (0.9,0.999), eps = 1e-08)",
+          "choices": [
+            "optim.Adam(model.parameters(), lr=0.001, betas = (0.9,0.999), eps = 1e-08)",
+            "model.train()",
+            "loss.backward()",
+            "optimizer.step()"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "model.train()",
+          "choices": [
+            "model.train()",
+            "model.eval()",
+            "torch.no_grad()",
+            "model.training"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "loss.backward()",
+          "choices": [
+            "loss.backward()",
+            "loss.item()",
+            "loss.detach()",
+            "optimizer.backward()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "optimizer.step()",
+          "choices": [
+            "optimizer.step()",
+            "optimizer.zero_grad()",
+            "loss.backward()",
+            "scheduler.step()"
+          ]
+        },
+        {
+          "id": "blank-5",
+          "answer": "torch.no_grad()",
+          "choices": [
+            "torch.no_grad()",
+            "torch.enable_grad()",
+            "model.eval()",
+            "torch.set_grad_enabled()"
+          ]
+        }
+      ],
+      "solution": "# 1. 모델을 학습 전 상태로 되돌리세요\n\n\n# 2. Optimizer를 `Adam(lr=0.001, betas=(0.9, 0.999))`으로 변경하세요\noptimizer = optim.Adam(model.parameters(), lr=0.001, betas = (0.9,0.999), eps = 1e-08)\n\n# 3. Scheduler를 `ReduceLROnPlateau(mode='min', factor=0.1, patience=2)`로 변경하세요\n# mode : 성능 개선 평가 기준, factor : 학습률을 줄일 배수, patient: 성능 개선이 없어도 기다려줄 에포크 수\nscheduler = optim.lr_scheduler.ReduceLROnPlateau(\n    optimizer,\n    mode='min', \n    factor=0.1, \n    patience=2\n)\n\n# 에포크 수 설정\nnum_epochs = 10\nnew_losses = []\n\nfor epoch in tqdm(range(num_epochs)):\n    model.train()  # 학습 모드\n    running_loss = 0.0\n    \n    for xb, yb in tqdm(trainloader, leave=False):\n        xb, yb = xb.to(device), yb.to(device)\n        # 1. 학습루프의 경우 출력값 계산, 미분 계산 및 파라미터 업데이트를 수행해주세요.\n        model.zero_grad()\n        output = model(xb)\n        loss = criterion(output,yb)\n        loss.backward()\n        optimizer.step()\n        \n        running_loss += loss.item()\n    \n    # Validation 루프: ReduceLROnPlateau는 validation loss를 모니터링\n    with torch.no_grad():\n        model.eval()\n        val_loss = 0\n        for xb, yb in valloader:\n            xb, yb = xb.to(device), yb.to(device)\n            \n            # 2. 검증루프는 출력값을 계산하고 검증 데이터셋의 `val_loss`를 계산해주세요.\n            output = model(xb)\n            loss = criterion(output,yb)\n            \n            \n            val_loss += loss.item()\n        avg_val_loss = val_loss / len(valloader)\n        \n        # 3. `scheduler`는 `val_loss`를 기반으로 업데이트하도록 코드를 추가해주세요.\n        scheduler.step(avg_val_loss)\n    \n    avg_loss = running_loss / len(trainloader)\n    new_losses.append(avg_loss)\n    print(f\"[Epoch {epoch+1}/{num_epochs}] 평균 훈련 손실: {avg_loss:.4f}\")",
+      "explanation": "빈칸 1\n정답: `optim.Adam(model.parameters(), lr=0.001, betas = (0.9,0.999), eps = 1e-08)`\n역할: 모델 파라미터를 Adam 규칙으로 갱신할 optimizer를 만듭니다.\n판단 근거: 코드가 요구하는 lr·betas·eps를 모두 설정하고 뒤에서 `optimizer.step()`을 호출합니다.\n\n빈칸 2\n정답: `model.train()`\n역할: 학습 전에 모델을 training 모드로 전환합니다.\n판단 근거: 뒤에서 손실 역전파와 optimizer 갱신이 실행되므로 evaluation 모드가 아닌 training 모드여야 합니다.\n\n빈칸 3\n정답: `loss.backward()`\n역할: 현재 손실에서 모델 파라미터까지 역전파해 기울기를 계산합니다.\n판단 근거: 바로 뒤의 `optimizer.step()`이 `.grad` 값을 사용하므로 먼저 backward가 실행되어야 합니다.\n\n빈칸 4\n정답: `optimizer.step()`\n역할: 계산된 기울기를 이용해 모델 파라미터를 한 번 갱신합니다.\n판단 근거: 앞에서 loss를 계산하고 backward를 호출했으므로 학습 순서상 다음 단계가 optimizer 갱신입니다.\n\n빈칸 5\n정답: `torch.no_grad()`\n역할: 평가·생성 구간의 autograd 그래프 생성을 꺼 메모리와 연산량을 줄입니다.\n판단 근거: `with` 블록 안에서는 예측이나 generate만 수행하고 backward를 호출하지 않습니다.\n\n완성하면 'Optimizer 구성과 파라미터 갱신' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-018",
+      "type": "api"
+    },
+    {
+      "unit": "3-1",
+      "title": "PyTorch 기울기 계산과 파라미터 갱신",
+      "content": "이 코드는 3-1 실습의 전체 과정 중 'PyTorch 기울기 계산과 파라미터 갱신' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 PyTorch 기울기 계산과 파라미터 갱신의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "num_epochs = 5\nfor epoch in tqdm(range(num_epochs)):\n    ____[1] # 훈련 모드\n    running_loss = 0.0\n\n    # 증강이 적용된 데이터로 훈련\n    for xb, yb in trainloader_aug:\n        xb, yb = xb.to(device), yb.to(device)\n        optimizer.zero_grad()\n        outputs = model(xb)\n        loss = criterion(outputs, yb)\n        ____[2]\n        ____[3]\n        running_loss += loss.item()\n\n    # 에포크 결과 출력\n    avg_loss = running_loss / len(trainloader_aug)\n    print(f\"[Fine-tune Epoch {epoch+1}/{num_epochs}] 평균 훈련 손실: {avg_loss:.4f}, 현재 학습률: {optimizer.param_groups[0]['lr']:.6f}\")\n\n    # --- 학습률 스케줄러 업데이트 ---\n    # 정의된 규칙에 따라 학습률을 조정\n    ____[4]",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "model.train()",
+          "choices": [
+            "model.train()",
+            "model.eval()",
+            "torch.no_grad()",
+            "model.training"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "loss.backward()",
+          "choices": [
+            "loss.backward()",
+            "loss.item()",
+            "loss.detach()",
+            "optimizer.backward()"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "optimizer.step()",
+          "choices": [
+            "optimizer.step()",
+            "optimizer.zero_grad()",
+            "loss.backward()",
+            "scheduler.step()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "scheduler.step()",
+          "choices": [
+            "scheduler.step()",
+            "model.train()",
+            "loss.backward()",
+            "optimizer.step()"
+          ]
+        }
+      ],
+      "solution": "num_epochs = 5\nfor epoch in tqdm(range(num_epochs)):\n    model.train() # 훈련 모드\n    running_loss = 0.0\n\n    # 증강이 적용된 데이터로 훈련\n    for xb, yb in trainloader_aug:\n        xb, yb = xb.to(device), yb.to(device)\n        optimizer.zero_grad()\n        outputs = model(xb)\n        loss = criterion(outputs, yb)\n        loss.backward()\n        optimizer.step()\n        running_loss += loss.item()\n\n    # 에포크 결과 출력\n    avg_loss = running_loss / len(trainloader_aug)\n    print(f\"[Fine-tune Epoch {epoch+1}/{num_epochs}] 평균 훈련 손실: {avg_loss:.4f}, 현재 학습률: {optimizer.param_groups[0]['lr']:.6f}\")\n\n    # --- 학습률 스케줄러 업데이트 ---\n    # 정의된 규칙에 따라 학습률을 조정\n    scheduler.step()",
+      "explanation": "빈칸 1\n정답: `model.train()`\n역할: 학습 전에 모델을 training 모드로 전환합니다.\n판단 근거: 뒤에서 손실 역전파와 optimizer 갱신이 실행되므로 evaluation 모드가 아닌 training 모드여야 합니다.\n\n빈칸 2\n정답: `loss.backward()`\n역할: 현재 손실에서 모델 파라미터까지 역전파해 기울기를 계산합니다.\n판단 근거: 바로 뒤의 `optimizer.step()`이 `.grad` 값을 사용하므로 먼저 backward가 실행되어야 합니다.\n\n빈칸 3\n정답: `optimizer.step()`\n역할: 계산된 기울기를 이용해 모델 파라미터를 한 번 갱신합니다.\n판단 근거: 앞에서 loss를 계산하고 backward를 호출했으므로 학습 순서상 다음 단계가 optimizer 갱신입니다.\n\n빈칸 4\n정답: `scheduler.step()`\n역할: epoch 종료 후 scheduler의 주기를 진행해 다음 학습률을 결정합니다.\n판단 근거: 배치별 optimizer 갱신이 끝난 위치에서 호출되므로 scheduler 갱신 호출이 필요합니다.\n\n완성하면 'PyTorch 기울기 계산과 파라미터 갱신' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-030",
+      "type": "api"
+    },
+    {
+      "unit": "3-1",
+      "title": "Dataset과 DataLoader 구성",
+      "content": "이 코드는 3-1 실습의 전체 과정 중 'Dataset과 DataLoader 구성' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 Dataset과 DataLoader 구성의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "train_transform_aug = transforms.Compose([\n    # 두 가지 증강기법을 추가해봅시다. 기존의 `train_transform`의 구성에 추가해주세요.\n    # 32x32 이미지 주변에 4픽셀의 패딩(padding)을 추가한 뒤, 무작위로 32x32 영역을 잘라냄\n\n    # 50% 확률로 이미지를 좌우로 뒤집음\n\n    ____[1],\n    ____[2],\n    ____[3]\n])\n\n# 데이터 증강이 적용된 새로운 훈련 데이터셋 및 DataLoader 생성\ntrainset_aug = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=train_transform_aug)\ntrainloader_aug = ____[4]",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "transforms.Resize((224, 224))",
+          "choices": [
+            "transforms.Resize((224, 224))",
+            "transforms.ToTensor()",
+            "transforms.Normalize(mean=mean, std=std)",
+            "torch.utils.data.DataLoader(trainset_aug, batch_size=256, shuffle=True, pin_memory=True, num_workers=8)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "transforms.ToTensor()",
+          "choices": [
+            "transforms.ToTensor()",
+            "transforms.Resize((224, 224))",
+            "transforms.Normalize(mean=mean, std=std)",
+            "torch.utils.data.DataLoader(trainset_aug, batch_size=256, shuffle=True, pin_memory=True, num_workers=8)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "transforms.Normalize(mean=mean, std=std)",
+          "choices": [
+            "transforms.Normalize(mean=mean, std=std)",
+            "transforms.ToTensor(mean=mean, std=std)",
+            "transforms.Resize((224, 224))",
+            "transforms.ToTensor()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "torch.utils.data.DataLoader(trainset_aug, batch_size=256, shuffle=True, pin_memory=True, num_workers=8)",
+          "choices": [
+            "torch.utils.data.DataLoader(trainset_aug, batch_size=256, shuffle=True, pin_memory=True, num_workers=8)",
+            "torch.utils.data.TensorDataset(trainset_aug, batch_size=256, shuffle=True, pin_memory=True, num_workers=8)",
+            "torch.utils.data.DataLoader(trainset_aug, batch_size=256, shuffle=False, pin_memory=True, num_workers=8)",
+            "torch.utils.data.DataLoader(trainset_aug, input_size=256, shuffle=True, pin_memory=True, num_workers=8)"
+          ]
+        }
+      ],
+      "solution": "train_transform_aug = transforms.Compose([\n    # 두 가지 증강기법을 추가해봅시다. 기존의 `train_transform`의 구성에 추가해주세요.\n    # 32x32 이미지 주변에 4픽셀의 패딩(padding)을 추가한 뒤, 무작위로 32x32 영역을 잘라냄\n\n    # 50% 확률로 이미지를 좌우로 뒤집음\n\n    transforms.Resize((224, 224)),\n    transforms.ToTensor(),\n    transforms.Normalize(mean=mean, std=std)\n])\n\n# 데이터 증강이 적용된 새로운 훈련 데이터셋 및 DataLoader 생성\ntrainset_aug = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=train_transform_aug)\ntrainloader_aug = torch.utils.data.DataLoader(trainset_aug, batch_size=256, shuffle=True, pin_memory=True, num_workers=8)",
+      "explanation": "빈칸 1\n정답: `transforms.Resize((224, 224))`\n역할: 입력 이미지를 CNN이 요구하는 224×224 크기로 고정합니다.\n판단 근거: 배치 결합과 사전학습 모델 입력을 위해 모든 이미지 shape가 같아야 합니다.\n\n빈칸 2\n정답: `transforms.ToTensor()`\n역할: PIL 이미지를 채널 우선 부동소수점 PyTorch tensor로 변환합니다.\n판단 근거: 다음 Normalize와 모델 입력은 PIL 객체가 아닌 tensor를 요구합니다.\n\n빈칸 3\n정답: `transforms.Normalize(mean=mean, std=std)`\n역할: 이미지 tensor를 채널별 mean과 std로 표준화합니다.\n판단 근거: 사전학습 모델이 기대하는 입력 분포를 맞추려면 ToTensor 뒤에 Normalize가 필요합니다.\n\n빈칸 4\n정답: `torch.utils.data.DataLoader(trainset_aug, batch_size=256, shuffle=True, pin_memory=True, num_workers=8)`\n역할: 증강 trainset을 256개 배치로 묶고 shuffle·고정 메모리·병렬 로딩을 적용합니다.\n판단 근거: 학습 루프가 배치를 반복하고 GPU 전송과 데이터 공급 효율을 높여야 합니다.\n\n완성하면 'Dataset과 DataLoader 구성' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-035",
+      "type": "api"
+    }
+  ]
+}

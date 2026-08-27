@@ -1,0 +1,109 @@
+{
+  "problems": [
+    {
+      "id": "flow-generated-009",
+      "unit": "5-1",
+      "type": "flow",
+      "title": "PEFT 필요성",
+      "content": "PEFT 필요성에서 `adapter`와 `requires_grad=True`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `adapter`와 `requires_grad=True`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다."
+      ],
+      "keywords": [
+        "adapter",
+        "requires_grad=True"
+      ],
+      "solution": "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다.",
+      "explanation": "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `adapter`와 `requires_grad=True`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-018",
+      "unit": "5-1",
+      "type": "flow",
+      "title": "LoRA 원리",
+      "content": "LoRA 원리에서 `동결`와 `저랭크`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `동결`와 `저랭크`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다."
+      ],
+      "keywords": [
+        "동결",
+        "저랭크"
+      ],
+      "solution": "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다.",
+      "explanation": "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `동결`와 `저랭크`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-027",
+      "unit": "5-1",
+      "type": "flow",
+      "title": "LoRA rank와 alpha",
+      "content": "LoRA rank와 alpha에서 `r`와 `파라미터 수`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `r`와 `파라미터 수`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다."
+      ],
+      "keywords": [
+        "r",
+        "파라미터 수"
+      ],
+      "solution": "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다.",
+      "explanation": "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `r`와 `파라미터 수`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-036",
+      "unit": "5-1",
+      "type": "flow",
+      "title": "LoRA와 QLoRA",
+      "content": "LoRA와 QLoRA에서 `4-bit`와 `base model 고정`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `4-bit`와 `base model 고정`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다."
+      ],
+      "keywords": [
+        "4-bit",
+        "base model 고정"
+      ],
+      "solution": "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다.",
+      "explanation": "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `4-bit`와 `base model 고정`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-045",
+      "unit": "5-1",
+      "type": "flow",
+      "title": "Chat Template",
+      "content": "Chat Template에서 `role`와 `구분 토큰`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `role`와 `구분 토큰`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다."
+      ],
+      "keywords": [
+        "role",
+        "구분 토큰"
+      ],
+      "solution": "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다.",
+      "explanation": "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `role`와 `구분 토큰`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    }
+  ]
+}

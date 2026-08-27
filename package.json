@@ -6,17 +6,18 @@
   "scripts": {
     "dev": "node scripts/build-data.mjs && node scripts/validate-pack.mjs && node scripts/build-client.mjs && node --watch server.mjs",
     "start": "node server.mjs",
+    "assembly:data": "node scripts/build-assembly-from-samples.mjs",
     "data": "node scripts/build-data.mjs",
     "pack:validate": "node scripts/validate-pack.mjs",
     "lint": "node scripts/check.mjs",
-    "typecheck": "node --check server.mjs && node --check public/app.js && node --check scripts/build-data.mjs && node --check scripts/build-client.mjs && node --check scripts/problem-pack.mjs && node --check scripts/validate-pack.mjs",
+    "typecheck": "node --check server.mjs && node --check public/app.js && node --check scripts/build-data.mjs && node --check scripts/build-assembly-from-samples.mjs && node --check scripts/build-client.mjs && node --check scripts/problem-pack.mjs && node --check scripts/validate-pack.mjs",
     "test": "node --test tests/*.test.mjs",
     "build": "node scripts/build.mjs"
   },
   "engines": {
     "node": ">=20"
   },
-  "dependencies": {
+  "devDependencies": {
     "esbuild": "^0.28.2"
   }
 }

@@ -8,8 +8,8 @@ import { loadProjectProblems } from '../scripts/parser.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-test('두 문제 유형 템플릿이 공통 검증을 통과한다', () => {
-  for (const type of ['flow', 'api']) {
+test('세 문제 유형 템플릿이 공통 검증을 통과한다', () => {
+  for (const type of ['flow', 'api', 'assembly']) {
     const problem = JSON.parse(fs.readFileSync(path.join(root, 'problem-templates', `${type}.json`), 'utf8'));
     assert.deepEqual(validateProblems([problem]), []);
   }

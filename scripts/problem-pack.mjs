@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const TYPES = new Set(['flow', 'api']);
+const TYPES = new Set(['flow', 'api', 'assembly']);
 
 export function loadActiveProblemPack(root) {
   const configPath = path.join(root, 'problem-pack.config.json');
@@ -45,7 +45,7 @@ export function validateProblems(problems) {
     for (const field of ['id', 'unit', 'type', 'title']) if (typeof problem[field] !== 'string' || !problem[field].trim()) errors.push(`${at}: ${field}는 비어 있지 않은 문자열이어야 합니다.`);
     if (typeof problem.content !== 'string') errors.push(`${at}: content는 문자열이어야 합니다.`);
     if (problem.id) { if (ids.has(problem.id)) errors.push(`${at}: ID '${problem.id}'가 중복됩니다.`); ids.add(problem.id); }
-    if (!TYPES.has(problem.type)) errors.push(`${at}: type은 flow 또는 api여야 합니다.`);
+    if (!TYPES.has(problem.type)) errors.push(`${at}: type은 flow, api 또는 assembly여야 합니다.`);
     if (!Array.isArray(problem.requirements)) errors.push(`${at}: requirements는 문자열 배열이어야 합니다.`);
     else if (problem.requirements.some((item) => typeof item !== 'string')) errors.push(`${at}: requirements의 모든 항목은 문자열이어야 합니다.`);
     if (problem.constraints != null && (!Array.isArray(problem.constraints) || problem.constraints.some((item) => typeof item !== 'string'))) errors.push(`${at}: constraints는 문자열 배열이어야 합니다.`);
@@ -61,6 +61,21 @@ export function validateProblems(problems) {
         else if (!blank.id.trim() || !blank.answer.trim() || blank.choices.some((choice) => typeof choice !== 'string')) errors.push(`${at} 빈칸 ${blankIndex + 1}: id, answer, choices에는 문자열 값이 필요합니다.`);
         else if (!blank.choices.includes(blank.answer)) errors.push(`${at} 빈칸 ${blankIndex + 1}: choices에 answer가 포함되어야 합니다.`);
       });
+    }
+    if (problem.type === 'assembly') {
+      if (!Array.isArray(problem.slots) || !problem.slots.length) errors.push(`${at}: assembly 문제에는 slots가 한 개 이상 필요합니다.`);
+      else {
+        const slotIds = new Set();
+        problem.slots.forEach((slot, slotIndex) => {
+          if (!slot || typeof slot.id !== 'string' || typeof slot.answer !== 'string' || !slot.id.trim() || !slot.answer.trim()) errors.push(`${at} 슬롯 ${slotIndex + 1}: id와 answer에는 비어 있지 않은 문자열이 필요합니다.`);
+          else if (slotIds.has(slot.id)) errors.push(`${at} 슬롯 ${slotIndex + 1}: ID '${slot.id}'가 중복됩니다.`);
+          else slotIds.add(slot.id);
+        });
+      }
+      if (!Array.isArray(problem.tokens) || !problem.tokens.length || problem.tokens.some((token) => typeof token !== 'string' || !token.trim())) errors.push(`${at}: assembly 문제의 tokens에는 비어 있지 않은 문자열이 필요합니다.`);
+      else if (Array.isArray(problem.slots) && problem.slots.some((slot) => slot?.answer && !problem.tokens.includes(slot.answer))) errors.push(`${at}: 모든 슬롯 정답은 tokens에 포함되어야 합니다.`);
+      const markers = typeof problem.skeleton === 'string' ? [...problem.skeleton.matchAll(/_{2,}\[(\d+)\]/g)] : [];
+      if (Array.isArray(problem.slots) && markers.length !== problem.slots.length) errors.push(`${at}: skeleton 빈칸 수와 slots 수가 일치해야 합니다.`);
     }
   });
   return errors;

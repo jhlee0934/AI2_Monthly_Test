@@ -106,9 +106,17 @@ const purposes = [
 ];
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const file = path.join(root, 'problems', 'exam_questions.json');
-const payload = JSON.parse(fs.readFileSync(file, 'utf8'));
-const apiProblems = payload.problems.filter((problem) => problem.type === 'api');
+const apiDir = path.join(root, 'problems', 'api');
+const sources = fs.readdirSync(apiDir, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+  .sort((a, b) => a.name.localeCompare(b.name, 'en', { numeric: true }))
+  .map((entry) => {
+    const file = path.join(apiDir, entry.name);
+    return { file, payload: JSON.parse(fs.readFileSync(file, 'utf8')) };
+  });
+const apiProblems = sources.flatMap(({ payload }) => payload.problems)
+  .filter((problem) => legacyApiNumber(problem) <= 35)
+  .sort((a, b) => legacyApiNumber(a) - legacyApiNumber(b));
 if (apiProblems.length !== purposes.length) throw new Error(`API 문제 ${apiProblems.length}개와 해설 ${purposes.length}개의 수가 다릅니다.`);
 
 apiProblems.forEach((problem, index) => {
@@ -117,5 +125,9 @@ apiProblems.forEach((problem, index) => {
   problem.explanation = `정답은 ${answers}입니다. 이 표현은 ${purposes[index]}. 완성하면 \`${completed.replaceAll('\n', ' / ')}\`이 되어 호출 대상과 적용 위치를 함께 확인할 수 있습니다.`;
 });
 
-fs.writeFileSync(file, `${JSON.stringify(payload, null, 2)}\n`);
+for (const { file, payload } of sources) fs.writeFileSync(file, `${JSON.stringify(payload, null, 2)}\n`);
 console.log(`API 빈칸 문제 ${apiProblems.length}개의 해설을 보강했습니다.`);
+
+function legacyApiNumber(problem) {
+  return Number(/^api-generated-(\d+)$/.exec(problem.id)?.[1] || Number.POSITIVE_INFINITY);
+}

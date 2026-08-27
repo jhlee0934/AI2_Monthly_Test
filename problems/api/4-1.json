@@ -1,0 +1,239 @@
+{
+  "problems": [
+    {
+      "unit": "4-1",
+      "title": "Vector Store와 Retriever 구성",
+      "content": "이 코드는 4-1 실습의 전체 과정 중 'Vector Store와 Retriever 구성' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 Vector Store와 Retriever 구성의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# 검색 비교\nif vectorstore_small and vectorstore_large:\n    retriever_small = ____[1]\n    retriever_large = ____[2]\n\n    test_query = \"배송이 늦으면 어떻게 보상받나요?\"\n\n    print(f\"🔍 질문: {test_query}\\n\")\n\n    # 작은 chunk로 검색\n    results_small = ____[3]\n    print(\"📄 [chunk_size=200 검색 결과]\")\n    for i, doc in enumerate(results_small, 1):\n        print(f\"  결과 {i} (길이: {len(doc.page_content)}자): {doc.page_content[:100]}...\")\n\n    print()\n\n    # 큰 chunk로 검색\n    results_large = ____[4]\n    print(\"📄 [chunk_size=500 검색 결과]\")\n    for i, doc in enumerate(results_large, 1):\n        print(f\"  결과 {i} (길이: {len(doc.page_content)}자): {doc.page_content[:100]}...\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "vectorstore_small.as_retriever(search_kwargs={\"k\": 3})",
+          "choices": [
+            "vectorstore_small.as_retriever(search_kwargs={\"k\": 3})",
+            "vectorstore_small.similarity_search(search_kwargs={\"k\": 3})",
+            "vectorstore_small.from_documents(search_kwargs={\"k\": 3})",
+            "vectorstore_small.invoke(search_kwargs={\"k\": 3})"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "vectorstore_large.as_retriever(search_kwargs={\"k\": 3})",
+          "choices": [
+            "vectorstore_large.as_retriever(search_kwargs={\"k\": 3})",
+            "vectorstore_large.similarity_search(search_kwargs={\"k\": 3})",
+            "vectorstore_large.from_documents(search_kwargs={\"k\": 3})",
+            "vectorstore_large.invoke(search_kwargs={\"k\": 3})"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "retriever_small.invoke(test_query)",
+          "choices": [
+            "retriever_small.invoke(test_query)",
+            "retriever_small.run(test_query)",
+            "retriever_small.predict(test_query)",
+            "retriever_small.compile(test_query)"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "retriever_large.invoke(test_query)",
+          "choices": [
+            "retriever_large.invoke(test_query)",
+            "retriever_large.run(test_query)",
+            "retriever_large.predict(test_query)",
+            "retriever_large.compile(test_query)"
+          ]
+        }
+      ],
+      "solution": "# 검색 비교\nif vectorstore_small and vectorstore_large:\n    retriever_small = vectorstore_small.as_retriever(search_kwargs={\"k\": 3})\n    retriever_large = vectorstore_large.as_retriever(search_kwargs={\"k\": 3})\n\n    test_query = \"배송이 늦으면 어떻게 보상받나요?\"\n\n    print(f\"🔍 질문: {test_query}\\n\")\n\n    # 작은 chunk로 검색\n    results_small = retriever_small.invoke(test_query)\n    print(\"📄 [chunk_size=200 검색 결과]\")\n    for i, doc in enumerate(results_small, 1):\n        print(f\"  결과 {i} (길이: {len(doc.page_content)}자): {doc.page_content[:100]}...\")\n\n    print()\n\n    # 큰 chunk로 검색\n    results_large = retriever_large.invoke(test_query)\n    print(\"📄 [chunk_size=500 검색 결과]\")\n    for i, doc in enumerate(results_large, 1):\n        print(f\"  결과 {i} (길이: {len(doc.page_content)}자): {doc.page_content[:100]}...\")",
+      "explanation": "빈칸 1\n정답: `vectorstore_small.as_retriever(search_kwargs={\"k\": 3})`\n역할: Vector Store를 상위 k개 문서를 반환하는 retriever로 변환합니다.\n판단 근거: 뒤에서 `.invoke(query)`를 호출하므로 search_kwargs가 설정된 검색 인터페이스가 필요합니다.\n\n빈칸 2\n정답: `vectorstore_large.as_retriever(search_kwargs={\"k\": 3})`\n역할: Vector Store를 상위 k개 문서를 반환하는 retriever로 변환합니다.\n판단 근거: 뒤에서 `.invoke(query)`를 호출하므로 search_kwargs가 설정된 검색 인터페이스가 필요합니다.\n\n빈칸 3\n정답: `retriever_small.invoke(test_query)`\n역할: 질문을 retriever에 전달해 답변 근거가 될 관련 Document 목록을 검색합니다.\n판단 근거: 반환값이 context나 비교 결과로 사용되므로 문서 검색 객체의 invoke가 필요합니다.\n\n빈칸 4\n정답: `retriever_large.invoke(test_query)`\n역할: 질문을 retriever에 전달해 답변 근거가 될 관련 Document 목록을 검색합니다.\n판단 근거: 반환값이 context나 비교 결과로 사용되므로 문서 검색 객체의 invoke가 필요합니다.\n\n완성하면 'Vector Store와 Retriever 구성' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-007",
+      "type": "api"
+    },
+    {
+      "unit": "4-1",
+      "title": "Vector Store와 Retriever 구성",
+      "content": "이 코드는 4-1 실습의 전체 과정 중 'Vector Store와 Retriever 구성' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 Vector Store와 Retriever 구성의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "from langchain_core.prompts import ChatPromptTemplate\n# 기본 설정으로 Vector Store 생성 (비교 실험용)\nvectorstore_base, _ = create_vectorstore_with_chunking(\n    documents=all_documents,\n    chunk_size=300,\n    chunk_overlap=50,\n    collection_name=\"yes24_base\"\n)\n\n# RAG 프롬프트\nrag_prompt = ChatPromptTemplate.from_messages([\n    (\"system\", \"\"\"당신은 온라인 서점 'Yes24'의 고객 서비스 상담원입니다.\n다음 검색된 자료를 참고하여 고객의 질문에 정확하고 친절하게 답변해주세요.\n\n[검색된 자료]\n{context}\n\n답변 규칙:\n1. 검색된 자료를 기반으로 답변하세요\n2. 자료에 없는 내용은 추측하지 마세요\"\"\"),\n    (\"human\", \"{question}\")\n])\n\ndef format_docs(docs):\n    return \"\\n\\n\".join([doc.page_content for doc in docs])\n\ndef run_rag(retriever, question):\n    # 관련 문서 검색\n    docs = ____[1]\n    context = format_docs(docs)\n    \n    # 프롬프트 생성 후 LLM 직접 호출\n    messages = rag_prompt.format_messages(context=context, question=question)\n    response = ____[2]\n    \n    return response.content\n\ndef create_rag_components(vectorstore, k):\n    retriever = ____[3]\n    return retriever\n\nprint(\"✅ 함수 정의 완료\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "retriever.invoke(question)",
+          "choices": [
+            "retriever.invoke(question)",
+            "retriever.run(question)",
+            "retriever.predict(question)",
+            "retriever.compile(question)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "llm.invoke(messages)",
+          "choices": [
+            "llm.invoke(messages)",
+            "llm.run(messages)",
+            "llm.predict(messages)",
+            "llm.compile(messages)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "vectorstore.as_retriever(search_kwargs={\"k\": k})",
+          "choices": [
+            "vectorstore.as_retriever(search_kwargs={\"k\": k})",
+            "vectorstore.similarity_search(search_kwargs={\"k\": k})",
+            "vectorstore.from_documents(search_kwargs={\"k\": k})",
+            "vectorstore.invoke(search_kwargs={\"k\": k})"
+          ]
+        }
+      ],
+      "solution": "from langchain_core.prompts import ChatPromptTemplate\n# 기본 설정으로 Vector Store 생성 (비교 실험용)\nvectorstore_base, _ = create_vectorstore_with_chunking(\n    documents=all_documents,\n    chunk_size=300,\n    chunk_overlap=50,\n    collection_name=\"yes24_base\"\n)\n\n# RAG 프롬프트\nrag_prompt = ChatPromptTemplate.from_messages([\n    (\"system\", \"\"\"당신은 온라인 서점 'Yes24'의 고객 서비스 상담원입니다.\n다음 검색된 자료를 참고하여 고객의 질문에 정확하고 친절하게 답변해주세요.\n\n[검색된 자료]\n{context}\n\n답변 규칙:\n1. 검색된 자료를 기반으로 답변하세요\n2. 자료에 없는 내용은 추측하지 마세요\"\"\"),\n    (\"human\", \"{question}\")\n])\n\ndef format_docs(docs):\n    return \"\\n\\n\".join([doc.page_content for doc in docs])\n\ndef run_rag(retriever, question):\n    # 관련 문서 검색\n    docs = retriever.invoke(question)\n    context = format_docs(docs)\n    \n    # 프롬프트 생성 후 LLM 직접 호출\n    messages = rag_prompt.format_messages(context=context, question=question)\n    response = llm.invoke(messages)\n    \n    return response.content\n\ndef create_rag_components(vectorstore, k):\n    retriever = vectorstore.as_retriever(search_kwargs={\"k\": k})\n    return retriever\n\nprint(\"✅ 함수 정의 완료\")",
+      "explanation": "빈칸 1\n정답: `retriever.invoke(question)`\n역할: 질문을 retriever에 전달해 답변 근거가 될 관련 Document 목록을 검색합니다.\n판단 근거: 반환값이 context나 비교 결과로 사용되므로 문서 검색 객체의 invoke가 필요합니다.\n\n빈칸 2\n정답: `llm.invoke(messages)`\n역할: 검색 문맥과 질문으로 만든 메시지를 LLM에 전달해 답변을 생성합니다.\n판단 근거: 앞에서 messages가 구성되고 반환 메시지가 최종 답변으로 사용됩니다.\n\n빈칸 3\n정답: `vectorstore.as_retriever(search_kwargs={\"k\": k})`\n역할: Vector Store를 상위 k개 문서를 반환하는 retriever로 변환합니다.\n판단 근거: 뒤에서 `.invoke(query)`를 호출하므로 search_kwargs가 설정된 검색 인터페이스가 필요합니다.\n\n완성하면 'Vector Store와 Retriever 구성' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-014",
+      "type": "api"
+    },
+    {
+      "unit": "4-1",
+      "title": "청킹 기반 Vector Store 생성 함수 구현",
+      "content": "이 코드는 4-1 실습의 전체 과정 중 '청킹 기반 Vector Store 생성 함수 구현' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 청킹 기반 Vector Store 생성 함수 구현의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "from langchain_text_splitters import RecursiveCharacterTextSplitter\nfrom langchain_community.vectorstores import Chroma\nimport tiktoken\n\ndef create_vectorstore_with_chunking(documents, chunk_size, chunk_overlap, collection_name):\n    # 청킹\n    text_splitter = RecursiveCharacterTextSplitter(\n        chunk_size=chunk_size,\n        chunk_overlap=chunk_overlap,\n        length_function=len,\n        separators=[\"\\n\\n\", \"\\n\", \".\", \" \", \"\"]\n    )\n    chunked_docs = ____[1]\n    \n    # 임베딩 모델의 토큰 제한 안전장치 (text-embedding-3-small: 최대 8,191 토큰)\n    MAX_TOKENS = 8000\n    enc = tiktoken.encoding_for_model(\"text-embedding-3-small\")\n    for doc in chunked_docs:\n        tokens = ____[2]\n        if len(tokens) > MAX_TOKENS:\n            doc.page_content = ____[3]\n    \n    # Vector Store 생성\n    vectorstore = Chroma.from_documents(\n        documents=chunked_docs,\n        embedding=embeddings,\n        collection_name=collection_name\n    )\n    \n    return vectorstore, chunked_docs\n\nprint(\"✅ 함수 정의 완료\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "text_splitter.split_documents(documents)",
+          "choices": [
+            "text_splitter.split_documents(documents)",
+            "text_splitter.split_text(documents)",
+            "text_splitter.create_documents(documents)",
+            "text_splitter.invoke(documents)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "enc.encode(doc.page_content)",
+          "choices": [
+            "enc.encode(doc.page_content)",
+            "text_splitter.split_documents(documents)",
+            "enc.decode(tokens[:MAX_TOKENS])",
+            "enc.encode"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "enc.decode(tokens[:MAX_TOKENS])",
+          "choices": [
+            "enc.decode(tokens[:MAX_TOKENS])",
+            "text_splitter.split_documents(documents)",
+            "enc.encode(doc.page_content)",
+            "enc.decode"
+          ]
+        }
+      ],
+      "solution": "from langchain_text_splitters import RecursiveCharacterTextSplitter\nfrom langchain_community.vectorstores import Chroma\nimport tiktoken\n\ndef create_vectorstore_with_chunking(documents, chunk_size, chunk_overlap, collection_name):\n    # 청킹\n    text_splitter = RecursiveCharacterTextSplitter(\n        chunk_size=chunk_size,\n        chunk_overlap=chunk_overlap,\n        length_function=len,\n        separators=[\"\\n\\n\", \"\\n\", \".\", \" \", \"\"]\n    )\n    chunked_docs = text_splitter.split_documents(documents)\n    \n    # 임베딩 모델의 토큰 제한 안전장치 (text-embedding-3-small: 최대 8,191 토큰)\n    MAX_TOKENS = 8000\n    enc = tiktoken.encoding_for_model(\"text-embedding-3-small\")\n    for doc in chunked_docs:\n        tokens = enc.encode(doc.page_content)\n        if len(tokens) > MAX_TOKENS:\n            doc.page_content = enc.decode(tokens[:MAX_TOKENS])\n    \n    # Vector Store 생성\n    vectorstore = Chroma.from_documents(\n        documents=chunked_docs,\n        embedding=embeddings,\n        collection_name=collection_name\n    )\n    \n    return vectorstore, chunked_docs\n\nprint(\"✅ 함수 정의 완료\")",
+      "explanation": "빈칸 1\n정답: `text_splitter.split_documents(documents)`\n역할: 원본 Document 목록을 설정된 크기와 overlap의 작은 Document 청크로 나눕니다.\n판단 근거: 뒤의 루프가 각 `doc.page_content`를 처리하므로 metadata를 유지한 Document 목록이 필요합니다.\n\n빈칸 2\n정답: `enc.encode(doc.page_content)`\n역할: 현재 청크 본문을 token ID 배열로 변환해 임베딩 입력 길이를 검사합니다.\n판단 근거: 다음 줄에서 tokens를 MAX_TOKENS까지 자르므로 먼저 문자열을 token sequence로 encode해야 합니다.\n\n빈칸 3\n정답: `enc.decode(tokens[:MAX_TOKENS])`\n역할: 최대 길이까지 자른 token ID를 다시 청크 본문 문자열로 복원합니다.\n판단 근거: Vector Store에는 텍스트 Document를 넣으므로 잘린 token 배열을 decode해야 합니다.\n\n완성하면 '청킹 기반 Vector Store 생성 함수 구현' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-019",
+      "type": "api"
+    },
+    {
+      "unit": "4-1",
+      "title": "청킹 기반 Vector Store 생성 함수 구현",
+      "content": "이 코드는 4-1 실습의 전체 과정 중 '청킹 기반 Vector Store 생성 함수 구현' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 청킹 기반 Vector Store 생성 함수 구현의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "def create_vectorstore_with_chunking(documents, chunk_size, chunk_overlap, collection_name):\n    # 청킹\n    text_splitter = RecursiveCharacterTextSplitter(\n        chunk_size=chunk_size,\n        chunk_overlap=chunk_overlap,\n        length_function=len,\n        separators=[\"\\n\\n\", \"\\n\", \".\", \" \", \"\"]\n    )\n    chunked_docs = ____[1]\n\n    # 임베딩 모델의 토큰 제한 안전장치 (text-embedding-3-small: 최대 8,191 토큰)\n    MAX_TOKENS = 8000\n    enc = tiktoken.encoding_for_model(\"text-embedding-3-small\")\n    for doc in chunked_docs:\n        tokens = ____[2]\n        if len(tokens) > MAX_TOKENS:\n            doc.page_content = ____[3]\n\n    # Vector Store 생성\n    vectorstore = Chroma.from_documents(\n        documents=chunked_docs,\n        embedding=embeddings,\n        collection_name=collection_name\n    )\n\n    return vectorstore, chunked_docs",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "text_splitter.split_documents(documents)",
+          "choices": [
+            "text_splitter.split_documents(documents)",
+            "text_splitter.split_text(documents)",
+            "text_splitter.create_documents(documents)",
+            "text_splitter.invoke(documents)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "enc.encode(doc.page_content)",
+          "choices": [
+            "enc.encode(doc.page_content)",
+            "text_splitter.split_documents(documents)",
+            "enc.decode(tokens[:MAX_TOKENS])",
+            "enc.encode"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "enc.decode(tokens[:MAX_TOKENS])",
+          "choices": [
+            "enc.decode(tokens[:MAX_TOKENS])",
+            "text_splitter.split_documents(documents)",
+            "enc.encode(doc.page_content)",
+            "enc.decode"
+          ]
+        }
+      ],
+      "solution": "def create_vectorstore_with_chunking(documents, chunk_size, chunk_overlap, collection_name):\n    # 청킹\n    text_splitter = RecursiveCharacterTextSplitter(\n        chunk_size=chunk_size,\n        chunk_overlap=chunk_overlap,\n        length_function=len,\n        separators=[\"\\n\\n\", \"\\n\", \".\", \" \", \"\"]\n    )\n    chunked_docs = text_splitter.split_documents(documents)\n\n    # 임베딩 모델의 토큰 제한 안전장치 (text-embedding-3-small: 최대 8,191 토큰)\n    MAX_TOKENS = 8000\n    enc = tiktoken.encoding_for_model(\"text-embedding-3-small\")\n    for doc in chunked_docs:\n        tokens = enc.encode(doc.page_content)\n        if len(tokens) > MAX_TOKENS:\n            doc.page_content = enc.decode(tokens[:MAX_TOKENS])\n\n    # Vector Store 생성\n    vectorstore = Chroma.from_documents(\n        documents=chunked_docs,\n        embedding=embeddings,\n        collection_name=collection_name\n    )\n\n    return vectorstore, chunked_docs",
+      "explanation": "빈칸 1\n정답: `text_splitter.split_documents(documents)`\n역할: 원본 Document 목록을 설정된 크기와 overlap의 작은 Document 청크로 나눕니다.\n판단 근거: 뒤의 루프가 각 `doc.page_content`를 처리하므로 metadata를 유지한 Document 목록이 필요합니다.\n\n빈칸 2\n정답: `enc.encode(doc.page_content)`\n역할: 현재 청크 본문을 token ID 배열로 변환해 임베딩 입력 길이를 검사합니다.\n판단 근거: 다음 줄에서 tokens를 MAX_TOKENS까지 자르므로 먼저 문자열을 token sequence로 encode해야 합니다.\n\n빈칸 3\n정답: `enc.decode(tokens[:MAX_TOKENS])`\n역할: 최대 길이까지 자른 token ID를 다시 청크 본문 문자열로 복원합니다.\n판단 근거: Vector Store에는 텍스트 Document를 넣으므로 잘린 token 배열을 decode해야 합니다.\n\n완성하면 '청킹 기반 Vector Store 생성 함수 구현' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-024",
+      "type": "api"
+    },
+    {
+      "unit": "4-1",
+      "title": "Embedding 입력의 토큰 길이 제한 처리",
+      "content": "이 코드는 4-1 실습의 전체 과정 중 'Embedding 입력의 토큰 길이 제한 처리' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 Embedding 입력의 토큰 길이 제한 처리의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "from langchain_community.vectorstores import Chroma\nimport tiktoken\n\n# 임베딩 모델의 토큰 제한 처리 (text-embedding-3-small: 최대 8,191 토큰)\n# PDF 전체 페이지는 토큰 제한을 초과할 수 있으므로 사전에 잘라줌\nMAX_TOKENS = 8000  # 안전 여유분 확보\nenc = tiktoken.encoding_for_model(\"text-embedding-3-small\")\n\ntruncated_count = 0\nfor doc in all_documents:\n    tokens = ____[1]\n    if len(tokens) > MAX_TOKENS:\n        doc.page_content = ____[2]\n        truncated_count += 1\n\nif truncated_count > 0:\n    print(f\"⚠️ {truncated_count}개 문서가 토큰 제한 초과로 잘림 (최대 {MAX_TOKENS} 토큰)\")\n\n# ========== 여기에 코드를 작성하세요 ==========\n# Vector Store 생성 (문서 단위 - 페이지별)\n# 힌트: Chroma.from_documents(documents=..., embedding=..., collection_name=...)\n\nvectorstore = Chroma.from_documents(\n    documents= all_documents,\n    embedding=embeddings,\n    collection_name=\"yes24_docs_page\"\n)\n\n# ============================================\n\nif vectorstore:\n    print(f\"✅ Vector Store 생성 완료\")\n    print(f\"📊 저장된 문서 수: {vectorstore._collection.count()}개\")\nelse:\n    print(\"⚠️ vectorstore를 완성해주세요!\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "enc.encode(doc.page_content)",
+          "choices": [
+            "enc.encode(doc.page_content)",
+            "enc.decode(tokens[:MAX_TOKENS])",
+            "enc.encode",
+            "enc.encode()"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "enc.decode(tokens[:MAX_TOKENS])",
+          "choices": [
+            "enc.decode(tokens[:MAX_TOKENS])",
+            "enc.encode(doc.page_content)",
+            "enc.decode",
+            "enc.decode()"
+          ]
+        }
+      ],
+      "solution": "from langchain_community.vectorstores import Chroma\nimport tiktoken\n\n# 임베딩 모델의 토큰 제한 처리 (text-embedding-3-small: 최대 8,191 토큰)\n# PDF 전체 페이지는 토큰 제한을 초과할 수 있으므로 사전에 잘라줌\nMAX_TOKENS = 8000  # 안전 여유분 확보\nenc = tiktoken.encoding_for_model(\"text-embedding-3-small\")\n\ntruncated_count = 0\nfor doc in all_documents:\n    tokens = enc.encode(doc.page_content)\n    if len(tokens) > MAX_TOKENS:\n        doc.page_content = enc.decode(tokens[:MAX_TOKENS])\n        truncated_count += 1\n\nif truncated_count > 0:\n    print(f\"⚠️ {truncated_count}개 문서가 토큰 제한 초과로 잘림 (최대 {MAX_TOKENS} 토큰)\")\n\n# ========== 여기에 코드를 작성하세요 ==========\n# Vector Store 생성 (문서 단위 - 페이지별)\n# 힌트: Chroma.from_documents(documents=..., embedding=..., collection_name=...)\n\nvectorstore = Chroma.from_documents(\n    documents= all_documents,\n    embedding=embeddings,\n    collection_name=\"yes24_docs_page\"\n)\n\n# ============================================\n\nif vectorstore:\n    print(f\"✅ Vector Store 생성 완료\")\n    print(f\"📊 저장된 문서 수: {vectorstore._collection.count()}개\")\nelse:\n    print(\"⚠️ vectorstore를 완성해주세요!\")",
+      "explanation": "빈칸 1\n정답: `enc.encode(doc.page_content)`\n역할: 현재 청크 본문을 token ID 배열로 변환해 임베딩 입력 길이를 검사합니다.\n판단 근거: 다음 줄에서 tokens를 MAX_TOKENS까지 자르므로 먼저 문자열을 token sequence로 encode해야 합니다.\n\n빈칸 2\n정답: `enc.decode(tokens[:MAX_TOKENS])`\n역할: 최대 길이까지 자른 token ID를 다시 청크 본문 문자열로 복원합니다.\n판단 근거: Vector Store에는 텍스트 Document를 넣으므로 잘린 token 배열을 decode해야 합니다.\n\n완성하면 'Embedding 입력의 토큰 길이 제한 처리' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-031",
+      "type": "api"
+    }
+  ]
+}

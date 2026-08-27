@@ -1,0 +1,79 @@
+{
+  "problems": [
+    {
+      "id": "api-generated-036", "unit": "1-1", "type": "api", "title": "데이터 요약과 상관 특성 찾기",
+      "content": "Wine 데이터 EDA 전체 과정 중 클래스별 alcohol 평균과 alcohol에 가장 강한 상관을 보이는 다른 특성을 찾습니다. 자기상관을 제외하기 위해 정렬 결과의 두 번째 인덱스를 선택합니다.",
+      "requirements": ["클래스별 평균을 계산한다.", "수치형 상관행렬에서 alcohol 열을 선택한다.", "자기상관 다음 특성명을 얻는다."],
+      "skeleton": "class_means = df.____[1](\"quality\")[\"alcohol\"].____[2]()\n\ncorr = df.____[3](numeric_only=True)\ntop_feature = corr[\"alcohol\"].____[4](ascending=False).____[5][1]\nprint(class_means, top_feature)",
+      "blanks": [
+        { "id": "group-by-quality", "answer": "groupby", "choices": ["groupby", "merge", "pivot", "drop"] },
+        { "id": "group-mean", "answer": "mean", "choices": ["mean", "count", "sum", "std"] },
+        { "id": "correlation", "answer": "corr", "choices": ["corr", "describe", "cov", "value_counts"] },
+        { "id": "sort-correlation", "answer": "sort_values", "choices": ["sort_values", "sort_index", "rank", "nlargest"] },
+        { "id": "correlation-index", "answer": "index", "choices": ["index", "columns", "values", "shape"] }
+      ],
+      "solution": "class_means = df.groupby(\"quality\")[\"alcohol\"].mean()\n\ncorr = df.corr(numeric_only=True)\ntop_feature = corr[\"alcohol\"].sort_values(ascending=False).index[1]\nprint(class_means, top_feature)",
+      "explanation": "빈칸 1\n정답: `groupby`\n역할: quality 값별로 행을 그룹화합니다.\n판단 근거: 다음 alcohol 열의 클래스별 집계를 계산해야 합니다.\n\n빈칸 2\n정답: `mean`\n역할: 각 클래스의 alcohol 평균을 계산합니다.\n판단 근거: 문제에서 클래스별 평균을 요구합니다.\n\n빈칸 3\n정답: `corr`\n역할: 수치형 열 사이의 피어슨 상관행렬을 만듭니다.\n판단 근거: alcohol과 다른 특성의 선형 상관을 비교해야 합니다.\n\n빈칸 4\n정답: `sort_values`\n역할: alcohol 상관계수를 값 기준 내림차순으로 정렬합니다.\n판단 근거: 가장 큰 상관 특성을 앞쪽에서 선택하기 위한 단계입니다.\n\n빈칸 5\n정답: `index`\n역할: 정렬된 Series의 특성명 인덱스를 가져옵니다.\n판단 근거: 값이 아니라 두 번째 특성 이름을 결과로 사용합니다.\n\n완성하면 '데이터 요약과 상관 특성 찾기' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.", "example": ""
+    },
+    {
+      "id": "api-generated-037", "unit": "1-1", "type": "api", "title": "클래스 비율을 유지한 데이터 분할",
+      "content": "분류 모델 전처리 전체 과정 중 특성과 타깃을 분리하고 클래스 비율이 train/test에 유지되도록 데이터를 나눕니다. 재현 가능한 평가를 위해 난수 시드도 고정합니다.",
+      "requirements": ["타깃 열을 특성에서 제외한다.", "test 비율을 20%로 둔다.", "stratify에 타깃을 전달한다."],
+      "skeleton": "from sklearn.model_selection import train_test_split\n\nX = df.____[1](columns=[\"quality\"])\ny = df[\"quality\"]\nX_train, X_test, y_train, y_test = ____[2](\n    X, y, test_size=____[3], random_state=____[4], stratify=____[5]\n)\nprint(X_train.shape, X_test.shape)",
+      "blanks": [
+        { "id": "drop-target", "answer": "drop", "choices": ["drop", "pop", "filter", "assign"] },
+        { "id": "split-api", "answer": "train_test_split", "choices": ["train_test_split", "cross_val_score", "KFold", "resample"] },
+        { "id": "test-size", "answer": "0.2", "choices": ["0.2", "0.5", "1", "20"] },
+        { "id": "random-state", "answer": "42", "choices": ["42", "None", "0.2", "178"] },
+        { "id": "stratify-target", "answer": "y", "choices": ["y", "X", "X_train", "None"] }
+      ],
+      "solution": "from sklearn.model_selection import train_test_split\n\nX = df.drop(columns=[\"quality\"])\ny = df[\"quality\"]\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y\n)\nprint(X_train.shape, X_test.shape)",
+      "explanation": "빈칸 1\n정답: `drop`\n역할: quality 타깃 열을 입력 특성에서 제외합니다.\n판단 근거: 지도학습 입력 X와 정답 y를 분리해야 합니다.\n\n빈칸 2\n정답: `train_test_split`\n역할: X와 y를 대응 관계를 유지한 채 학습·테스트 세트로 나눕니다.\n판단 근거: 함수가 네 배열을 반환하는 호출 문맥입니다.\n\n빈칸 3\n정답: `0.2`\n역할: 전체 데이터의 20%를 test 세트로 지정합니다.\n판단 근거: test_size는 0과 1 사이 비율을 받습니다.\n\n빈칸 4\n정답: `42`\n역할: 분할의 난수 시드를 고정합니다.\n판단 근거: 반복 실행에서도 같은 분할을 재현해야 합니다.\n\n빈칸 5\n정답: `y`\n역할: 타깃 클래스 비율을 기준으로 층화 분할합니다.\n판단 근거: 분류 클래스 분포를 train과 test에 유지해야 합니다.\n\n완성하면 '클래스 비율을 유지한 데이터 분할' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.", "example": ""
+    },
+    {
+      "id": "api-generated-038", "unit": "1-1", "type": "api", "title": "데이터 누수 없는 표준화",
+      "content": "모델 전처리 전체 과정 중 train 데이터의 통계량으로 StandardScaler를 학습하고 같은 스케일러로 test 데이터를 변환하여 데이터 누수를 방지합니다.",
+      "requirements": ["StandardScaler를 생성한다.", "train에는 fit과 transform을 함께 수행한다.", "test에는 transform만 수행한다."],
+      "skeleton": "from sklearn.preprocessing import StandardScaler\n\nscaler = ____[1]()\nX_train_scaled = scaler.____[2](X_train)\nX_test_scaled = scaler.____[3](X_test)\n\ntrain_mean = X_train_scaled.____[4](axis=0)\ntrain_std = X_train_scaled.____[5](axis=0)",
+      "blanks": [
+        { "id": "scaler-class", "answer": "StandardScaler", "choices": ["StandardScaler", "MinMaxScaler", "SimpleImputer", "PCA"] },
+        { "id": "fit-train", "answer": "fit_transform", "choices": ["fit_transform", "transform", "fit", "predict"] },
+        { "id": "transform-test", "answer": "transform", "choices": ["transform", "fit_transform", "inverse_transform", "predict"] },
+        { "id": "scaled-mean", "answer": "mean", "choices": ["mean", "median", "min", "sum"] },
+        { "id": "scaled-std", "answer": "std", "choices": ["std", "var", "max", "count"] }
+      ],
+      "solution": "from sklearn.preprocessing import StandardScaler\n\nscaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)\n\ntrain_mean = X_train_scaled.mean(axis=0)\ntrain_std = X_train_scaled.std(axis=0)",
+      "explanation": "빈칸 1\n정답: `StandardScaler`\n역할: 특성별 평균과 표준편차를 사용하는 표준화 객체를 만듭니다.\n판단 근거: 뒤에서 train에 맞춘 변환을 test에도 재사용합니다.\n\n빈칸 2\n정답: `fit_transform`\n역할: train 통계량을 학습하면서 train 값을 변환합니다.\n판단 근거: 스케일러 학습은 train 데이터에서만 일어나야 합니다.\n\n빈칸 3\n정답: `transform`\n역할: train에서 학습한 통계량으로 test를 변환합니다.\n판단 근거: test에 다시 fit하면 데이터 누수가 발생합니다.\n\n빈칸 4\n정답: `mean`\n역할: 표준화된 train 특성의 평균을 확인합니다.\n판단 근거: StandardScaler 결과의 평균은 특성별로 0에 가까워야 합니다.\n\n빈칸 5\n정답: `std`\n역할: 표준화된 train 특성의 표준편차를 확인합니다.\n판단 근거: StandardScaler 결과의 표준편차는 특성별로 1에 가까워야 합니다.\n\n완성하면 '데이터 누수 없는 표준화' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.", "example": ""
+    },
+    {
+      "id": "api-generated-039", "unit": "1-1", "type": "api", "title": "로지스틱 회귀 학습과 분류 평가",
+      "content": "Wine 다중 분류 전체 과정 중 표준화된 train 데이터로 로지스틱 회귀를 학습하고 test 예측을 만든 뒤 정확도와 혼동 행렬을 계산합니다.",
+      "requirements": ["LogisticRegression을 학습한다.", "test 데이터에 대한 클래스를 예측한다.", "분류 지표를 계산한다."],
+      "skeleton": "from sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import accuracy_score, confusion_matrix\n\nmodel = ____[1](max_iter=1000)\nmodel.____[2](X_train_scaled, y_train)\ny_pred = model.____[3](X_test_scaled)\naccuracy = ____[4](y_test, y_pred)\nmatrix = ____[5](y_test, y_pred)\nprint(accuracy, matrix)",
+      "blanks": [
+        { "id": "classifier", "answer": "LogisticRegression", "choices": ["LogisticRegression", "LinearRegression", "KMeans", "PCA"] },
+        { "id": "classifier-fit", "answer": "fit", "choices": ["fit", "transform", "score_samples", "compile"] },
+        { "id": "classifier-predict", "answer": "predict", "choices": ["predict", "transform", "fit_predict", "inverse_transform"] },
+        { "id": "accuracy-metric", "answer": "accuracy_score", "choices": ["accuracy_score", "mean_squared_error", "r2_score", "silhouette_score"] },
+        { "id": "confusion-metric", "answer": "confusion_matrix", "choices": ["confusion_matrix", "classification_report", "roc_curve", "cross_val_score"] }
+      ],
+      "solution": "from sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import accuracy_score, confusion_matrix\n\nmodel = LogisticRegression(max_iter=1000)\nmodel.fit(X_train_scaled, y_train)\ny_pred = model.predict(X_test_scaled)\naccuracy = accuracy_score(y_test, y_pred)\nmatrix = confusion_matrix(y_test, y_pred)\nprint(accuracy, matrix)",
+      "explanation": "빈칸 1\n정답: `LogisticRegression`\n역할: 클래스 확률을 기반으로 분류하는 모델을 생성합니다.\n판단 근거: 타깃이 여러 범주인 Wine 분류 문제입니다.\n\n빈칸 2\n정답: `fit`\n역할: train 특성과 레이블로 모델 파라미터를 학습합니다.\n판단 근거: 예측 전에 지도학습 모델을 훈련해야 합니다.\n\n빈칸 3\n정답: `predict`\n역할: test 샘플별 예측 클래스를 반환합니다.\n판단 근거: 뒤의 분류 지표가 클래스 레이블 배열을 요구합니다.\n\n빈칸 4\n정답: `accuracy_score`\n역할: 전체 예측 중 정답 비율을 계산합니다.\n판단 근거: y_test와 y_pred를 비교하는 분류 정확도 함수입니다.\n\n빈칸 5\n정답: `confusion_matrix`\n역할: 실제·예측 클래스 조합별 개수를 행렬로 계산합니다.\n판단 근거: 클래스별 오분류 패턴을 확인해야 합니다.\n\n완성하면 '로지스틱 회귀 학습과 분류 평가' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.", "example": ""
+    },
+    {
+      "id": "api-generated-040", "unit": "1-1", "type": "api", "title": "선형 회귀와 회귀 지표",
+      "content": "주택 가격 회귀 전체 과정 중 선형 회귀 모델을 학습해 연속값을 예측하고 MAE, RMSE, R²로 결과를 평가합니다.",
+      "requirements": ["LinearRegression을 학습한다.", "연속형 예측값을 생성한다.", "세 가지 회귀 지표를 계산한다."],
+      "skeleton": "from sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score\n\nmodel = ____[1]()\nmodel.____[2](X_train_scaled, y_train)\ny_pred = model.____[3](X_test_scaled)\nmae = ____[4](y_test, y_pred)\nrmse = ____[5](y_test, y_pred) ** 0.5\nr2 = r2_score(y_test, y_pred)",
+      "blanks": [
+        { "id": "regressor", "answer": "LinearRegression", "choices": ["LinearRegression", "LogisticRegression", "KMeans", "StandardScaler"] },
+        { "id": "regressor-fit", "answer": "fit", "choices": ["fit", "transform", "compile", "partial_fit_transform"] },
+        { "id": "regressor-predict", "answer": "predict", "choices": ["predict", "transform", "score_samples", "fit_predict"] },
+        { "id": "mae-metric", "answer": "mean_absolute_error", "choices": ["mean_absolute_error", "accuracy_score", "confusion_matrix", "log_loss"] },
+        { "id": "mse-metric", "answer": "mean_squared_error", "choices": ["mean_squared_error", "mean_absolute_error", "r2_score", "classification_report"] }
+      ],
+      "solution": "from sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score\n\nmodel = LinearRegression()\nmodel.fit(X_train_scaled, y_train)\ny_pred = model.predict(X_test_scaled)\nmae = mean_absolute_error(y_test, y_pred)\nrmse = mean_squared_error(y_test, y_pred) ** 0.5\nr2 = r2_score(y_test, y_pred)",
+      "explanation": "빈칸 1\n정답: `LinearRegression`\n역할: 입력 특성의 선형 결합으로 연속형 타깃을 예측하는 모델을 만듭니다.\n판단 근거: 주택 가격은 범주가 아닌 연속값입니다.\n\n빈칸 2\n정답: `fit`\n역할: train 데이터로 회귀 계수와 절편을 학습합니다.\n판단 근거: 예측 전에 모델 파라미터를 추정해야 합니다.\n\n빈칸 3\n정답: `predict`\n역할: test 특성에 대한 연속형 예측값을 만듭니다.\n판단 근거: 회귀 지표는 실제값과 예측값 배열을 비교합니다.\n\n빈칸 4\n정답: `mean_absolute_error`\n역할: 예측 오차 절대값의 평균을 계산합니다.\n판단 근거: MAE는 원래 타깃 단위로 평균 오차를 보여 줍니다.\n\n빈칸 5\n정답: `mean_squared_error`\n역할: 제곱 오차의 평균을 계산합니다.\n판단 근거: 결과에 제곱근을 적용해 RMSE를 구하는 문맥입니다.\n\n완성하면 '선형 회귀와 회귀 지표' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.", "example": ""
+    }
+  ]
+}

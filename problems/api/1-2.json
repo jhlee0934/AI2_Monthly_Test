@@ -1,0 +1,366 @@
+{
+  "problems": [
+    {
+      "unit": "1-2",
+      "title": "학습 손실 함수 구성",
+      "content": "이 코드는 1-2 실습의 전체 과정 중 '학습 손실 함수 구성' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 학습 손실 함수 구성의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "from torch import nn\nfrom torch import optim\n\n# 더미 데이터 준비: y = 2x + 1\nX = torch.linspace(0, 10, 100).unsqueeze(1)  # shape: (100, 1)\ny_true = 2 * X + 1 + 0.5 * torch.randn_like(X)  # 약간의 노이즈 추가\n\n# 1. Parameter 선언\n# 이렇게 하면 weight, bias가 자동으로 준비됩니다.\n# 우리는 1차원 변수 x로 1차원 변수 y를 예측하기 때문에 아래와 같이 선언하면 됩니다.\nmodel = ____[1]  # 입력 1차원, 출력 1차원\n\n# 2. 손실 함수 정의\n# torch.nn에서 불러올 수 있습니다.\ncriterion = ____[2]\n\n# 3. Parameter 업데이트\n# 현재 사용하고 있는 업데이트 방식은 Mini-batch Gradient Descent입니다.\n# 정확한 정의는 batch_size=1일때 Stochastic Gradient Descent, 줄여서 SGD라고 부르는데\n# PyTorch에서는 가장 기본적인 미분 기반의 업데이트 방식을 SGD를 선언하여 진행할 수 있습니다.\n# 같은 optim.SGD라도 배치 구성에 따라 Full-batch/Mini-batch/SGD 모두로 동작할 수 있습니다.\n# 선언할 때는 업데이트 대상인 매개변수와 학습률을 입력해야합니다.\noptimizer = ____[3]\n\n# 4. 학습 루프\nepochs = 200\nfor epoch in range(epochs):\n    # 기울기 초기화: 위에서 진행한 weight.grad.zero_()를 자동으로 수행해줍니다.\n    # 수행대상은 선언할 때 등록한 모델의 매개변수입니다.\n    optimizer.zero_grad()\n\n    # 예측값 만들어주기: model(X)로 가능합니다\n    # 이에 대한 자세한 작동방식은 후에 살펴보겠습니다.\n    y_pred = model(X)\n\n    # Loss 계산도 마찬가지로 위에서 선언한 손실함수를 활용합니다.\n    loss = criterion(y_pred, y_true)\n\n    # Loss를 계산하고 미분을 계산해줍니다.\n    ____[4]\n\n    # 매개변수를 업데이트해줍니다.\n    # 위에서 진행한 weight -= lr * weight.grad 부분입니다.\n    # 모든 매개변수가 optimizer 안에 등록되어 있기 때문에\n    # 매개변수 별로 업데이트 코드를 짜주지 않아도 됩니다.\n    ____[5]\n\n    if (epoch+1) % 20 == 0:\n        print(f\"Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}\")\n\n# 학습 결과 출력\nprint(\"\\n학습된 가중치와 편향:\")\nfor name, param in model.named_parameters():\n    print(f\"{name}: {param.data}\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "nn.Linear(in_features=1, out_features=1)",
+          "choices": [
+            "nn.Linear(in_features=1, out_features=1)",
+            "nn.MSELoss()",
+            "optim.SGD(model.parameters(), lr=0.01)",
+            "loss.backward()"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "nn.MSELoss()",
+          "choices": [
+            "nn.MSELoss()",
+            "nn.Linear(in_features=1, out_features=1)",
+            "optim.SGD(model.parameters(), lr=0.01)",
+            "loss.backward()"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "optim.SGD(model.parameters(), lr=0.01)",
+          "choices": [
+            "optim.SGD(model.parameters(), lr=0.01)",
+            "nn.Linear(in_features=1, out_features=1)",
+            "nn.MSELoss()",
+            "loss.backward()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "loss.backward()",
+          "choices": [
+            "loss.backward()",
+            "loss.item()",
+            "loss.detach()",
+            "optimizer.backward()"
+          ]
+        },
+        {
+          "id": "blank-5",
+          "answer": "optimizer.step()",
+          "choices": [
+            "optimizer.step()",
+            "optimizer.zero_grad()",
+            "loss.backward()",
+            "scheduler.step()"
+          ]
+        }
+      ],
+      "solution": "from torch import nn\nfrom torch import optim\n\n# 더미 데이터 준비: y = 2x + 1\nX = torch.linspace(0, 10, 100).unsqueeze(1)  # shape: (100, 1)\ny_true = 2 * X + 1 + 0.5 * torch.randn_like(X)  # 약간의 노이즈 추가\n\n# 1. Parameter 선언\n# 이렇게 하면 weight, bias가 자동으로 준비됩니다.\n# 우리는 1차원 변수 x로 1차원 변수 y를 예측하기 때문에 아래와 같이 선언하면 됩니다.\nmodel = nn.Linear(in_features=1, out_features=1)  # 입력 1차원, 출력 1차원\n\n# 2. 손실 함수 정의\n# torch.nn에서 불러올 수 있습니다.\ncriterion = nn.MSELoss()\n\n# 3. Parameter 업데이트\n# 현재 사용하고 있는 업데이트 방식은 Mini-batch Gradient Descent입니다.\n# 정확한 정의는 batch_size=1일때 Stochastic Gradient Descent, 줄여서 SGD라고 부르는데\n# PyTorch에서는 가장 기본적인 미분 기반의 업데이트 방식을 SGD를 선언하여 진행할 수 있습니다.\n# 같은 optim.SGD라도 배치 구성에 따라 Full-batch/Mini-batch/SGD 모두로 동작할 수 있습니다.\n# 선언할 때는 업데이트 대상인 매개변수와 학습률을 입력해야합니다.\noptimizer = optim.SGD(model.parameters(), lr=0.01)\n\n# 4. 학습 루프\nepochs = 200\nfor epoch in range(epochs):\n    # 기울기 초기화: 위에서 진행한 weight.grad.zero_()를 자동으로 수행해줍니다.\n    # 수행대상은 선언할 때 등록한 모델의 매개변수입니다.\n    optimizer.zero_grad()\n\n    # 예측값 만들어주기: model(X)로 가능합니다\n    # 이에 대한 자세한 작동방식은 후에 살펴보겠습니다.\n    y_pred = model(X)\n\n    # Loss 계산도 마찬가지로 위에서 선언한 손실함수를 활용합니다.\n    loss = criterion(y_pred, y_true)\n\n    # Loss를 계산하고 미분을 계산해줍니다.\n    loss.backward()\n\n    # 매개변수를 업데이트해줍니다.\n    # 위에서 진행한 weight -= lr * weight.grad 부분입니다.\n    # 모든 매개변수가 optimizer 안에 등록되어 있기 때문에\n    # 매개변수 별로 업데이트 코드를 짜주지 않아도 됩니다.\n    optimizer.step()\n\n    if (epoch+1) % 20 == 0:\n        print(f\"Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}\")\n\n# 학습 결과 출력\nprint(\"\\n학습된 가중치와 편향:\")\nfor name, param in model.named_parameters():\n    print(f\"{name}: {param.data}\")",
+      "explanation": "빈칸 1\n정답: `nn.Linear(in_features=1, out_features=1)`\n역할: 입력값 하나를 예측값 하나로 변환하는 선형 회귀 계층을 만듭니다.\n판단 근거: 입력과 목표가 모두 1차원이고 뒤에서 MSE를 계산하므로 출력 차원도 1이어야 합니다.\n\n빈칸 2\n정답: `nn.MSELoss()`\n역할: 회귀 예측과 정답 사이의 평균제곱오차를 손실로 정의합니다.\n판단 근거: 단일 연속값을 예측하고 이 손실에서 `backward()`를 호출하므로 MSELoss가 맞습니다.\n\n빈칸 3\n정답: `optim.SGD(model.parameters(), lr=0.01)`\n역할: 모델 전체 파라미터를 SGD로 갱신할 optimizer를 만듭니다.\n판단 근거: 뒤에서 같은 객체의 `zero_grad()`와 `step()`을 호출하므로 `model.parameters()`를 받은 optimizer가 필요합니다.\n\n빈칸 4\n정답: `loss.backward()`\n역할: 현재 손실에서 모델 파라미터까지 역전파해 기울기를 계산합니다.\n판단 근거: 바로 뒤의 `optimizer.step()`이 `.grad` 값을 사용하므로 먼저 backward가 실행되어야 합니다.\n\n빈칸 5\n정답: `optimizer.step()`\n역할: 계산된 기울기를 이용해 모델 파라미터를 한 번 갱신합니다.\n판단 근거: 앞에서 loss를 계산하고 backward를 호출했으므로 학습 순서상 다음 단계가 optimizer 갱신입니다.\n\n완성하면 '학습 손실 함수 구성' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-002",
+      "type": "api"
+    },
+    {
+      "unit": "1-2",
+      "title": "모델 평가 함수 구현",
+      "content": "이 코드는 1-2 실습의 전체 과정 중 '모델 평가 함수 구현' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 모델 평가 함수 구현의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "def evaluate(model, loader, device):\n    running_loss = 0.0\n    correct = 0\n    total = 0\n    all_preds = []\n    all_targets = []\n\n    # 1. 모델이 추론할 때는 추론모드로 설정해주어야합니다.\n    ____[1]\n    # 2. 추론 시에는 미분그래프를 생성하지 않도록 컨텍스트를 생성해주셔야합니다.\n    with ____[2]:\n        # 3. 추론 과정 루프를 다음 순서에 맞춰 작성해주세요.\n        for xb, yb in loader:\n            # 3.1 데이터를 가속화기기로 보내주세요.\n            xb, yb = xb.to(device), yb.to(device)\n\n            # 3.2 모델의 출력값인 `logits`를 계산합니다.\n            logits = model(xb)\n\n            # 3.3 `torch.nn.functional.cross_entropy`를 통해 `loss` 계산해주기\n            loss = cross_entropy(logits, yb)\n\n            # 기록\n            running_loss += loss.item() * xb.size(0)\n            preds = ____[3]\n            correct += (preds == yb).sum().item()\n            total += yb.size(0)\n\n            all_preds.append(preds.cpu())\n            all_targets.append(yb.cpu())\n\n    # 위에서 잘 계산된 값들을 정리해서 반환합니다.\n    avg_loss = running_loss / total\n    acc = correct / total\n    preds_cat = ____[4]\n    targets_cat = ____[5]\n    return avg_loss, acc, preds_cat, targets_cat",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "model.eval()",
+          "choices": [
+            "model.eval()",
+            "model.train()",
+            "torch.no_grad()",
+            "model.requires_grad_(False)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "torch.no_grad()",
+          "choices": [
+            "torch.no_grad()",
+            "torch.enable_grad()",
+            "model.eval()",
+            "torch.set_grad_enabled()"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "logits.argmax(dim=1)",
+          "choices": [
+            "logits.argmax(dim=1)",
+            "logits.max(dim=1)",
+            "logits.argmax(dim=0)",
+            "logits.argmin(dim=1)"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "torch.cat(all_preds).numpy()",
+          "choices": [
+            "torch.cat(all_preds).numpy()",
+            "model.eval()",
+            "torch.no_grad()",
+            "logits.argmax(dim=1)"
+          ]
+        },
+        {
+          "id": "blank-5",
+          "answer": "torch.cat(all_targets).numpy()",
+          "choices": [
+            "torch.cat(all_targets).numpy()",
+            "model.eval()",
+            "torch.no_grad()",
+            "logits.argmax(dim=1)"
+          ]
+        }
+      ],
+      "solution": "def evaluate(model, loader, device):\n    running_loss = 0.0\n    correct = 0\n    total = 0\n    all_preds = []\n    all_targets = []\n\n    # 1. 모델이 추론할 때는 추론모드로 설정해주어야합니다.\n    model.eval()\n    # 2. 추론 시에는 미분그래프를 생성하지 않도록 컨텍스트를 생성해주셔야합니다.\n    with torch.no_grad():\n        # 3. 추론 과정 루프를 다음 순서에 맞춰 작성해주세요.\n        for xb, yb in loader:\n            # 3.1 데이터를 가속화기기로 보내주세요.\n            xb, yb = xb.to(device), yb.to(device)\n\n            # 3.2 모델의 출력값인 `logits`를 계산합니다.\n            logits = model(xb)\n\n            # 3.3 `torch.nn.functional.cross_entropy`를 통해 `loss` 계산해주기\n            loss = cross_entropy(logits, yb)\n\n            # 기록\n            running_loss += loss.item() * xb.size(0)\n            preds = logits.argmax(dim=1)\n            correct += (preds == yb).sum().item()\n            total += yb.size(0)\n\n            all_preds.append(preds.cpu())\n            all_targets.append(yb.cpu())\n\n    # 위에서 잘 계산된 값들을 정리해서 반환합니다.\n    avg_loss = running_loss / total\n    acc = correct / total\n    preds_cat = torch.cat(all_preds).numpy()\n    targets_cat = torch.cat(all_targets).numpy()\n    return avg_loss, acc, preds_cat, targets_cat",
+      "explanation": "빈칸 1\n정답: `model.eval()`\n역할: 검증·추론 전에 모델을 evaluation 모드로 전환합니다.\n판단 근거: 뒤의 코드는 파라미터 갱신 없이 예측만 수행하므로 Dropout 등의 학습 동작을 꺼야 합니다.\n\n빈칸 2\n정답: `torch.no_grad()`\n역할: 평가·생성 구간의 autograd 그래프 생성을 꺼 메모리와 연산량을 줄입니다.\n판단 근거: `with` 블록 안에서는 예측이나 generate만 수행하고 backward를 호출하지 않습니다.\n\n빈칸 3\n정답: `logits.argmax(dim=1)`\n역할: 각 샘플의 클래스 logits에서 가장 큰 인덱스를 예측 라벨로 선택합니다.\n판단 근거: 뒤에서 정답과 비교하므로 dim=1을 제거한 배치 크기의 라벨 tensor가 필요합니다.\n\n빈칸 4\n정답: `torch.cat(all_preds).numpy()`\n역할: 배치별 예측 tensor를 전체 데이터 순서로 합쳐 NumPy 배열로 변환합니다.\n판단 근거: 루프에서 all_preds에 CPU tensor를 누적했으므로 반환 전에 배치 축으로 연결해야 합니다.\n\n빈칸 5\n정답: `torch.cat(all_targets).numpy()`\n역할: 배치별 정답 tensor를 전체 데이터 순서의 NumPy 배열로 합칩니다.\n판단 근거: 예측과 같은 길이·순서를 유지해야 평가 지표를 계산할 수 있습니다.\n\n완성하면 '모델 평가 함수 구현' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-011",
+      "type": "api"
+    },
+    {
+      "unit": "1-2",
+      "title": "심플 MLP 클래스 정의",
+      "content": "이 코드는 1-2 실습의 전체 과정 중 '심플 MLP 클래스 정의' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 심플 MLP 클래스 정의의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# 3. Multi-Layer Perceptron 구성하기\nimport torch\nimport torch.nn as nn\n\n\nclass SimpleMLP(nn.Module):\n    def __init__(self, input_dim, hidden_dim, output_dim):\n        # 모델의 구성요소를 정의하는 부분입니다.\n\n        # 🌟 PyTorch 모델을 구성할 때 항상 넣어줘야하는 코드입니다.\n        super().__init__()\n\n        # 여기에 Layer를 정의합니다.\n        self.fc1 = nn.Linear(input_dim, hidden_dim)\n        self.relu = nn.ReLU()\n        self.fc2 = nn.Linear(hidden_dim, output_dim)\n\n    def forward(self, x):\n        # 실제 데이터를 입력으로 받았을 때 __init__에서 정의한 레이어 순서대로 입력을 보내주는 코드입니다.\n        x = ____[1]\n        x = ____[2]\n        x = ____[3]\n        return x\n\n\nclass SequentialMLP(nn.Module):\n    def __init__(self, input_dim, hidden_dim, output_dim):\n        super().__init__()\n\n        # 위에서 제작한 코드가 기본적인 형태입니다.\n        # 하지만 매번 forward에서 정의한 layer들을 쓰면서 넘기기는 귀찮네요.\n        # nn.Sequential을 이용하면 귀찮음을 해결할 수 있습니다.\n        self.layers = nn.Sequential(\n            nn.Linear(input_dim, hidden_dim),\n            nn.ReLU(),\n            nn.Linear(hidden_dim, output_dim)\n        )\n\n    def forward(self, x):\n        # 귀찮음 해결 ☝️\n        return ____[4]\n\n\n# 실제로 작동하는 모델을 선언하려면 위에서 정의한 클래스를 객체로 만들어줘야합니다.\nmodel = SequentialMLP(input_dim=20, hidden_dim=10, output_dim=1)\n\n# 더미데이터를 만들어서 의도한대로 작동하는지 확인하는 작업입니다.\n# 위에서 모델을 정의할 때 input_dim=20으로 만들었기 때문에 특성이 20개인 데이터를 만들어줍니다.\n# 예시로 전체 데이터의 수는 40건이 있다고 가정합시다.\n# 그렇다면 X는 다음과 같이 정의됩니다.\nX = torch.ones(size=(40, 20))\ny_pred = model(X)\ny_pred.size()",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "self.fc1(x)",
+          "choices": [
+            "self.fc1(x)",
+            "self.relu(x)",
+            "self.fc2(x)",
+            "self.layers(x)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "self.relu(x)",
+          "choices": [
+            "self.relu(x)",
+            "self.fc1(x)",
+            "self.fc2(x)",
+            "self.layers(x)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "self.fc2(x)",
+          "choices": [
+            "self.fc2(x)",
+            "self.fc1(x)",
+            "self.relu(x)",
+            "self.layers(x)"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "self.layers(x)",
+          "choices": [
+            "self.layers(x)",
+            "self.fc1(x)",
+            "self.relu(x)",
+            "self.fc2(x)"
+          ]
+        }
+      ],
+      "solution": "# 3. Multi-Layer Perceptron 구성하기\nimport torch\nimport torch.nn as nn\n\n\nclass SimpleMLP(nn.Module):\n    def __init__(self, input_dim, hidden_dim, output_dim):\n        # 모델의 구성요소를 정의하는 부분입니다.\n\n        # 🌟 PyTorch 모델을 구성할 때 항상 넣어줘야하는 코드입니다.\n        super().__init__()\n\n        # 여기에 Layer를 정의합니다.\n        self.fc1 = nn.Linear(input_dim, hidden_dim)\n        self.relu = nn.ReLU()\n        self.fc2 = nn.Linear(hidden_dim, output_dim)\n\n    def forward(self, x):\n        # 실제 데이터를 입력으로 받았을 때 __init__에서 정의한 레이어 순서대로 입력을 보내주는 코드입니다.\n        x = self.fc1(x)\n        x = self.relu(x)\n        x = self.fc2(x)\n        return x\n\n\nclass SequentialMLP(nn.Module):\n    def __init__(self, input_dim, hidden_dim, output_dim):\n        super().__init__()\n\n        # 위에서 제작한 코드가 기본적인 형태입니다.\n        # 하지만 매번 forward에서 정의한 layer들을 쓰면서 넘기기는 귀찮네요.\n        # nn.Sequential을 이용하면 귀찮음을 해결할 수 있습니다.\n        self.layers = nn.Sequential(\n            nn.Linear(input_dim, hidden_dim),\n            nn.ReLU(),\n            nn.Linear(hidden_dim, output_dim)\n        )\n\n    def forward(self, x):\n        # 귀찮음 해결 ☝️\n        return self.layers(x)\n\n\n# 실제로 작동하는 모델을 선언하려면 위에서 정의한 클래스를 객체로 만들어줘야합니다.\nmodel = SequentialMLP(input_dim=20, hidden_dim=10, output_dim=1)\n\n# 더미데이터를 만들어서 의도한대로 작동하는지 확인하는 작업입니다.\n# 위에서 모델을 정의할 때 input_dim=20으로 만들었기 때문에 특성이 20개인 데이터를 만들어줍니다.\n# 예시로 전체 데이터의 수는 40건이 있다고 가정합시다.\n# 그렇다면 X는 다음과 같이 정의됩니다.\nX = torch.ones(size=(40, 20))\ny_pred = model(X)\ny_pred.size()",
+      "explanation": "빈칸 1\n정답: `self.fc1(x)`\n역할: 입력 특성을 첫 Linear에 통과시켜 hidden representation을 만듭니다.\n판단 근거: 다음 ReLU는 hidden_dim tensor를 받아야 하므로 input_dim→hidden_dim인 fc1이 먼저입니다.\n\n빈칸 2\n정답: `self.relu(x)`\n역할: 첫 Linear 출력에 비선형 ReLU를 적용합니다.\n판단 근거: 두 Linear 사이에 활성화가 있어야 모델이 비선형 관계를 표현할 수 있습니다.\n\n빈칸 3\n정답: `self.fc2(x)`\n역할: hidden representation을 최종 output_dim 크기의 예측으로 변환합니다.\n판단 근거: 앞의 ReLU 출력을 받아 함수가 반환할 차원으로 바꾸는 계층은 fc2입니다.\n\n빈칸 4\n정답: `self.layers(x)`\n역할: Sequential에 묶인 Linear→ReLU→Linear 전체를 입력에 적용합니다.\n판단 근거: 생성자에서 전체 계층을 self.layers에 등록했으므로 결과를 바로 반환할 수 있습니다.\n\n완성하면 '심플 MLP 클래스 정의' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-016",
+      "type": "api"
+    },
+    {
+      "unit": "1-2",
+      "title": "단일 에포크 학습 함수 구현",
+      "content": "이 코드는 1-2 실습의 전체 과정 중 '단일 에포크 학습 함수 구현' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 단일 에포크 학습 함수 구현의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "from torch.nn.functional import cross_entropy\n\ndef train_one_epoch(model, loader, optimizer, device):\n    running_loss = 0.0\n    correct = 0\n    total = 0\n\n    # 1. 모델이 학습모드로 들어가게 설정해야합니다.\n    ____[1]\n\n    # 2. 위에서 배운 파라미터 업데이트 방식을 구현해주세요:\n    for xb, yb in loader:\n        # 2.1 데이터를 가속화기기로 보내주세요.\n        xb, yb = xb.to(device), yb.to(device)\n\n        # 2.2 모델의 출력 만들어주기\n        logits = model(xb)\n\n        # 2.3 미분값 지워주기 (`zero_grad`)\n        optimizer.zero_grad()\n\n        # 2.4 `torch.nn.functional.cross_entropy`를 통해 `loss` 계산해주기\n        loss = cross_entropy(logits, yb)\n\n        # 2.5 `loss`를 기준으로 역전파를 수행합니다.\n        ____[2]\n\n        # 2.6 파라미터 업데이트를 진행해주세요\n        ____[3]\n\n        # 파라미터 업데이트가 끝났으면 몇 가지를 기록해줍니다.\n        running_loss += loss.item() * xb.size(0)\n        preds = ____[4]\n        correct += (preds == yb).sum().item()\n        total += yb.size(0)\n\n    # 위에서 잘 계산된 값들을 정리해서 반환합니다.\n    avg_loss = running_loss / total\n    acc = correct / total\n    return avg_loss, acc",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "model.train()",
+          "choices": [
+            "model.train()",
+            "model.eval()",
+            "torch.no_grad()",
+            "model.training"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "loss.backward()",
+          "choices": [
+            "loss.backward()",
+            "loss.item()",
+            "loss.detach()",
+            "optimizer.backward()"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "optimizer.step()",
+          "choices": [
+            "optimizer.step()",
+            "optimizer.zero_grad()",
+            "loss.backward()",
+            "scheduler.step()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "logits.argmax(dim=1)",
+          "choices": [
+            "logits.argmax(dim=1)",
+            "logits.max(dim=1)",
+            "logits.argmax(dim=0)",
+            "logits.argmin(dim=1)"
+          ]
+        }
+      ],
+      "solution": "from torch.nn.functional import cross_entropy\n\ndef train_one_epoch(model, loader, optimizer, device):\n    running_loss = 0.0\n    correct = 0\n    total = 0\n\n    # 1. 모델이 학습모드로 들어가게 설정해야합니다.\n    model.train()\n\n    # 2. 위에서 배운 파라미터 업데이트 방식을 구현해주세요:\n    for xb, yb in loader:\n        # 2.1 데이터를 가속화기기로 보내주세요.\n        xb, yb = xb.to(device), yb.to(device)\n\n        # 2.2 모델의 출력 만들어주기\n        logits = model(xb)\n\n        # 2.3 미분값 지워주기 (`zero_grad`)\n        optimizer.zero_grad()\n\n        # 2.4 `torch.nn.functional.cross_entropy`를 통해 `loss` 계산해주기\n        loss = cross_entropy(logits, yb)\n\n        # 2.5 `loss`를 기준으로 역전파를 수행합니다.\n        loss.backward()\n\n        # 2.6 파라미터 업데이트를 진행해주세요\n        optimizer.step()\n\n        # 파라미터 업데이트가 끝났으면 몇 가지를 기록해줍니다.\n        running_loss += loss.item() * xb.size(0)\n        preds = logits.argmax(dim=1)\n        correct += (preds == yb).sum().item()\n        total += yb.size(0)\n\n    # 위에서 잘 계산된 값들을 정리해서 반환합니다.\n    avg_loss = running_loss / total\n    acc = correct / total\n    return avg_loss, acc",
+      "explanation": "빈칸 1\n정답: `model.train()`\n역할: 학습 전에 모델을 training 모드로 전환합니다.\n판단 근거: 뒤에서 손실 역전파와 optimizer 갱신이 실행되므로 evaluation 모드가 아닌 training 모드여야 합니다.\n\n빈칸 2\n정답: `loss.backward()`\n역할: 현재 손실에서 모델 파라미터까지 역전파해 기울기를 계산합니다.\n판단 근거: 바로 뒤의 `optimizer.step()`이 `.grad` 값을 사용하므로 먼저 backward가 실행되어야 합니다.\n\n빈칸 3\n정답: `optimizer.step()`\n역할: 계산된 기울기를 이용해 모델 파라미터를 한 번 갱신합니다.\n판단 근거: 앞에서 loss를 계산하고 backward를 호출했으므로 학습 순서상 다음 단계가 optimizer 갱신입니다.\n\n빈칸 4\n정답: `logits.argmax(dim=1)`\n역할: 각 샘플의 클래스 logits에서 가장 큰 인덱스를 예측 라벨로 선택합니다.\n판단 근거: 뒤에서 정답과 비교하므로 dim=1을 제거한 배치 크기의 라벨 tensor가 필요합니다.\n\n완성하면 '단일 에포크 학습 함수 구현' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-021",
+      "type": "api"
+    },
+    {
+      "unit": "1-2",
+      "title": "PyTorch 모델 평가 모드와 추론",
+      "content": "이 코드는 1-2 실습의 전체 과정 중 'PyTorch 모델 평가 모드와 추론' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 PyTorch 모델 평가 모드와 추론의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "def plot_decision_boundary(model, X, y, scaler, title=\"Decision Boundary\"):\n    ____[1]\n\n    # 그리드 생성\n    h = 0.02\n    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1\n    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1\n    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),\n                         np.arange(y_min, y_max, h))\n\n    # 그리드 포인트를 모델에 입력\n    grid_points = np.c_[xx.ravel(), yy.ravel()]\n    grid_points_scaled = scaler.transform(grid_points)\n    grid_tensor = ____[2]\n\n    with ____[3]:\n        outputs = model(grid_tensor)\n        _, predictions = outputs.max(1)\n\n    predictions = ____[4]\n\n    # 시각화\n    plt.figure(figsize=(10, 8))\n    plt.contourf(xx, yy, predictions, alpha=0.4, cmap='RdYlBu')\n    plt.scatter(X[y == 0, 0], X[y == 0, 1], c='blue', label='Class 0',\n                edgecolors='k', s=50, alpha=0.7)\n    plt.scatter(X[y == 1, 0], X[y == 1, 1], c='red', label='Class 1',\n                edgecolors='k', s=50, alpha=0.7)\n    plt.xlabel('Feature 1')\n    plt.ylabel('Feature 2')\n    plt.title(title)\n    plt.legend()\n    plt.grid(True, alpha=0.3)\n    plt.show()\n\n# 결정 경계 시각화\nplot_decision_boundary(model, X_train, y_train, scaler, \"Decision Boundary (Training Set)\")\nplot_decision_boundary(model, X_valid, y_valid, scaler, \"Decision Boundary (Validation Set)\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "model.eval()",
+          "choices": [
+            "model.eval()",
+            "model.train()",
+            "torch.no_grad()",
+            "model.requires_grad_(False)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "torch.from_numpy(grid_points_scaled).float().to(device)",
+          "choices": [
+            "torch.from_numpy(grid_points_scaled).float().to(device)",
+            "model.eval()",
+            "torch.no_grad()",
+            "predictions.cpu().numpy().reshape(xx.shape)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "torch.no_grad()",
+          "choices": [
+            "torch.no_grad()",
+            "torch.enable_grad()",
+            "model.eval()",
+            "torch.set_grad_enabled()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "predictions.cpu().numpy().reshape(xx.shape)",
+          "choices": [
+            "predictions.cpu().numpy().reshape(xx.shape)",
+            "model.eval()",
+            "torch.from_numpy(grid_points_scaled).float().to(device)",
+            "torch.no_grad()"
+          ]
+        }
+      ],
+      "solution": "def plot_decision_boundary(model, X, y, scaler, title=\"Decision Boundary\"):\n    model.eval()\n\n    # 그리드 생성\n    h = 0.02\n    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1\n    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1\n    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),\n                         np.arange(y_min, y_max, h))\n\n    # 그리드 포인트를 모델에 입력\n    grid_points = np.c_[xx.ravel(), yy.ravel()]\n    grid_points_scaled = scaler.transform(grid_points)\n    grid_tensor = torch.from_numpy(grid_points_scaled).float().to(device)\n\n    with torch.no_grad():\n        outputs = model(grid_tensor)\n        _, predictions = outputs.max(1)\n\n    predictions = predictions.cpu().numpy().reshape(xx.shape)\n\n    # 시각화\n    plt.figure(figsize=(10, 8))\n    plt.contourf(xx, yy, predictions, alpha=0.4, cmap='RdYlBu')\n    plt.scatter(X[y == 0, 0], X[y == 0, 1], c='blue', label='Class 0',\n                edgecolors='k', s=50, alpha=0.7)\n    plt.scatter(X[y == 1, 0], X[y == 1, 1], c='red', label='Class 1',\n                edgecolors='k', s=50, alpha=0.7)\n    plt.xlabel('Feature 1')\n    plt.ylabel('Feature 2')\n    plt.title(title)\n    plt.legend()\n    plt.grid(True, alpha=0.3)\n    plt.show()\n\n# 결정 경계 시각화\nplot_decision_boundary(model, X_train, y_train, scaler, \"Decision Boundary (Training Set)\")\nplot_decision_boundary(model, X_valid, y_valid, scaler, \"Decision Boundary (Validation Set)\")",
+      "explanation": "빈칸 1\n정답: `model.eval()`\n역할: 검증·추론 전에 모델을 evaluation 모드로 전환합니다.\n판단 근거: 뒤의 코드는 파라미터 갱신 없이 예측만 수행하므로 Dropout 등의 학습 동작을 꺼야 합니다.\n\n빈칸 2\n정답: `torch.from_numpy(grid_points_scaled).float().to(device)`\n역할: 표준화된 NumPy 그리드를 float tensor로 바꾸고 모델 device로 이동합니다.\n판단 근거: 다음 모델 호출은 모델과 같은 device의 float PyTorch tensor를 요구합니다.\n\n빈칸 3\n정답: `torch.no_grad()`\n역할: 평가·생성 구간의 autograd 그래프 생성을 꺼 메모리와 연산량을 줄입니다.\n판단 근거: `with` 블록 안에서는 예측이나 generate만 수행하고 backward를 호출하지 않습니다.\n\n빈칸 4\n정답: `predictions.cpu().numpy().reshape(xx.shape)`\n역할: 평탄한 예측을 CPU NumPy 배열로 옮기고 시각화 grid shape로 복원합니다.\n판단 근거: contourf의 predictions는 xx와 같은 2차원 shape여야 합니다.\n\n완성하면 'PyTorch 모델 평가 모드와 추론' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-027",
+      "type": "api"
+    },
+    {
+      "unit": "1-2",
+      "title": "단일 에포크 학습 함수 구현",
+      "content": "이 코드는 1-2 실습의 전체 과정 중 '단일 에포크 학습 함수 구현' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 단일 에포크 학습 함수 구현의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "def train_one_epoch(model, loader, optimizer, device):\n    running_loss = 0.0\n    correct = 0\n    total = 0\n\n    # 1. 모델이 학습모드로 들어가게 설정해야합니다.\n    ____[1]\n\n    # 2. 위에서 배운 파라미터 업데이트 방식을 구현해주세요:\n    for xb, yb in loader:\n        # 2.1 데이터를 가속화기기로 보내주세요.\n        xb, yb = xb.to(device), yb.to(device)\n\n        # 2.2 모델의 출력 만들어주기\n        logits = model(xb)\n\n        # 2.3 미분값 지워주기 (`zero_grad`)\n        optimizer.zero_grad()\n\n        # 2.4 `torch.nn.functional.cross_entropy`를 통해 `loss` 계산해주기\n        loss = cross_entropy(logits, yb)\n\n        # 2.5 `loss`를 기준으로 역전파를 수행합니다.\n        ____[2]\n\n        # 2.6 파라미터 업데이트를 진행해주세요\n        ____[3]\n\n        # 파라미터 업데이트가 끝났으면 몇 가지를 기록해줍니다.\n        running_loss += loss.item() * xb.size(0)\n        preds = ____[4]\n        correct += (preds == yb).sum().item()\n        total += yb.size(0)\n\n    # 위에서 잘 계산된 값들을 정리해서 반환합니다.\n    avg_loss = running_loss / total\n    acc = correct / total\n    return avg_loss, acc",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "model.train()",
+          "choices": [
+            "model.train()",
+            "model.eval()",
+            "torch.no_grad()",
+            "model.training"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "loss.backward()",
+          "choices": [
+            "loss.backward()",
+            "loss.item()",
+            "loss.detach()",
+            "optimizer.backward()"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "optimizer.step()",
+          "choices": [
+            "optimizer.step()",
+            "optimizer.zero_grad()",
+            "loss.backward()",
+            "scheduler.step()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "logits.argmax(dim=1)",
+          "choices": [
+            "logits.argmax(dim=1)",
+            "logits.max(dim=1)",
+            "logits.argmax(dim=0)",
+            "logits.argmin(dim=1)"
+          ]
+        }
+      ],
+      "solution": "def train_one_epoch(model, loader, optimizer, device):\n    running_loss = 0.0\n    correct = 0\n    total = 0\n\n    # 1. 모델이 학습모드로 들어가게 설정해야합니다.\n    model.train()\n\n    # 2. 위에서 배운 파라미터 업데이트 방식을 구현해주세요:\n    for xb, yb in loader:\n        # 2.1 데이터를 가속화기기로 보내주세요.\n        xb, yb = xb.to(device), yb.to(device)\n\n        # 2.2 모델의 출력 만들어주기\n        logits = model(xb)\n\n        # 2.3 미분값 지워주기 (`zero_grad`)\n        optimizer.zero_grad()\n\n        # 2.4 `torch.nn.functional.cross_entropy`를 통해 `loss` 계산해주기\n        loss = cross_entropy(logits, yb)\n\n        # 2.5 `loss`를 기준으로 역전파를 수행합니다.\n        loss.backward()\n\n        # 2.6 파라미터 업데이트를 진행해주세요\n        optimizer.step()\n\n        # 파라미터 업데이트가 끝났으면 몇 가지를 기록해줍니다.\n        running_loss += loss.item() * xb.size(0)\n        preds = logits.argmax(dim=1)\n        correct += (preds == yb).sum().item()\n        total += yb.size(0)\n\n    # 위에서 잘 계산된 값들을 정리해서 반환합니다.\n    avg_loss = running_loss / total\n    acc = correct / total\n    return avg_loss, acc",
+      "explanation": "빈칸 1\n정답: `model.train()`\n역할: 학습 전에 모델을 training 모드로 전환합니다.\n판단 근거: 뒤에서 손실 역전파와 optimizer 갱신이 실행되므로 evaluation 모드가 아닌 training 모드여야 합니다.\n\n빈칸 2\n정답: `loss.backward()`\n역할: 현재 손실에서 모델 파라미터까지 역전파해 기울기를 계산합니다.\n판단 근거: 바로 뒤의 `optimizer.step()`이 `.grad` 값을 사용하므로 먼저 backward가 실행되어야 합니다.\n\n빈칸 3\n정답: `optimizer.step()`\n역할: 계산된 기울기를 이용해 모델 파라미터를 한 번 갱신합니다.\n판단 근거: 앞에서 loss를 계산하고 backward를 호출했으므로 학습 순서상 다음 단계가 optimizer 갱신입니다.\n\n빈칸 4\n정답: `logits.argmax(dim=1)`\n역할: 각 샘플의 클래스 logits에서 가장 큰 인덱스를 예측 라벨로 선택합니다.\n판단 근거: 뒤에서 정답과 비교하므로 dim=1을 제거한 배치 크기의 라벨 tensor가 필요합니다.\n\n완성하면 '단일 에포크 학습 함수 구현' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-034",
+      "type": "api"
+    }
+  ]
+}

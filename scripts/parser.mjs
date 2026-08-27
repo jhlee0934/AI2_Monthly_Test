@@ -96,11 +96,13 @@ function distractors(answer, pool) {
 export function parseProblems(root) {
   const jsonProblems = fs.readdirSync(root, { recursive: true, withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
-    .map((entry) => path.join(entry.parentPath, entry.name)).sort()
+    .map((entry) => path.join(entry.parentPath, entry.name))
+    .sort((a, b) => problemSourceOrder(root, a, b))
     .flatMap((file) => {
       const payload = JSON.parse(fs.readFileSync(file, 'utf8'));
       return Array.isArray(payload) ? payload : payload.problems ?? [payload];
-    });
+    })
+    .sort((a, b) => problemOrder(a, b));
   const files = fs.readdirSync(root, { recursive: true, withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
     .map((entry) => path.join(entry.parentPath, entry.name)).sort();
@@ -141,4 +143,16 @@ export function parseProblems(root) {
     return q;
   });
   return [...jsonProblems, ...markdownProblems];
+}
+
+function problemSourceOrder(root, a, b) {
+  const relativeA = path.relative(root, a).replaceAll('\\', '/');
+  const relativeB = path.relative(root, b).replaceAll('\\', '/');
+  const typeOrder = (file) => file.startsWith('flow/') ? 0 : file.startsWith('api/') ? 1 : file.startsWith('assembly/') ? 2 : 3;
+  return typeOrder(relativeA) - typeOrder(relativeB) || relativeA.localeCompare(relativeB, 'en', { numeric: true });
+}
+
+function problemOrder(a, b) {
+  const typeOrder = (problem) => problem.type === 'flow' ? 0 : problem.type === 'api' ? 1 : problem.type === 'assembly' ? 2 : 3;
+  return typeOrder(a) - typeOrder(b) || String(a.id).localeCompare(String(b.id), 'en', { numeric: true });
 }

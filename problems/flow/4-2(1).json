@@ -1,0 +1,109 @@
+{
+  "problems": [
+    {
+      "id": "flow-generated-007",
+      "unit": "4-2(1)",
+      "type": "flow",
+      "title": "LLM과 Tool",
+      "content": "LLM과 Tool에서 `Tool 호출`와 `외부 상태`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `Tool 호출`와 `외부 상태`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "LLM only는 텍스트를 생성할 뿐 외부 상태를 조회·변경하지 못하지만 Agent는 선택한 Tool을 실제 호출하고 결과를 다시 추론에 사용할 수 있습니다."
+      ],
+      "keywords": [
+        "Tool 호출",
+        "외부 상태"
+      ],
+      "solution": "LLM only는 텍스트를 생성할 뿐 외부 상태를 조회·변경하지 못하지만 Agent는 선택한 Tool을 실제 호출하고 결과를 다시 추론에 사용할 수 있습니다.",
+      "explanation": "LLM only는 텍스트를 생성할 뿐 외부 상태를 조회·변경하지 못하지만 Agent는 선택한 Tool을 실제 호출하고 결과를 다시 추론에 사용할 수 있습니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `Tool 호출`와 `외부 상태`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-016",
+      "unit": "4-2(1)",
+      "type": "flow",
+      "title": "ReAct 순환",
+      "content": "ReAct 순환에서 `tool call`와 `관찰`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `tool call`와 `관찰`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "agent가 tool call을 만들면 tools가 실행 결과를 메시지에 추가하고 agent가 다시 관찰해 다음 행동을 정합니다. 더 이상 tool call이 없으면 END로 갑니다."
+      ],
+      "keywords": [
+        "tool call",
+        "관찰"
+      ],
+      "solution": "agent가 tool call을 만들면 tools가 실행 결과를 메시지에 추가하고 agent가 다시 관찰해 다음 행동을 정합니다. 더 이상 tool call이 없으면 END로 갑니다.",
+      "explanation": "agent가 tool call을 만들면 tools가 실행 결과를 메시지에 추가하고 agent가 다시 관찰해 다음 행동을 정합니다. 더 이상 tool call이 없으면 END로 갑니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `tool call`와 `관찰`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-025",
+      "unit": "4-2(1)",
+      "type": "flow",
+      "title": "조건부 분기",
+      "content": "조건부 분기에서 `tool_calls`와 `tools 노드`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `tool_calls`와 `tools 노드`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "도구 요청이 있으면 tools 노드로, 없으면 최종 답변으로 보고 END로 보내 실행과 종료를 상태에 따라 결정하기 위해서입니다."
+      ],
+      "keywords": [
+        "tool_calls",
+        "tools 노드"
+      ],
+      "solution": "도구 요청이 있으면 tools 노드로, 없으면 최종 답변으로 보고 END로 보내 실행과 종료를 상태에 따라 결정하기 위해서입니다.",
+      "explanation": "도구 요청이 있으면 tools 노드로, 없으면 최종 답변으로 보고 END로 보내 실행과 종료를 상태에 따라 결정하기 위해서입니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `tool_calls`와 `tools 노드`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-034",
+      "unit": "4-2(1)",
+      "type": "flow",
+      "title": "Tool 결과 기록",
+      "content": "Tool 결과 기록에서 `ToolMessage`와 `tool_call_id`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `ToolMessage`와 `tool_call_id`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "어떤 요청에 대한 관찰 결과인지 모델이 연결하고 대화 프로토콜의 도구 호출-응답 대응을 유지하기 위해서입니다."
+      ],
+      "keywords": [
+        "ToolMessage",
+        "tool_call_id"
+      ],
+      "solution": "어떤 요청에 대한 관찰 결과인지 모델이 연결하고 대화 프로토콜의 도구 호출-응답 대응을 유지하기 위해서입니다.",
+      "explanation": "어떤 요청에 대한 관찰 결과인지 모델이 연결하고 대화 프로토콜의 도구 호출-응답 대응을 유지하기 위해서입니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `ToolMessage`와 `tool_call_id`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    },
+    {
+      "id": "flow-generated-043",
+      "unit": "4-2(1)",
+      "type": "flow",
+      "title": "Memory",
+      "content": "Memory에서 `messages`와 `문맥`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
+      "requirements": [
+        "답변에 `messages`와 `문맥`을(를) 포함한다.",
+        "핵심 결론과 이유를 2~4문장으로 설명한다."
+      ],
+      "acceptedAnswers": [
+        "이전 주문번호나 사용자 조건을 잃어 후속 질문을 독립 요청처럼 처리하므로 messages 상태를 이어 문맥을 보존해야 합니다."
+      ],
+      "keywords": [
+        "messages",
+        "문맥"
+      ],
+      "solution": "이전 주문번호나 사용자 조건을 잃어 후속 질문을 독립 요청처럼 처리하므로 messages 상태를 이어 문맥을 보존해야 합니다.",
+      "explanation": "이전 주문번호나 사용자 조건을 잃어 후속 질문을 독립 요청처럼 처리하므로 messages 상태를 이어 문맥을 보존해야 합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `messages`와 `문맥`만 핵심 채점 기준으로 사용합니다.",
+      "example": ""
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const files = ['server.mjs', 'public/app.js', 'scripts/parser.mjs', 'scripts/problem-pack.mjs', 'scripts/validate-pack.mjs', 'scripts/build-data.mjs', 'scripts/build.mjs'];
+const files = ['server.mjs', 'public/app.js', 'scripts/parser.mjs', 'scripts/problem-pack.mjs', 'scripts/validate-pack.mjs', 'scripts/build-data.mjs', 'scripts/build-assembly-from-samples.mjs', 'scripts/build.mjs'];
 let failed = false;
 for (const file of files) {
   const text = fs.readFileSync(path.join(root, file), 'utf8');

@@ -1,0 +1,205 @@
+{
+  "problems": [
+    {
+      "unit": "3-2",
+      "title": "PyTorch 모델 평가 모드와 추론",
+      "content": "이 코드는 3-2 실습의 전체 과정 중 'PyTorch 모델 평가 모드와 추론' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 PyTorch 모델 평가 모드와 추론의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# 1. 모델 ID `openai/clip-vit-base-patch32`를 사용하여 `CLIPProcessor`와 `CLIPModel`을 로드하세요\nclip_model_id = \"openai/clip-vit-base-patch32\"\nprocessor = ____[1]\nmodel_clip = ____[2]\n\n# 2. 이미지와 텍스트 레이블을 CLIP 모델에 입력할 수 있도록 전처리합니다.\n# `processor`를 사용하여 `text`와 `images`를 함께 전처리하고, 결과를 PyTorch 텐서로 받으세요\ninputs = processor(\n    text = labels,\n    images = image,\n    return_tensors=\"pt\",\n    padding = True\n)\n\n# 3. 전처리된 입력을 CLIP 모델에 통과시켜 유사도 점수(logits)와 확률을 계산합니다.\nwith ____[3]:\n    outputs = model_clip(**inputs)\n    logits_per_image = outputs.logits_per_image\n    probs = ____[4]\n\n# 예측 결과가 제일 높은 이미지를 확인해봅시다.\nbest_idx = ____[5]\nprint(f\"CLIP 예측 결과: '{labels[best_idx]}' 라벨이 가장 타당하다고 예측되었습니다.\")\nprint(\"\\n--- 각 레이블 별 확률 --- \")\nfor i, label in enumerate(labels):\n    print(f\"{label}: {probs[0][i].item():.4f}\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "CLIPProcessor.from_pretrained(clip_model_id)",
+          "choices": [
+            "CLIPProcessor.from_pretrained(clip_model_id)",
+            "CLIPProcessor.from_config(clip_model_id)",
+            "CLIPProcessor.load_state_dict(clip_model_id)",
+            "CLIPProcessor.train(clip_model_id)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "CLIPModel.from_pretrained(clip_model_id)",
+          "choices": [
+            "CLIPModel.from_pretrained(clip_model_id)",
+            "CLIPModel.from_config(clip_model_id)",
+            "CLIPModel.load_state_dict(clip_model_id)",
+            "CLIPModel.train(clip_model_id)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "torch.no_grad()",
+          "choices": [
+            "torch.no_grad()",
+            "torch.enable_grad()",
+            "model.eval()",
+            "torch.set_grad_enabled()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "logits_per_image.softmax(1)",
+          "choices": [
+            "logits_per_image.softmax(1)",
+            "logits_per_image.log_softmax(1)",
+            "logits_per_image.sigmoid(1)",
+            "CLIPProcessor.from_pretrained(clip_model_id)"
+          ]
+        },
+        {
+          "id": "blank-5",
+          "answer": "logits_per_image.argmax(dim=1).item()",
+          "choices": [
+            "logits_per_image.argmax(dim=1).item()",
+            "logits_per_image.max(dim=1).item()",
+            "logits_per_image.argmax(dim=0).item()",
+            "logits_per_image.argmin(dim=1).item()"
+          ]
+        }
+      ],
+      "solution": "# 1. 모델 ID `openai/clip-vit-base-patch32`를 사용하여 `CLIPProcessor`와 `CLIPModel`을 로드하세요\nclip_model_id = \"openai/clip-vit-base-patch32\"\nprocessor = CLIPProcessor.from_pretrained(clip_model_id)\nmodel_clip = CLIPModel.from_pretrained(clip_model_id)\n\n# 2. 이미지와 텍스트 레이블을 CLIP 모델에 입력할 수 있도록 전처리합니다.\n# `processor`를 사용하여 `text`와 `images`를 함께 전처리하고, 결과를 PyTorch 텐서로 받으세요\ninputs = processor(\n    text = labels,\n    images = image,\n    return_tensors=\"pt\",\n    padding = True\n)\n\n# 3. 전처리된 입력을 CLIP 모델에 통과시켜 유사도 점수(logits)와 확률을 계산합니다.\nwith torch.no_grad():\n    outputs = model_clip(**inputs)\n    logits_per_image = outputs.logits_per_image\n    probs = logits_per_image.softmax(1)\n\n# 예측 결과가 제일 높은 이미지를 확인해봅시다.\nbest_idx = logits_per_image.argmax(dim=1).item()\nprint(f\"CLIP 예측 결과: '{labels[best_idx]}' 라벨이 가장 타당하다고 예측되었습니다.\")\nprint(\"\\n--- 각 레이블 별 확률 --- \")\nfor i, label in enumerate(labels):\n    print(f\"{label}: {probs[0][i].item():.4f}\")",
+      "explanation": "빈칸 1\n정답: `CLIPProcessor.from_pretrained(clip_model_id)`\n역할: CLIP 체크포인트에 맞는 이미지·텍스트 전처리기를 불러옵니다.\n판단 근거: 이미지와 후보 문장을 모델 입력 텐서로 만들려면 모델 ID와 같은 processor가 필요합니다.\n\n빈칸 2\n정답: `CLIPModel.from_pretrained(clip_model_id)`\n역할: 사전학습된 CLIP 모델과 가중치를 불러옵니다.\n판단 근거: 같은 clip_model_id의 processor 출력으로 이미지-텍스트 유사도 logits를 계산해야 합니다.\n\n빈칸 3\n정답: `torch.no_grad()`\n역할: 평가·생성 구간의 autograd 그래프 생성을 꺼 메모리와 연산량을 줄입니다.\n판단 근거: `with` 블록 안에서는 예측이나 generate만 수행하고 backward를 호출하지 않습니다.\n\n빈칸 4\n정답: `logits_per_image.softmax(1)`\n역할: 텍스트 후보별 유사도 logits를 상대 확률로 정규화합니다.\n판단 근거: 후보 클래스가 1번 축에 있으므로 그 축에 softmax를 적용해야 합니다.\n\n빈칸 5\n정답: `logits_per_image.argmax(dim=1).item()`\n역할: 가장 유사한 텍스트 후보의 인덱스를 Python 정수로 얻습니다.\n판단 근거: 후속 코드가 후보 목록을 인덱싱하므로 클래스 축의 argmax와 스칼라 변환이 필요합니다.\n\n완성하면 'PyTorch 모델 평가 모드와 추론' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-006",
+      "type": "api"
+    },
+    {
+      "unit": "3-2",
+      "title": "이미지 데이터 파이프라인 구성",
+      "content": "이 코드는 3-2 실습의 전체 과정 중 '이미지 데이터 파이프라인 구성' 단계를 구현하는 부분입니다. 같은 완성 코드에서 따로 출제되던 API 위치를 하나로 통합했습니다. 빈칸 앞에서 준비된 객체와 입력, 뒤의 반환·출력 또는 후속 연산을 확인해 실행 흐름이 유지되도록 각 API를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 다음 연산의 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "import os\nfrom torch.utils.data import DataLoader\nfrom torchvision.datasets import ImageFolder\n\n# 1. 각 클래스에 대한 프롬프트를 정의하세요.\n# 가능하다면 negative prompt도 활용해보세요.\nclasses = {\n    \"brand_new\": \"photorealistic photo of a 1960s red convertible on a coastal road at sunset, same car identity, brand new condition, shiny paint, pristine body\",\n    \"rusty_abandoned\": \"photorealistic photo of a 1960s red convertible on a coastal road at sunset, same car identity, rusty abandoned wreck, corroded body, broken windows\"\n}\nneg_prompt_ft = \"cartoon, drawing, sketch, text, watermark, low quality\"\n\n# 학습 및 테스트 데이터 폴더 생성\nfor split in ['train', 'test']:\n    for cls in classes.keys():\n        os.makedirs(f\"data/{split}/{cls}\", exist_ok=True)\n\n# 2. 각 클래스별로 학습 이미지 5장, 테스트 이미지 3장을 생성 후 저장해주세요.\nfor split in ['train', 'test']:\n    num_images = 5 if split == 'train' else 3\n    for cls, prompt in classes.items():\n        print(f\"--- Generating {split} images for {cls}... ---\")\n        result = pipe(\n            prompt,\n            negative_prompt=neg_prompt_ft,\n            num_images_per_prompt=num_images,\n            guidance_scale=8,\n            num_inference_steps=50\n        )        \n        images = result.images\n        for i, img in enumerate(images):\n            img.save(f\"data/{split}/{cls}/{cls}_{split}_{i}.png\")\n            display(img)\n\n\n# 데이터셋 및 데이터로더 생성 (수정 불필요)\ntrain_transforms = transforms.Compose([\n    ____[1],\n    ____[2],\n    transforms.ToTensor(),\n    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])\n])\ntest_transforms = transforms.Compose([\n    ____[3],\n    ____[4],\n    transforms.ToTensor(),\n    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])\n])\ntrain_dataset = ImageFolder(\"data/train\", transform=train_transforms)\ntest_dataset = ImageFolder(\"data/test\", transform=test_transforms)\ntrain_loader = ____[5]\ntest_loader = DataLoader(test_dataset, batch_size=4, shuffle=False)\nprint(f\"\\n총 학습 이미지: {len(train_dataset)}, 총 테스트 이미지: {len(test_dataset)}\")\nprint(f\"클래스: {train_dataset.classes}\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "transforms.RandomResizedCrop(224)",
+          "choices": [
+            "transforms.RandomResizedCrop(224)",
+            "transforms.RandomHorizontalFlip()",
+            "transforms.Resize(256)",
+            "transforms.CenterCrop(224)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "transforms.RandomHorizontalFlip()",
+          "choices": [
+            "transforms.RandomHorizontalFlip()",
+            "transforms.CenterCrop()",
+            "transforms.RandomResizedCrop(224)",
+            "transforms.Resize(256)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "transforms.Resize(256)",
+          "choices": [
+            "transforms.Resize(256)",
+            "transforms.RandomResizedCrop(224)",
+            "transforms.RandomHorizontalFlip()",
+            "transforms.CenterCrop(224)"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "transforms.CenterCrop(224)",
+          "choices": [
+            "transforms.CenterCrop(224)",
+            "transforms.RandomResizedCrop(224)",
+            "transforms.RandomHorizontalFlip()",
+            "transforms.Resize(256)"
+          ]
+        },
+        {
+          "id": "blank-5",
+          "answer": "DataLoader(train_dataset, batch_size=4, shuffle=True)",
+          "choices": [
+            "DataLoader(train_dataset, batch_size=4, shuffle=True)",
+            "TensorDataset(train_dataset, batch_size=4, shuffle=True)",
+            "DataLoader(train_dataset, batch_size=4, shuffle=False)",
+            "DataLoader(train_dataset, input_size=4, shuffle=True)"
+          ]
+        }
+      ],
+      "solution": "import os\nfrom torch.utils.data import DataLoader\nfrom torchvision.datasets import ImageFolder\n\n# 1. 각 클래스에 대한 프롬프트를 정의하세요.\n# 가능하다면 negative prompt도 활용해보세요.\nclasses = {\n    \"brand_new\": \"photorealistic photo of a 1960s red convertible on a coastal road at sunset, same car identity, brand new condition, shiny paint, pristine body\",\n    \"rusty_abandoned\": \"photorealistic photo of a 1960s red convertible on a coastal road at sunset, same car identity, rusty abandoned wreck, corroded body, broken windows\"\n}\nneg_prompt_ft = \"cartoon, drawing, sketch, text, watermark, low quality\"\n\n# 학습 및 테스트 데이터 폴더 생성\nfor split in ['train', 'test']:\n    for cls in classes.keys():\n        os.makedirs(f\"data/{split}/{cls}\", exist_ok=True)\n\n# 2. 각 클래스별로 학습 이미지 5장, 테스트 이미지 3장을 생성 후 저장해주세요.\nfor split in ['train', 'test']:\n    num_images = 5 if split == 'train' else 3\n    for cls, prompt in classes.items():\n        print(f\"--- Generating {split} images for {cls}... ---\")\n        result = pipe(\n            prompt,\n            negative_prompt=neg_prompt_ft,\n            num_images_per_prompt=num_images,\n            guidance_scale=8,\n            num_inference_steps=50\n        )        \n        images = result.images\n        for i, img in enumerate(images):\n            img.save(f\"data/{split}/{cls}/{cls}_{split}_{i}.png\")\n            display(img)\n\n\n# 데이터셋 및 데이터로더 생성 (수정 불필요)\ntrain_transforms = transforms.Compose([\n    transforms.RandomResizedCrop(224),\n    transforms.RandomHorizontalFlip(),\n    transforms.ToTensor(),\n    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])\n])\ntest_transforms = transforms.Compose([\n    transforms.Resize(256),\n    transforms.CenterCrop(224),\n    transforms.ToTensor(),\n    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])\n])\ntrain_dataset = ImageFolder(\"data/train\", transform=train_transforms)\ntest_dataset = ImageFolder(\"data/test\", transform=test_transforms)\ntrain_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)\ntest_loader = DataLoader(test_dataset, batch_size=4, shuffle=False)\nprint(f\"\\n총 학습 이미지: {len(train_dataset)}, 총 테스트 이미지: {len(test_dataset)}\")\nprint(f\"클래스: {train_dataset.classes}\")",
+      "explanation": "빈칸 1\n정답: `transforms.RandomResizedCrop(224)`\n역할: 학습 이미지를 무작위 영역에서 잘라 224×224로 조정합니다.\n판단 근거: 훈련 입력 크기를 유지하면서 위치·크기 augmentation을 적용하는 단계입니다.\n\n빈칸 2\n정답: `transforms.RandomHorizontalFlip()`\n역할: 학습 이미지를 확률적으로 좌우 반전해 데이터 다양성을 늘립니다.\n판단 근거: 라벨을 바꾸지 않는 변형이며 검증이 아닌 훈련 transform에 사용됩니다.\n\n빈칸 3\n정답: `transforms.Resize(256)`\n역할: 평가 이미지 크기를 256으로 일정하게 맞춥니다.\n판단 근거: 다음 CenterCrop(224)가 모든 이미지에서 동일한 중앙 영역을 얻으려면 먼저 resize해야 합니다.\n\n빈칸 4\n정답: `transforms.CenterCrop(224)`\n역할: 평가 이미지의 중앙 224×224 영역을 잘라 모델 입력 크기로 만듭니다.\n판단 근거: 검증에서는 무작위 crop 대신 결정적인 중앙 crop을 사용해야 재현 가능합니다.\n\n빈칸 5\n정답: `DataLoader(train_dataset, batch_size=4, shuffle=True)`\n역할: 훈련 데이터셋을 4개 배치로 묶고 epoch마다 순서를 섞어 공급합니다.\n판단 근거: 학습 루프가 배치 입력을 요구하며 shuffle=True로 순서 편향을 줄입니다.\n\n완성하면 '이미지 데이터 파이프라인 구성' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-013",
+      "type": "api"
+    },
+    {
+      "unit": "3-2",
+      "title": "학습 손실 함수 구성 · PyTorch 기울기 계산과 파라미터 갱신",
+      "content": "이 코드는 3-2 실습의 전체 과정 중 '학습 손실 함수 구성 · PyTorch 기울기 계산과 파라미터 갱신' 단계를 구현하는 부분입니다. 같은 완성 코드에서 따로 출제되던 API 위치를 하나로 통합했습니다. 빈칸 앞에서 준비된 객체와 입력, 뒤의 반환·출력 또는 후속 연산을 확인해 실행 흐름이 유지되도록 각 API를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 다음 연산의 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# 1. ImageNet 사전학습된 ResNet-50을 로드하세요\nweight = models.ResNet50_Weights.IMAGENET1K_V2\nteacher_model = ____[1]\n\nfor param in teacher_model.parameters():\n    param.requires_grad = False\n    \n# 2. 특징 추출부를 동결(freeze)하고 fc층을 2클래스로 교체하세요\nnum_features_teacher = teacher_model.fc.in_features\nteacher_model.fc = ____[2]\nteacher_model = teacher_model.to(device)\n\n# 3. 위에서 정의한 Teacher Model을 10 epoch동안 학습시켜주세요.\n# 3.1 손실함수와 Optimizer를 구현해주세요. 학습을 위한 하이퍼파라미터는 자유롭게 설정해주세요.\n# resnet50을 학습하는거라 kl 구할 필요 없이 ce\n# 범주형 라벨 -> ce\nteacher_criterion = ____[3]\n# 마지막 레이어만 손대면 됨\nteacher_optimizer = ____[4]\n\n____[5]\nnum_epochs_teacher = 10\n\nprint(\"--- Teacher (ResNet-50) Fine-tuning 시작 ---\")\nfor epoch in range(num_epochs_teacher):\n    running_loss = 0.0\n    for inputs, labels in train_loader:\n        inputs, labels = inputs.to(device), labels.to(device)\n        \n        # 3.2 학습루프를 구성해주세요.\n        teacher_optimizer.zero_grad()\n        outputs = teacher_model(inputs)\n        loss = teacher_criterion(outputs,labels)\n        loss.backward()\n        teacher_optimizer.step()\n        \n        \n        \n\n        running_loss += loss.item() * inputs.size(0)\n    epoch_loss = running_loss / len(train_dataset)\n    print(f\"Epoch {epoch+1}/{num_epochs_teacher}, Loss: {epoch_loss:.4f}\")\n\n\n# Teacher 평가\nteacher_model.eval()\ncorrect = 0\ntotal = 0\nwith torch.no_grad():\n    for inputs, labels in test_loader:\n        inputs, labels = inputs.to(device), labels.to(device)\n        outputs = teacher_model(inputs)\n        _, predicted = torch.max(outputs.data, 1)\n        total += labels.size(0)\n        correct += (predicted == labels).sum().item()\nprint(f\"\\nTeacher 모델 테스트 정확도: {100 * correct / total:.2f} %\")\nprint(\"--- Teacher Fine-tuning 완료 ---\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "models.resnet50(weights=weight)",
+          "choices": [
+            "models.resnet50(weights=weight)",
+            "nn.Linear(num_features_teacher, 2)",
+            "nn.CrossEntropyLoss()",
+            "optim.SGD(teacher_model.fc.parameters(), lr = 0.001, momentum= 0.9)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "nn.Linear(num_features_teacher, 2)",
+          "choices": [
+            "nn.Linear(num_features_teacher, 2)",
+            "models.resnet50(weights=weight)",
+            "nn.CrossEntropyLoss()",
+            "optim.SGD(teacher_model.fc.parameters(), lr = 0.001, momentum= 0.9)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "nn.CrossEntropyLoss()",
+          "choices": [
+            "nn.CrossEntropyLoss()",
+            "nn.MSELoss()",
+            "nn.BCELoss()",
+            "nn.NLLLoss()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "optim.SGD(teacher_model.fc.parameters(), lr = 0.001, momentum= 0.9)",
+          "choices": [
+            "optim.SGD(teacher_model.fc.parameters(), lr = 0.001, momentum= 0.9)",
+            "models.resnet50(weights=weight)",
+            "nn.Linear(num_features_teacher, 2)",
+            "nn.CrossEntropyLoss()"
+          ]
+        },
+        {
+          "id": "blank-5",
+          "answer": "teacher_model.train()",
+          "choices": [
+            "teacher_model.train()",
+            "teacher_model.eval()",
+            "teacher_torch.no_grad()",
+            "teacher_model.training"
+          ]
+        }
+      ],
+      "solution": "# 1. ImageNet 사전학습된 ResNet-50을 로드하세요\nweight = models.ResNet50_Weights.IMAGENET1K_V2\nteacher_model = models.resnet50(weights=weight)\n\nfor param in teacher_model.parameters():\n    param.requires_grad = False\n    \n# 2. 특징 추출부를 동결(freeze)하고 fc층을 2클래스로 교체하세요\nnum_features_teacher = teacher_model.fc.in_features\nteacher_model.fc = nn.Linear(num_features_teacher, 2)\nteacher_model = teacher_model.to(device)\n\n# 3. 위에서 정의한 Teacher Model을 10 epoch동안 학습시켜주세요.\n# 3.1 손실함수와 Optimizer를 구현해주세요. 학습을 위한 하이퍼파라미터는 자유롭게 설정해주세요.\n# resnet50을 학습하는거라 kl 구할 필요 없이 ce\n# 범주형 라벨 -> ce\nteacher_criterion = nn.CrossEntropyLoss()\n# 마지막 레이어만 손대면 됨\nteacher_optimizer = optim.SGD(teacher_model.fc.parameters(), lr = 0.001, momentum= 0.9)\n\nteacher_model.train()\nnum_epochs_teacher = 10\n\nprint(\"--- Teacher (ResNet-50) Fine-tuning 시작 ---\")\nfor epoch in range(num_epochs_teacher):\n    running_loss = 0.0\n    for inputs, labels in train_loader:\n        inputs, labels = inputs.to(device), labels.to(device)\n        \n        # 3.2 학습루프를 구성해주세요.\n        teacher_optimizer.zero_grad()\n        outputs = teacher_model(inputs)\n        loss = teacher_criterion(outputs,labels)\n        loss.backward()\n        teacher_optimizer.step()\n        \n        \n        \n\n        running_loss += loss.item() * inputs.size(0)\n    epoch_loss = running_loss / len(train_dataset)\n    print(f\"Epoch {epoch+1}/{num_epochs_teacher}, Loss: {epoch_loss:.4f}\")\n\n\n# Teacher 평가\nteacher_model.eval()\ncorrect = 0\ntotal = 0\nwith torch.no_grad():\n    for inputs, labels in test_loader:\n        inputs, labels = inputs.to(device), labels.to(device)\n        outputs = teacher_model(inputs)\n        _, predicted = torch.max(outputs.data, 1)\n        total += labels.size(0)\n        correct += (predicted == labels).sum().item()\nprint(f\"\\nTeacher 모델 테스트 정확도: {100 * correct / total:.2f} %\")\nprint(\"--- Teacher Fine-tuning 완료 ---\")",
+      "explanation": "빈칸 1\n정답: `models.resnet50(weights=weight)`\n역할: 사전학습 가중치로 teacher용 ResNet-50을 생성합니다.\n판단 근거: 다음 줄에서 fc.in_features를 읽고 분류기를 교체하므로 fc를 가진 ResNet 객체가 필요합니다.\n\n빈칸 2\n정답: `nn.Linear(num_features_teacher, 2)`\n역할: teacher backbone 특징을 두 클래스 logits로 바꾸도록 마지막 fc를 교체합니다.\n판단 근거: 백본 출력은 num_features_teacher이고 현재 데이터셋 클래스 수는 2입니다.\n\n빈칸 3\n정답: `nn.CrossEntropyLoss()`\n역할: 두 클래스 logits와 정답 index를 비교하는 분류 손실을 만듭니다.\n판단 근거: 모델이 raw logits를 출력하고 라벨이 클래스 index이므로 CrossEntropyLoss가 맞습니다.\n\n빈칸 4\n정답: `optim.SGD(teacher_model.fc.parameters(), lr = 0.001, momentum= 0.9)`\n역할: teacher의 새 분류기 fc 파라미터만 SGD로 학습하도록 optimizer를 만듭니다.\n판단 근거: 전이학습에서 backbone은 유지하고 교체한 fc만 갱신해야 합니다.\n\n빈칸 5\n정답: `teacher_model.train()`\n역할: 학습 전에 모델을 training 모드로 전환합니다.\n판단 근거: 뒤에서 손실 역전파와 optimizer 갱신이 실행되므로 evaluation 모드가 아닌 training 모드여야 합니다.\n\n완성하면 '학습 손실 함수 구성 · PyTorch 기울기 계산과 파라미터 갱신' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-023",
+      "type": "api"
+    }
+  ]
+}

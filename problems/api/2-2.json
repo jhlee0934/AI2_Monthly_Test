@@ -1,0 +1,159 @@
+{
+  "problems": [
+    {
+      "unit": "2-2",
+      "title": "환경 변수 기반 API 설정 로드",
+      "content": "이 코드는 2-2 실습의 전체 과정 중 '환경 변수 기반 API 설정 로드' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 환경 변수 기반 API 설정 로드의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "from os import getenv\nimport json\n\nfrom dotenv import load_dotenv\nfrom openai import OpenAI\nfrom datasets import load_dataset\n\n\n\n\n\n# 지난 시간과 마찬가지로 API KEY를 `.env` 파일에 저장한 후 불러와서 사용합시다.\n# 1. .env 파일 경로를 지정하여 환경 변수를 로드하세요\n____[1]\n\n# 2. GMS_KEY 환경 변수를 가져와 변수에 저장하세요\nGMS_KEY = ____[2]\n\n# 3. API 키가 정상적으로 로드되었는지 확인\nif GMS_KEY:\n    print(\"Success! API Key가 정상적으로 로드되었습니다.\")\nelse:\n    print(\"Error: API Key를 찾을 수 없습니다. .env 파일을 확인해주세요.\")\n\n# OpenAI 호환 클라이언트를 생성합니다.\nclient = OpenAI(\n    api_key=GMS_KEY,\n    base_url=\"https://gms.ssafy.io/gmsapi/api.openai.com/v1/\"\n)",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "load_dotenv(\".env\")",
+          "choices": [
+            "load_dotenv(\".env\")",
+            "getenv(\".env\")",
+            "dotenv_values(\".env\")",
+            "os.getenv(\".env\")"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "getenv(\"GMS_KEY\")",
+          "choices": [
+            "getenv(\"GMS_KEY\")",
+            "load_dotenv(\".env\")",
+            "getenv",
+            "getenv()"
+          ]
+        }
+      ],
+      "solution": "from os import getenv\nimport json\n\nfrom dotenv import load_dotenv\nfrom openai import OpenAI\nfrom datasets import load_dataset\n\n\n\n\n\n# 지난 시간과 마찬가지로 API KEY를 `.env` 파일에 저장한 후 불러와서 사용합시다.\n# 1. .env 파일 경로를 지정하여 환경 변수를 로드하세요\nload_dotenv(\".env\")\n\n# 2. GMS_KEY 환경 변수를 가져와 변수에 저장하세요\nGMS_KEY = getenv(\"GMS_KEY\")\n\n# 3. API 키가 정상적으로 로드되었는지 확인\nif GMS_KEY:\n    print(\"Success! API Key가 정상적으로 로드되었습니다.\")\nelse:\n    print(\"Error: API Key를 찾을 수 없습니다. .env 파일을 확인해주세요.\")\n\n# OpenAI 호환 클라이언트를 생성합니다.\nclient = OpenAI(\n    api_key=GMS_KEY,\n    base_url=\"https://gms.ssafy.io/gmsapi/api.openai.com/v1/\"\n)",
+      "explanation": "빈칸 1\n정답: `load_dotenv(\".env\")`\n역할: `.env` 파일 값을 현재 프로세스 환경 변수로 로드합니다.\n판단 근거: 다음 줄에서 GMS_KEY를 환경 변수로 조회하므로 그 전에 파일을 읽어야 합니다.\n\n빈칸 2\n정답: `getenv(\"GMS_KEY\")`\n역할: 환경 변수에서 GMS API 키를 읽어 클라이언트 설정 변수에 저장합니다.\n판단 근거: 앞에서 `.env`를 로드했고 뒤에서 이 값을 검사하거나 `api_key`로 사용합니다.\n\n완성하면 '환경 변수 기반 API 설정 로드' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-004",
+      "type": "api"
+    },
+    {
+      "unit": "2-2",
+      "title": "환경 변수 기반 API 설정 로드",
+      "content": "이 코드는 2-2 실습의 전체 과정 중 '환경 변수 기반 API 설정 로드' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 환경 변수 기반 API 설정 로드의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# 1. load_dotenv() 함수를 사용하여 .env 파일을 로드하세요\n____[1]\n\n# 2. os.getenv() 함수를 사용하여 GMS_KEY를 가져오세요\nGMS_KEY = ____[2]\n\n# 정상적으로 잘 작동하는지 확인해봅시다.\nif GMS_KEY:\n    print(\"Success API Key Setting!\")\nelse:\n    print(\"Failed to load API Key. Please check your .env file.\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "load_dotenv(\".env\")",
+          "choices": [
+            "load_dotenv(\".env\")",
+            "getenv(\".env\")",
+            "dotenv_values(\".env\")",
+            "os.getenv(\".env\")"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "os.getenv(\"GMS_KEY\")",
+          "choices": [
+            "os.getenv(\"GMS_KEY\")",
+            "load_dotenv(\".env\")",
+            "os.getenv",
+            "os.getenv()"
+          ]
+        }
+      ],
+      "solution": "# 1. load_dotenv() 함수를 사용하여 .env 파일을 로드하세요\nload_dotenv(\".env\")\n\n# 2. os.getenv() 함수를 사용하여 GMS_KEY를 가져오세요\nGMS_KEY = os.getenv(\"GMS_KEY\")\n\n# 정상적으로 잘 작동하는지 확인해봅시다.\nif GMS_KEY:\n    print(\"Success API Key Setting!\")\nelse:\n    print(\"Failed to load API Key. Please check your .env file.\")",
+      "explanation": "빈칸 1\n정답: `load_dotenv(\".env\")`\n역할: `.env` 파일 값을 현재 프로세스 환경 변수로 로드합니다.\n판단 근거: 다음 줄에서 GMS_KEY를 환경 변수로 조회하므로 그 전에 파일을 읽어야 합니다.\n\n빈칸 2\n정답: `os.getenv(\"GMS_KEY\")`\n역할: 환경 변수에서 GMS API 키를 읽어 클라이언트 설정 변수에 저장합니다.\n판단 근거: 앞에서 `.env`를 로드했고 뒤에서 이 값을 검사하거나 `api_key`로 사용합니다.\n\n완성하면 '환경 변수 기반 API 설정 로드' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-012",
+      "type": "api"
+    },
+    {
+      "unit": "2-2",
+      "title": "LLM 평가 결과의 DataFrame 변환",
+      "content": "이 코드는 2-2 실습의 전체 과정 중 'LLM 평가 결과의 DataFrame 변환' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 LLM 평가 결과의 DataFrame 변환의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# 1. 모든 합성 데이터에 대해 평가를 수행하여 `evaluation_results`에 저장해주세요.\ncriteria_list = [\n    \"요청의 충실도: 요청된 장르에 맞는 영화를 추천했는지, 필수 정보가 모두 포함되었는지\",\n    \"추천 이유의 구체성: 추천 이유가 구체적이고 설득력 있는지\",\n    \"정보의 정확성: 영화 제목과 개봉 연도가 실제와 일치하는지\"\n]\nevaluation_results = [\n    evaluate_with_llm(\n        instruction=JUDGE_SYSTEM_PROMPT,\n        output=data,\n        criteria=\"\\n\".join(criteria_list)\n    )\n    for data in synthetic_data\n]\n\n# 2. 평가 결과를 정리하여 출력하세요\nprint(\"\\n\" + \"=\" * 60)\nprint(\"평가 결과 요약\")\nprint(\"=\" * 60)\n\n# 2.1 평균 점수와 품질 분석 결과를 출력하세요\nscores = []\n\nfor eval_result in evaluation_results:\n    scores.append(eval_result[\"score\"])\n    print(eval_result[\"comment\"])\n    print(\"\\n\")\n\nprint(f\"# 평균 스코어 : {sum(scores)/len(scores)}\")\n    \n\n\n# 2.2 결과를 `pandas.DataFrame`으로 저장해주세요.\ndf = ____[1]",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "pd.DataFrame(evaluation_results)",
+          "choices": [
+            "pd.DataFrame(evaluation_results)",
+            "pd.DataFrame",
+            "pd.DataFrame()",
+            "None"
+          ]
+        }
+      ],
+      "solution": "# 1. 모든 합성 데이터에 대해 평가를 수행하여 `evaluation_results`에 저장해주세요.\ncriteria_list = [\n    \"요청의 충실도: 요청된 장르에 맞는 영화를 추천했는지, 필수 정보가 모두 포함되었는지\",\n    \"추천 이유의 구체성: 추천 이유가 구체적이고 설득력 있는지\",\n    \"정보의 정확성: 영화 제목과 개봉 연도가 실제와 일치하는지\"\n]\nevaluation_results = [\n    evaluate_with_llm(\n        instruction=JUDGE_SYSTEM_PROMPT,\n        output=data,\n        criteria=\"\\n\".join(criteria_list)\n    )\n    for data in synthetic_data\n]\n\n# 2. 평가 결과를 정리하여 출력하세요\nprint(\"\\n\" + \"=\" * 60)\nprint(\"평가 결과 요약\")\nprint(\"=\" * 60)\n\n# 2.1 평균 점수와 품질 분석 결과를 출력하세요\nscores = []\n\nfor eval_result in evaluation_results:\n    scores.append(eval_result[\"score\"])\n    print(eval_result[\"comment\"])\n    print(\"\\n\")\n\nprint(f\"# 평균 스코어 : {sum(scores)/len(scores)}\")\n    \n\n\n# 2.2 결과를 `pandas.DataFrame`으로 저장해주세요.\ndf = pd.DataFrame(evaluation_results)",
+      "explanation": "빈칸 1\n정답: `pd.DataFrame(evaluation_results)`\n역할: 샘플별 평가 결과 record 목록을 열 기반 DataFrame으로 변환합니다.\n판단 근거: 후속 코드가 컬럼 이름으로 점수와 결과를 조회하므로 DataFrame이 필요합니다.\n\n완성하면 'LLM 평가 결과의 DataFrame 변환' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-017",
+      "type": "api"
+    },
+    {
+      "unit": "2-2",
+      "title": "구조화 영화 추천 생성 함수 구현",
+      "content": "이 코드는 2-2 실습의 전체 과정 중 '구조화 영화 추천 생성 함수 구현' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 구조화 영화 추천 생성 함수 구현의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "def generate_movie_recommendation(\n    genre: str,\n    temperature: float = 1.0\n) -> dict:\n    response = client.responses.create(\n        model=\"gpt-4o-mini\",\n        instructions=STRUCTURED_GENERATOR_SYSTEM_PROMPT,\n        input=f\"{genre} 장르의 영화를 추천해주세요.\",\n        temperature=temperature\n    )\n\n    recommendation = ____[1]\n\n    return recommendation",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "json.loads(response.output_text)",
+          "choices": [
+            "json.loads(response.output_text)",
+            "json.dumps(response.output_text)",
+            "json.load(response.output_text)",
+            "ast.literal_eval(response.output_text)"
+          ]
+        }
+      ],
+      "solution": "def generate_movie_recommendation(\n    genre: str,\n    temperature: float = 1.0\n) -> dict:\n    response = client.responses.create(\n        model=\"gpt-4o-mini\",\n        instructions=STRUCTURED_GENERATOR_SYSTEM_PROMPT,\n        input=f\"{genre} 장르의 영화를 추천해주세요.\",\n        temperature=temperature\n    )\n\n    recommendation = json.loads(response.output_text)\n\n    return recommendation",
+      "explanation": "빈칸 1\n정답: `json.loads(response.output_text)`\n역할: LLM의 JSON 문자열을 Python dict/list 객체로 파싱합니다.\n판단 근거: 뒤에서 결과 필드를 key로 접근하므로 원시 문자열이 아닌 구조화 객체가 필요합니다.\n\n완성하면 '구조화 영화 추천 생성 함수 구현' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-022",
+      "type": "api"
+    },
+    {
+      "unit": "2-2",
+      "title": "LLM JSON 응답 파싱 함수 구현",
+      "content": "이 코드는 2-2 실습의 전체 과정 중 'LLM JSON 응답 파싱 함수 구현' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 LLM JSON 응답 파싱 함수 구현의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "def json_parsing(output_text: str) -> dict:\n    try:\n        # ```json ... ``` 형식에서 JSON 추출\n        if \"```json\" in output_text:\n            output_text = output_text[output_text.index(\"```json\") + len(\"```json\"):].strip()\n            output_text = output_text[:output_text.index(\"```\")].strip()\n        return ____[1]\n    except (json.JSONDecodeError, ValueError) as e:\n        print(f\"JSON 파싱 오류: {e}\")\n        return None",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "json.loads(output_text)",
+          "choices": [
+            "json.loads(output_text)",
+            "json.dumps(output_text)",
+            "json.load(output_text)",
+            "ast.literal_eval(output_text)"
+          ]
+        }
+      ],
+      "solution": "def json_parsing(output_text: str) -> dict:\n    try:\n        # ```json ... ``` 형식에서 JSON 추출\n        if \"```json\" in output_text:\n            output_text = output_text[output_text.index(\"```json\") + len(\"```json\"):].strip()\n            output_text = output_text[:output_text.index(\"```\")].strip()\n        return json.loads(output_text)\n    except (json.JSONDecodeError, ValueError) as e:\n        print(f\"JSON 파싱 오류: {e}\")\n        return None",
+      "explanation": "빈칸 1\n정답: `json.loads(output_text)`\n역할: LLM의 JSON 문자열을 Python dict/list 객체로 파싱합니다.\n판단 근거: 뒤에서 결과 필드를 key로 접근하므로 원시 문자열이 아닌 구조화 객체가 필요합니다.\n\n완성하면 'LLM JSON 응답 파싱 함수 구현' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-029",
+      "type": "api"
+    }
+  ]
+}

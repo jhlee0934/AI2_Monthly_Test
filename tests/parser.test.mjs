@@ -5,10 +5,10 @@ import fs from 'node:fs';
 import { BLANK_MARKER_PATTERN, loadProjectProblems } from '../scripts/parser.mjs';
 
 const problems = loadProjectProblems(path.resolve('.'));
-test('원본 문제는 flow와 api 유형만 포함한다', () => {
+test('원본 문제는 지원하는 세 문제 유형만 포함한다', () => {
   assert.ok(problems.length > 0);
-  assert.ok(problems.every((item) => item.type === 'flow' || item.type === 'api'));
-  assert.ok(problems.some((item) => item.type === 'api'));
+  assert.ok(problems.every((item) => ['flow', 'api', 'assembly'].includes(item.type)));
+  assert.ok(['flow', 'api', 'assembly'].every((type) => problems.some((item) => item.type === type)));
 });
 test('ID가 중복되지 않는다', () => assert.equal(new Set(problems.map((item) => item.id)).size, problems.length));
 test('난이도 분류를 생성하지 않는다', () => assert.ok(problems.every((item) => !('difficulty' in item))));
@@ -23,13 +23,72 @@ test('API 문제에는 채점 가능한 빈칸이 있다', () => {
   assert.ok(api.every((item) => item.blanks.every((blank) => blank.answer && blank.choices.includes(blank.answer))));
 });
 test('문제 파일은 개념형과 중복 통합된 API 문제의 출제 규칙을 따른다', () => {
-  const sample = JSON.parse(fs.readFileSync(path.resolve('problems/exam_questions.json'), 'utf8')).problems;
+  const sample = problems;
   assert.ok(sample.filter((item) => item.type === 'flow').every((item) => item.keywords.length >= 1 && item.keywords.length <= 2));
   assert.ok(sample.filter((item) => item.type === 'api').every((item) => item.content.includes('전체 과정 중') || item.id === 'api-generated-001'));
   assert.ok(sample.filter((item) => item.type === 'api').every((item) => item.blanks.length >= 1 && item.blanks.length <= 5));
   const solutions = sample.filter((item) => item.type === 'api').map((item) => item.solution.replace(/\s+/g, ' ').trim());
   assert.equal(new Set(solutions).size, solutions.length);
   assert.deepEqual(validateSampleIds(sample), []);
+});
+test('문제 원본은 유형별·단원별 파일로 분리되어 있다', () => {
+  for (const type of ['flow', 'api', 'assembly']) {
+    const directory = path.resolve('problems', type);
+    const files = fs.readdirSync(directory).filter((file) => file.endsWith('.json')).sort();
+    assert.ok(files.length > 0);
+    for (const file of files) {
+      const items = JSON.parse(fs.readFileSync(path.join(directory, file), 'utf8')).problems;
+      assert.ok(items.length > 0);
+      assert.ok(items.every((item) => item.type === type));
+      assert.ok(items.every((item) => item.unit === path.basename(file, '.json')));
+    }
+  }
+  assert.equal(fs.existsSync(path.resolve('problems/exam_questions.json')), false);
+});
+test('1-1과 5-2 신규 문제는 유형별 출제 수와 빈칸 계약을 만족한다', () => {
+  for (const unit of ['1-1', '5-2']) {
+    assert.equal(problems.filter((item) => item.unit === unit && item.type === 'flow').length, 6);
+    const api = problems.filter((item) => item.unit === unit && item.type === 'api');
+    assert.equal(api.length, 5);
+    assert.ok(api.every((item) => [...item.skeleton.matchAll(BLANK_MARKER_PATTERN)].length === item.blanks.length));
+    assert.ok(api.every((item) => !item.blanks.reduce((code, blank, index) => code.replace(`____[${index + 1}]`, blank.answer), item.skeleton).includes('____[')));
+  }
+});
+test('TODO 코드 조립 문제는 클릭 가능한 토큰과 슬롯 계약을 만족한다', () => {
+  const assembly = problems.filter((item) => item.type === 'assembly');
+  assert.equal(assembly.length, 52);
+  assert.ok(assembly.every((item) => item.source.includes('/문제/') && item.source.endsWith('.ipynb')));
+  assert.ok(assembly.every((item) => item.slots.length >= 1));
+  assert.ok(assembly.every((item) => [...item.skeleton.matchAll(BLANK_MARKER_PATTERN)].length === item.slots.length));
+  assert.ok(assembly.every((item) => item.slots.every((slot) => item.tokens.includes(slot.answer))));
+  assert.ok(assembly.every((item) => !item.slots.reduce((code, slot, index) => code.replace(`____[${index + 1}]`, slot.answer), item.skeleton).includes('____[')));
+  const exploration = assembly.find((item) => item.solution.includes('wine_dataset = load_wine()'));
+  assert.match(exploration.skeleton, /wine_dataset = ____\[\d+\]\(\)/);
+  assert.ok(exploration.slots.some((slot) => slot.answer === 'load_wine'));
+  const prompted = assembly.filter((item) => item.protectedRanges.length > 0 && item.solution.includes('prompt'));
+  assert.ok(prompted.length > 0);
+  assert.ok(prompted.every((item) => item.skeleton.includes('prompt = ') && !item.slots.some((slot) => /다음 문장|리뷰를 작성|자료를 기반/.test(slot.answer))));
+});
+test('세 번째 탭은 클릭 방식의 TODO 코드 조립 UI를 사용한다', () => {
+  const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
+  const html = fs.readFileSync(path.resolve('public/index.html'), 'utf8');
+  assert.match(html, /data-type="assembly"[^>]*>TODO 코드 조립/);
+  assert.match(client, /function renderAssembly\(/);
+  assert.match(client, /function placeAssemblyToken\(/);
+  assert.match(client, /class="code-token"/);
+  assert.doesNotMatch(client, /dragstart|drop|draggable=/);
+  assert.match(client, /assemblyDifficulty: 'normal'/);
+  assert.match(client, /function buildHardAssembly\(/);
+  assert.match(client, /problem\.protectedRanges\?\.some/);
+  assert.match(client, /키워드.*변수·클래스.*메서드·속성.*값·문자열/);
+  assert.doesNotMatch(client, /problem\.skeleton && problem\.type !== 'api'/);
+  assert.match(html, /class="toolbar"[\s\S]*id="assemblyDifficultyControl"/);
+  assert.match(client, /function revealAssemblySlot\(/);
+  assert.match(client, /!revealed\.includes\(slot\.id\)/);
+  assert.match(client, /id="revealAssemblySlot"[\s\S]*class="token-bank"/);
+  assert.match(client, /function ensureAssemblySlotVisible\(/);
+  assert.match(client, /function moveAssemblySlot\(/);
+  assert.match(client, /현재 슬롯 \$\{activeIndex \+ 1\}/);
 });
 test('Python 던더 이름은 API 빈칸으로 인식하지 않는다', () => {
   assert.deepEqual([...`def __init__(self):\n    ____[1]\n    return ①`.matchAll(BLANK_MARKER_PATTERN)].map((match) => match[0]), ['____[1]']);
@@ -69,6 +128,16 @@ test('문제 목록은 단원별 접기·펼치기 구조를 사용한다', () =
   assert.doesNotMatch(html, /id="unitFilter"/);
   assert.match(client, /unit\.localeCompare\(b\.unit, 'ko', \{ numeric: true \}\)/);
   assert.doesNotMatch(client, /\$\{index \+ 1\}\. \$\{escapeHtml\(item\.title\)\}/);
+});
+test('모바일에서는 세 문제 탭과 본문이 화면 폭 안에서 축소된다', () => {
+  const styles = fs.readFileSync(path.resolve('public/styles.css'), 'utf8');
+  assert.match(styles, /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(styles, /\.tabs button\{[^}]*font-size:clamp\(/);
+  assert.match(styles, /main\{padding:0 10px 34px\}/);
+  assert.match(styles, /@media\(max-width:380px\)/);
+  assert.match(styles, /\.token-group>div\{display:flex;flex-wrap:wrap;overflow-x:visible/);
+  assert.match(styles, /\.code-token\{flex:0 1 auto;[^}]*min-height:34px/);
+  assert.match(styles, /\.token-bank\{max-height:min\(38vh,320px\);[^}]*overflow-y:auto/);
 });
 test('GitHub Pages 정적 배포는 상대 경로 데이터만 사용하고 신고 기능을 포함하지 않는다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');

@@ -3,8 +3,17 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const file = path.join(root, 'problems', 'exam_questions.json');
-const payload = JSON.parse(fs.readFileSync(file, 'utf8'));
+const apiDir = path.join(root, 'problems', 'api');
+const sources = fs.readdirSync(apiDir, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+  .sort((a, b) => a.name.localeCompare(b.name, 'en', { numeric: true }))
+  .map((entry) => {
+    const file = path.join(apiDir, entry.name);
+    return { file, payload: JSON.parse(fs.readFileSync(file, 'utf8')) };
+  });
+const apiProblems = sources.flatMap(({ payload }) => payload.problems)
+  .filter((problem) => legacyApiNumber(problem) <= 35)
+  .sort((a, b) => legacyApiNumber(a) - legacyApiNumber(b));
 const result = (role, evidence) => ({ role, evidence });
 
 function explain(problem, answer) {
@@ -82,8 +91,7 @@ function explain(problem, answer) {
   throw new Error(`해설 규칙 누락: ${problem.id} / ${answer}`);
 }
 
-for (const problem of payload.problems) {
-  if (problem.type !== 'api') continue;
+for (const problem of apiProblems) {
   const sections = problem.blanks.map((blank, index) => {
     const { role, evidence } = explain(problem, blank.answer);
     return `빈칸 ${index + 1}\n정답: \`${blank.answer}\`\n역할: ${role}\n판단 근거: ${evidence}`;
@@ -91,5 +99,9 @@ for (const problem of payload.problems) {
   problem.explanation = `${sections.join('\n\n')}\n\n완성하면 '${problem.title}' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.`;
 }
 
-fs.writeFileSync(file, JSON.stringify(payload, null, 2));
+for (const { file, payload } of sources) fs.writeFileSync(file, `${JSON.stringify(payload, null, 2)}\n`);
 console.log('모든 API 빈칸의 역할과 판단 근거를 코드 문맥에 맞게 다시 작성했습니다.');
+
+function legacyApiNumber(problem) {
+  return Number(/^api-generated-(\d+)$/.exec(problem.id)?.[1] || Number.POSITIVE_INFINITY);
+}

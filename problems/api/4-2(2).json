@@ -1,0 +1,128 @@
+{
+  "problems": [
+    {
+      "unit": "4-2(2)",
+      "title": "LangGraph 워크플로우 구성",
+      "content": "이 코드는 4-2(2) 실습의 전체 과정 중 'LangGraph 워크플로우 구성' 단계를 구현하는 부분입니다. 같은 완성 코드에서 따로 출제되던 API 위치를 하나로 통합했습니다. 빈칸 앞에서 준비된 객체와 입력, 뒤의 반환·출력 또는 후속 연산을 확인해 실행 흐름이 유지되도록 각 API를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 다음 연산의 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "from langgraph.graph import StateGraph, START, END\n\ndef create_supervisor_workflow():\n    workflow = ____[1]\n\n    # 노드 추가\n    ____[2]\n    ____[3]\n    ____[4]\n\n    # Fan-out: START에서 두 Worker로 동시에 분기\n    # 힌트: add_edge(START, \"노드이름\") 을 두 번 호출하면 병렬 실행됩니다\n\n    ____[5]\n    workflow.add_edge(START, \"budget_worker\")\n    \n    \n    \n    # Fan-in: 두 Worker 모두 완료되면 supervisor_integration으로\n    # 힌트: 두 Worker에서 같은 노드로 엣지를 연결하면 LangGraph가 자동 대기합니다\n    workflow.add_edge(\"schedule_worker\", \"supervisor_integration\")\n    workflow.add_edge(\"budget_worker\", \"supervisor_integration\")\n    \n    # supervisor_integration → END 연결\n    workflow.add_edge(\"supervisor_integration\", END)\n    \n    # 컴파일\n    return workflow.compile()\n\nworkflow = create_supervisor_workflow()\nprint(\"Supervisor 패턴 워크플로우 구성 완료!\")\nprint(\"흐름: START → [schedule_worker, budget_worker] (병렬) → Supervisor 통합 → END\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "StateGraph(SupervisorState)",
+          "choices": [
+            "StateGraph(SupervisorState)",
+            "workflow.add_node(\"schedule_worker\", schedule_worker_node)",
+            "workflow.add_node(\"budget_worker\", budget_worker_node)",
+            "workflow.add_node(\"supervisor_integration\", supervisor_integration_node)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "workflow.add_node(\"schedule_worker\", schedule_worker_node)",
+          "choices": [
+            "workflow.add_node(\"schedule_worker\", schedule_worker_node)",
+            "workflow.add_edge(\"schedule_worker\", schedule_worker_node)",
+            "workflow.add_conditional_edges(\"schedule_worker\", schedule_worker_node)",
+            "workflow.set_entry_point(\"schedule_worker\", schedule_worker_node)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "workflow.add_node(\"budget_worker\", budget_worker_node)",
+          "choices": [
+            "workflow.add_node(\"budget_worker\", budget_worker_node)",
+            "workflow.add_edge(\"budget_worker\", budget_worker_node)",
+            "workflow.add_conditional_edges(\"budget_worker\", budget_worker_node)",
+            "workflow.set_entry_point(\"budget_worker\", budget_worker_node)"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "workflow.add_node(\"supervisor_integration\", supervisor_integration_node)",
+          "choices": [
+            "workflow.add_node(\"supervisor_integration\", supervisor_integration_node)",
+            "workflow.add_edge(\"supervisor_integration\", supervisor_integration_node)",
+            "workflow.add_conditional_edges(\"supervisor_integration\", supervisor_integration_node)",
+            "workflow.set_entry_point(\"supervisor_integration\", supervisor_integration_node)"
+          ]
+        },
+        {
+          "id": "blank-5",
+          "answer": "workflow.add_edge(START, \"schedule_worker\")",
+          "choices": [
+            "workflow.add_edge(START, \"schedule_worker\")",
+            "workflow.add_node(START, \"schedule_worker\")",
+            "workflow.add_conditional_edges(START, \"schedule_worker\")",
+            "workflow.set_finish_point(START, \"schedule_worker\")"
+          ]
+        }
+      ],
+      "solution": "from langgraph.graph import StateGraph, START, END\n\ndef create_supervisor_workflow():\n    workflow = StateGraph(SupervisorState)\n\n    # 노드 추가\n    workflow.add_node(\"schedule_worker\", schedule_worker_node)\n    workflow.add_node(\"budget_worker\", budget_worker_node)\n    workflow.add_node(\"supervisor_integration\", supervisor_integration_node)\n\n    # Fan-out: START에서 두 Worker로 동시에 분기\n    # 힌트: add_edge(START, \"노드이름\") 을 두 번 호출하면 병렬 실행됩니다\n\n    workflow.add_edge(START, \"schedule_worker\")\n    workflow.add_edge(START, \"budget_worker\")\n    \n    \n    \n    # Fan-in: 두 Worker 모두 완료되면 supervisor_integration으로\n    # 힌트: 두 Worker에서 같은 노드로 엣지를 연결하면 LangGraph가 자동 대기합니다\n    workflow.add_edge(\"schedule_worker\", \"supervisor_integration\")\n    workflow.add_edge(\"budget_worker\", \"supervisor_integration\")\n    \n    # supervisor_integration → END 연결\n    workflow.add_edge(\"supervisor_integration\", END)\n    \n    # 컴파일\n    return workflow.compile()\n\nworkflow = create_supervisor_workflow()\nprint(\"Supervisor 패턴 워크플로우 구성 완료!\")\nprint(\"흐름: START → [schedule_worker, budget_worker] (병렬) → Supervisor 통합 → END\")",
+      "explanation": "빈칸 1\n정답: `StateGraph(SupervisorState)`\n역할: SupervisorState를 공유 상태로 사용하는 LangGraph 정의 객체를 생성합니다.\n판단 근거: 이 객체에 worker 노드와 edge를 추가한 후 compile하므로 실행 전 StateGraph가 필요합니다.\n\n빈칸 2\n정답: `workflow.add_node(\"schedule_worker\", schedule_worker_node)`\n역할: 'schedule_worker' 노드 이름을 실제 실행 함수와 연결해 그래프에 등록합니다.\n판단 근거: 뒤에서 'schedule_worker' 이름으로 edge가 연결되므로 경로 정의 전에 callable을 add_node로 등록해야 합니다.\n\n빈칸 3\n정답: `workflow.add_node(\"budget_worker\", budget_worker_node)`\n역할: 'budget_worker' 노드 이름을 실제 실행 함수와 연결해 그래프에 등록합니다.\n판단 근거: 뒤에서 'budget_worker' 이름으로 edge가 연결되므로 경로 정의 전에 callable을 add_node로 등록해야 합니다.\n\n빈칸 4\n정답: `workflow.add_node(\"supervisor_integration\", supervisor_integration_node)`\n역할: 'supervisor_integration' 노드 이름을 실제 실행 함수와 연결해 그래프에 등록합니다.\n판단 근거: 뒤에서 'supervisor_integration' 이름으로 edge가 연결되므로 경로 정의 전에 callable을 add_node로 등록해야 합니다.\n\n빈칸 5\n정답: `workflow.add_edge(START, \"schedule_worker\")`\n역할: START, \"schedule_worker\" 사이의 LangGraph 실행 순서를 연결합니다.\n판단 근거: 연결 대상 노드는 앞에서 등록됐으며 의도한 시작·분기·합류 흐름을 만들려면 add_edge가 필요합니다.\n\n완성하면 'LangGraph 워크플로우 구성' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-009",
+      "type": "api"
+    },
+    {
+      "unit": "4-2(2)",
+      "title": "LangGraph schedule_worker 노드 등록",
+      "content": "이 코드는 4-2(2) 실습의 전체 과정 중 'LangGraph schedule_worker 노드 등록' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 LangGraph schedule_worker 노드 등록의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "def create_supervisor_workflow():\n    workflow = ____[1]\n\n    # 노드 추가\n    ____[2]\n    ____[3]\n    ____[4]\n\n    # Fan-out: START에서 두 Worker로 동시에 분기\n    # 힌트: add_edge(START, \"노드이름\") 을 두 번 호출하면 병렬 실행됩니다\n\n    workflow.add_edge(START, \"schedule_worker\")\n    workflow.add_edge(START, \"budget_worker\")\n\n\n\n    # Fan-in: 두 Worker 모두 완료되면 supervisor_integration으로\n    # 힌트: 두 Worker에서 같은 노드로 엣지를 연결하면 LangGraph가 자동 대기합니다\n    workflow.add_edge(\"schedule_worker\", \"supervisor_integration\")\n    workflow.add_edge(\"budget_worker\", \"supervisor_integration\")\n\n    # supervisor_integration → END 연결\n    workflow.add_edge(\"supervisor_integration\", END)\n\n    # 컴파일\n    return workflow.compile()",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "StateGraph(SupervisorState)",
+          "choices": [
+            "StateGraph(SupervisorState)",
+            "workflow.add_node(\"schedule_worker\", schedule_worker_node)",
+            "workflow.add_node(\"budget_worker\", budget_worker_node)",
+            "workflow.add_node(\"supervisor_integration\", supervisor_integration_node)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "workflow.add_node(\"schedule_worker\", schedule_worker_node)",
+          "choices": [
+            "workflow.add_node(\"schedule_worker\", schedule_worker_node)",
+            "workflow.add_edge(\"schedule_worker\", schedule_worker_node)",
+            "workflow.add_conditional_edges(\"schedule_worker\", schedule_worker_node)",
+            "workflow.set_entry_point(\"schedule_worker\", schedule_worker_node)"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "workflow.add_node(\"budget_worker\", budget_worker_node)",
+          "choices": [
+            "workflow.add_node(\"budget_worker\", budget_worker_node)",
+            "workflow.add_edge(\"budget_worker\", budget_worker_node)",
+            "workflow.add_conditional_edges(\"budget_worker\", budget_worker_node)",
+            "workflow.set_entry_point(\"budget_worker\", budget_worker_node)"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "workflow.add_node(\"supervisor_integration\", supervisor_integration_node)",
+          "choices": [
+            "workflow.add_node(\"supervisor_integration\", supervisor_integration_node)",
+            "workflow.add_edge(\"supervisor_integration\", supervisor_integration_node)",
+            "workflow.add_conditional_edges(\"supervisor_integration\", supervisor_integration_node)",
+            "workflow.set_entry_point(\"supervisor_integration\", supervisor_integration_node)"
+          ]
+        }
+      ],
+      "solution": "def create_supervisor_workflow():\n    workflow = StateGraph(SupervisorState)\n\n    # 노드 추가\n    workflow.add_node(\"schedule_worker\", schedule_worker_node)\n    workflow.add_node(\"budget_worker\", budget_worker_node)\n    workflow.add_node(\"supervisor_integration\", supervisor_integration_node)\n\n    # Fan-out: START에서 두 Worker로 동시에 분기\n    # 힌트: add_edge(START, \"노드이름\") 을 두 번 호출하면 병렬 실행됩니다\n\n    workflow.add_edge(START, \"schedule_worker\")\n    workflow.add_edge(START, \"budget_worker\")\n\n\n\n    # Fan-in: 두 Worker 모두 완료되면 supervisor_integration으로\n    # 힌트: 두 Worker에서 같은 노드로 엣지를 연결하면 LangGraph가 자동 대기합니다\n    workflow.add_edge(\"schedule_worker\", \"supervisor_integration\")\n    workflow.add_edge(\"budget_worker\", \"supervisor_integration\")\n\n    # supervisor_integration → END 연결\n    workflow.add_edge(\"supervisor_integration\", END)\n\n    # 컴파일\n    return workflow.compile()",
+      "explanation": "빈칸 1\n정답: `StateGraph(SupervisorState)`\n역할: SupervisorState를 공유 상태로 사용하는 LangGraph 정의 객체를 생성합니다.\n판단 근거: 이 객체에 worker 노드와 edge를 추가한 후 compile하므로 실행 전 StateGraph가 필요합니다.\n\n빈칸 2\n정답: `workflow.add_node(\"schedule_worker\", schedule_worker_node)`\n역할: 'schedule_worker' 노드 이름을 실제 실행 함수와 연결해 그래프에 등록합니다.\n판단 근거: 뒤에서 'schedule_worker' 이름으로 edge가 연결되므로 경로 정의 전에 callable을 add_node로 등록해야 합니다.\n\n빈칸 3\n정답: `workflow.add_node(\"budget_worker\", budget_worker_node)`\n역할: 'budget_worker' 노드 이름을 실제 실행 함수와 연결해 그래프에 등록합니다.\n판단 근거: 뒤에서 'budget_worker' 이름으로 edge가 연결되므로 경로 정의 전에 callable을 add_node로 등록해야 합니다.\n\n빈칸 4\n정답: `workflow.add_node(\"supervisor_integration\", supervisor_integration_node)`\n역할: 'supervisor_integration' 노드 이름을 실제 실행 함수와 연결해 그래프에 등록합니다.\n판단 근거: 뒤에서 'supervisor_integration' 이름으로 edge가 연결되므로 경로 정의 전에 callable을 add_node로 등록해야 합니다.\n\n완성하면 'LangGraph schedule_worker 노드 등록' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-032",
+      "type": "api"
+    }
+  ]
+}

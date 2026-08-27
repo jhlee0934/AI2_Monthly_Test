@@ -1,0 +1,19 @@
+{
+  "id": "assembly-example-001",
+  "unit": "예시 단원",
+  "type": "assembly",
+  "title": "TODO 코드 조립 문제 제목",
+  "content": "TODO 지시 사항을 읽고 코드 조각을 클릭해 전체 호출 코드를 완성하세요.",
+  "requirements": [
+    "호출 순서와 인자 구성을 정확히 완성한다."
+  ],
+  "skeleton": "result = client.____[1](data, option=____[2])",
+  "slots": [
+    { "id": "method", "answer": "create" },
+    { "id": "option", "answer": "True" }
+  ],
+  "tokens": ["create", "delete", "True", "False"],
+  "solution": "result = client.create(data, option=True)",
+  "explanation": "TODO가 요구하는 호출 대상, 메서드, 인자와 값의 관계를 설명합니다.",
+  "example": ""
+}

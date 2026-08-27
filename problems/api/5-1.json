@@ -1,0 +1,247 @@
+{
+  "problems": [
+    {
+      "id": "api-generated-001",
+      "unit": "5-1",
+      "type": "api",
+      "title": "LoRA 설정과 적용",
+      "content": "`FastModel.from_pretrained`로 불러온 기반 모델에 LoRA 어댑터를 추가하려고 합니다. 실습에서는 attention의 Query·Key·Value·Output projection만 학습 대상으로 삼고, rank의 두 배를 alpha로 사용하며 dropout은 적용하지 않습니다. 아래 설정 뒤에는 학습 가능한 파라미터 수를 출력해 전체 모델이 아니라 어댑터만 학습되는지 확인합니다.",
+      "requirements": [
+        "rank와 alpha의 관계를 유지한다.",
+        "attention projection 계층만 target_modules로 지정한다.",
+        "기반 모델을 LoRA 적용 모델로 다시 대입한다."
+      ],
+      "skeleton": "from unsloth import FastModel\n\nmodel, tokenizer = FastModel.from_pretrained(\n    model_name=\"unsloth/Qwen3-4B-Instruct-2507\",\n    max_seq_length=2048,\n    load_in_4bit=True,\n)\n\nr = ____[1]\nlora_alpha = ____[2]\ntarget_modules = ____[3]\nlora_dropout = ____[4]\n\nmodel = FastModel.____[5](\n    model,\n    r=r,\n    target_modules=target_modules,\n    lora_alpha=lora_alpha,\n    lora_dropout=lora_dropout,\n    bias=\"none\",\n)\nmodel.print_trainable_parameters()",
+      "blanks": [
+        {
+          "id": "lora-rank",
+          "answer": "8",
+          "choices": [
+            "8",
+            "1",
+            "128",
+            "512"
+          ]
+        },
+        {
+          "id": "lora-alpha",
+          "answer": "16",
+          "choices": [
+            "16",
+            "8",
+            "1",
+            "0"
+          ]
+        },
+        {
+          "id": "lora-targets",
+          "answer": "[\"q_proj\", \"k_proj\", \"v_proj\", \"o_proj\"]",
+          "choices": [
+            "[\"q_proj\", \"k_proj\", \"v_proj\", \"o_proj\"]",
+            "[\"embed_tokens\"]",
+            "[\"lm_head\"]",
+            "[]"
+          ]
+        },
+        {
+          "id": "lora-dropout",
+          "answer": "0",
+          "choices": [
+            "0",
+            "0.5",
+            "1",
+            "8"
+          ]
+        },
+        {
+          "id": "apply-peft",
+          "answer": "get_peft_model",
+          "choices": [
+            "get_peft_model",
+            "from_pretrained",
+            "merge_and_unload",
+            "save_pretrained"
+          ]
+        }
+      ],
+      "solution": "from unsloth import FastModel\n\nmodel, tokenizer = FastModel.from_pretrained(\n    model_name=\"unsloth/Qwen3-4B-Instruct-2507\",\n    max_seq_length=2048,\n    load_in_4bit=True,\n)\n\nr = 8\nlora_alpha = 16\ntarget_modules = [\"q_proj\", \"k_proj\", \"v_proj\", \"o_proj\"]\nlora_dropout = 0\n\nmodel = FastModel.get_peft_model(\n    model,\n    r=r,\n    target_modules=target_modules,\n    lora_alpha=lora_alpha,\n    lora_dropout=lora_dropout,\n    bias=\"none\",\n)\nmodel.print_trainable_parameters()",
+      "explanation": "빈칸 1\n정답: `8`\n역할: LoRA 저랭크 행렬의 rank를 8로 정합니다.\n판단 근거: alpha가 rank의 두 배인 16이므로 `r=8`이 실습 설정과 일치합니다.\n\n빈칸 2\n정답: `16`\n역할: LoRA 업데이트의 스케일을 조절하는 alpha를 정합니다.\n판단 근거: 앞의 rank 8과 `lora_alpha=2*r` 관계를 만족하는 값은 16입니다.\n\n빈칸 3\n정답: `[\"q_proj\", \"k_proj\", \"v_proj\", \"o_proj\"]`\n역할: LoRA 어댑터를 attention의 Q·K·V·O 투영 계층에 삽입하도록 대상을 지정합니다.\n판단 근거: `get_peft_model`의 `target_modules`는 실제 모듈 이름 목록을 요구하며 실습이 네 projection을 대상으로 합니다.\n\n빈칸 4\n정답: `0`\n역할: LoRA 어댑터 경로의 dropout을 비활성화합니다.\n판단 근거: `lora_dropout`은 확률값이고 이 실습에서는 dropout을 사용하지 않습니다.\n\n빈칸 5\n정답: `get_peft_model`\n역할: 기반 모델에 LoRA 설정을 적용해 학습 가능한 adapter가 추가된 모델로 바꿉니다.\n판단 근거: 반환값을 다시 `model`에 대입한 뒤 학습 가능한 파라미터를 출력하므로 `get_peft_model`이 필요합니다.\n\n완성하면 'LoRA 설정과 적용' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": ""
+    },
+    {
+      "unit": "5-1",
+      "title": "PyTorch 모델 평가 모드와 추론",
+      "content": "이 코드는 5-1 실습의 전체 과정 중 'PyTorch 모델 평가 모드와 추론' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 PyTorch 모델 평가 모드와 추론의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# 추론\n# [중요] 모델을 평가 모드로 전환 (Dropout 등 비활성화)\n____[1]\n\ninputs = tokenizer.apply_chat_template(\n    test_input, add_generation_prompt=True, return_dict=True, return_tensors=\"pt\"\n)\n\nwith ____[2]:\n    output_ids = model.generate(\n        **inputs.to(\"cuda\"),\n        max_new_tokens=256,\n        stop_strings=[\"<|im_end|>\", \"<|endoftext|>\"],\n        tokenizer=tokenizer\n    )\n\ninput_prompt = ____[3]\nresponse = ____[4][0][len(input_prompt) - 1:]\n\nprint(f\"모델 응답:\\n{response}\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "model.eval()",
+          "choices": [
+            "model.eval()",
+            "model.train()",
+            "torch.no_grad()",
+            "model.requires_grad_(False)"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "torch.no_grad()",
+          "choices": [
+            "torch.no_grad()",
+            "torch.enable_grad()",
+            "model.eval()",
+            "torch.set_grad_enabled()"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "tokenizer.apply_chat_template(test_input, add_generation_prompt=True, tokenize=False)",
+          "choices": [
+            "tokenizer.apply_chat_template(test_input, add_generation_prompt=True, tokenize=False)",
+            "tokenizer.encode(test_input, add_generation_prompt=True, tokenize=False)",
+            "tokenizer.apply_chat_template(test_input, add_generation_prompt=True, tokenize=True)",
+            "model.eval()"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "tokenizer.batch_decode(output_ids)",
+          "choices": [
+            "tokenizer.batch_decode(output_ids)",
+            "model.eval()",
+            "torch.no_grad()",
+            "tokenizer.apply_chat_template(test_input, add_generation_prompt=True, tokenize=False)"
+          ]
+        }
+      ],
+      "solution": "# 추론\n# [중요] 모델을 평가 모드로 전환 (Dropout 등 비활성화)\nmodel.eval()\n\ninputs = tokenizer.apply_chat_template(\n    test_input, add_generation_prompt=True, return_dict=True, return_tensors=\"pt\"\n)\n\nwith torch.no_grad():\n    output_ids = model.generate(\n        **inputs.to(\"cuda\"),\n        max_new_tokens=256,\n        stop_strings=[\"<|im_end|>\", \"<|endoftext|>\"],\n        tokenizer=tokenizer\n    )\n\ninput_prompt = tokenizer.apply_chat_template(test_input, add_generation_prompt=True, tokenize=False)\nresponse = tokenizer.batch_decode(output_ids)[0][len(input_prompt) - 1:]\n\nprint(f\"모델 응답:\\n{response}\")",
+      "explanation": "빈칸 1\n정답: `model.eval()`\n역할: 검증·추론 전에 모델을 evaluation 모드로 전환합니다.\n판단 근거: 뒤의 코드는 파라미터 갱신 없이 예측만 수행하므로 Dropout 등의 학습 동작을 꺼야 합니다.\n\n빈칸 2\n정답: `torch.no_grad()`\n역할: 평가·생성 구간의 autograd 그래프 생성을 꺼 메모리와 연산량을 줄입니다.\n판단 근거: `with` 블록 안에서는 예측이나 generate만 수행하고 backward를 호출하지 않습니다.\n\n빈칸 3\n정답: `tokenizer.apply_chat_template(test_input, add_generation_prompt=True, tokenize=False)`\n역할: role 메시지를 추론용 채팅 문자열로 직렬화하고 assistant 생성 시작 표시를 붙입니다.\n판단 근거: 뒤에서 생성 입력으로 쓰므로 tokenize=False와 add_generation_prompt=True가 필요합니다.\n\n빈칸 4\n정답: `tokenizer.batch_decode(output_ids)`\n역할: 배치의 생성 token ID들을 응답 문자열 목록으로 복원합니다.\n판단 근거: model.generate 결과가 배치 차원을 가진 token tensor이므로 batch_decode가 필요합니다.\n\n완성하면 'PyTorch 모델 평가 모드와 추론' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-010",
+      "type": "api"
+    },
+    {
+      "unit": "5-1",
+      "title": "학습 모델과 Adapter 저장",
+      "content": "이 코드는 5-1 실습의 전체 과정 중 '학습 모델과 Adapter 저장' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 학습 모델과 Adapter 저장의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# LoRA adapter만 저장 (권장)\noutput_dir = \"gemma3-lora-chess\"\n____[1]\n____[2]\n\nprint(f\"LoRA adapter 저장 완료: {output_dir}\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "model.save_pretrained(output_dir)",
+          "choices": [
+            "model.save_pretrained(output_dir)",
+            "tokenizer.save_pretrained(output_dir)",
+            "model.save_pretrained",
+            "model.save_pretrained()"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "tokenizer.save_pretrained(output_dir)",
+          "choices": [
+            "tokenizer.save_pretrained(output_dir)",
+            "model.save_pretrained(output_dir)",
+            "tokenizer.save_pretrained",
+            "tokenizer.save_pretrained()"
+          ]
+        }
+      ],
+      "solution": "# LoRA adapter만 저장 (권장)\noutput_dir = \"gemma3-lora-chess\"\nmodel.save_pretrained(output_dir)\ntokenizer.save_pretrained(output_dir)\n\nprint(f\"LoRA adapter 저장 완료: {output_dir}\")",
+      "explanation": "빈칸 1\n정답: `model.save_pretrained(output_dir)`\n역할: 학습된 LoRA adapter의 모델 설정과 가중치를 output_dir에 저장합니다.\n판단 근거: PEFT adapter를 나중에 다시 로드할 수 있는 형식으로 저장해야 합니다.\n\n빈칸 2\n정답: `tokenizer.save_pretrained(output_dir)`\n역할: 학습에 사용한 tokenizer 설정과 vocabulary를 모델과 같은 폴더에 저장합니다.\n판단 근거: adapter 재사용 시 동일한 tokenization을 복원해야 합니다.\n\n완성하면 '학습 모델과 Adapter 저장' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-015",
+      "type": "api"
+    },
+    {
+      "unit": "5-1",
+      "title": "대화형 학습 데이터 변환 함수 구현",
+      "content": "이 코드는 5-1 실습의 전체 과정 중 '대화형 학습 데이터 변환 함수 구현' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 대화형 학습 데이터 변환 함수 구현의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "import datasets\n\n# 시스템 프롬프트 (SQL 생성 지시)\nsystem_prompt = \"\"\"You are a text to SQL query translator. Users will ask you questions in Korean and you will generate a SQL query based on the provided SCHEMA.\"\"\"\n\n# 사용자 프롬프트 템플릿\nuser_prompt = \"\"\"Given the <USER_QUERY> and the <SCHEMA>, generate the corresponding SQL command to retrieve the desired data, considering the query's syntax, semantics, and schema constraints.\n\n<SCHEMA>\n{context}\n</SCHEMA>\n\n<USER_QUERY>\n{question}\n</USER_QUERY>\"\"\"\n\ndef convert_to_conversation(examples):\n    train_data = []\n    for i in range(len(examples)):\n        # system, user, assistant 역할의 메시지를 포함해야 합니다\n        example = examples.iloc[i]\n        \n        messages = [\n            {\"role\": \"system\", \"content\":system_prompt },\n            {\"role\": \"user\", \"content\" : user_prompt.format(\n                context = example[\"context\"],\n                question = example[\"question\"]\n            )},\n            {\"role\": \"assistant\", \"content\": example[\"answer\"]},\n            \n        ]\n        # chat template을 적용하여 모델 입력 형식의 텍스트로 변환\n        text = ____[1]\n        train_data.append({\"text\": text})\n    return train_data\n\n# 데이터셋 변환\ntrain_data_list = convert_to_conversation(train_data)\ntrain_dataset = datasets.Dataset.from_list(train_data_list)\n\nprint(\"변환된 샘플:\")\nprint(train_dataset[\"text\"][0])",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)",
+          "choices": [
+            "tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)",
+            "tokenizer.encode(messages, tokenize=False, add_generation_prompt=False)",
+            "tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=False)",
+            "tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)"
+          ]
+        }
+      ],
+      "solution": "import datasets\n\n# 시스템 프롬프트 (SQL 생성 지시)\nsystem_prompt = \"\"\"You are a text to SQL query translator. Users will ask you questions in Korean and you will generate a SQL query based on the provided SCHEMA.\"\"\"\n\n# 사용자 프롬프트 템플릿\nuser_prompt = \"\"\"Given the <USER_QUERY> and the <SCHEMA>, generate the corresponding SQL command to retrieve the desired data, considering the query's syntax, semantics, and schema constraints.\n\n<SCHEMA>\n{context}\n</SCHEMA>\n\n<USER_QUERY>\n{question}\n</USER_QUERY>\"\"\"\n\ndef convert_to_conversation(examples):\n    train_data = []\n    for i in range(len(examples)):\n        # system, user, assistant 역할의 메시지를 포함해야 합니다\n        example = examples.iloc[i]\n        \n        messages = [\n            {\"role\": \"system\", \"content\":system_prompt },\n            {\"role\": \"user\", \"content\" : user_prompt.format(\n                context = example[\"context\"],\n                question = example[\"question\"]\n            )},\n            {\"role\": \"assistant\", \"content\": example[\"answer\"]},\n            \n        ]\n        # chat template을 적용하여 모델 입력 형식의 텍스트로 변환\n        text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)\n        train_data.append({\"text\": text})\n    return train_data\n\n# 데이터셋 변환\ntrain_data_list = convert_to_conversation(train_data)\ntrain_dataset = datasets.Dataset.from_list(train_data_list)\n\nprint(\"변환된 샘플:\")\nprint(train_dataset[\"text\"][0])",
+      "explanation": "빈칸 1\n정답: `tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)`\n역할: system·user·assistant 메시지를 SFT 학습용 단일 채팅 문자열로 직렬화합니다.\n판단 근거: 정답 assistant 메시지까지 학습하므로 문자열을 반환하고 generation prompt는 붙이지 않습니다.\n\n완성하면 '대화형 학습 데이터 변환 함수 구현' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-020",
+      "type": "api"
+    },
+    {
+      "unit": "5-1",
+      "title": "PyTorch 모델 평가 모드와 추론",
+      "content": "이 코드는 5-1 실습의 전체 과정 중 'PyTorch 모델 평가 모드와 추론' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 PyTorch 모델 평가 모드와 추론의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "# 재현성을 위한 seed 설정 (학습 전과 동일한 조건)\ntorch.manual_seed(42)\nif torch.cuda.is_available():\n    torch.cuda.manual_seed_all(42)\n\n# 파인튜닝 전후 비교 실행\nprint(\"=\" * 70)\nprint(\"📊 LoRA 파인튜닝 전후 비교 결과\")\nprint(\"=\" * 70)\n\n# 파인튜닝된 모델로 테스트 데이터에 대한 응답 생성\nfor i, sample in enumerate(test_dataset):\n    print(f\"\\n{'─' * 70}\")\n    print(f\"🎯 테스트 샘플 {i+1}/{len(test_dataset)}\")\n    print(f\"{'─' * 70}\")\n    \n    # 질문 출력\n    print(f\"\\n[📝 질문]\")\n    print(f\"   Task: {sample['task'][:80]}...\")\n    print(f\"   Input: {sample['input'][:100]}...\")\n    \n    # 학습 전 응답 (Step 1에서 저장)\n    print(f\"\\n[❌ 학습 전 베이스 모델 응답]\")\n    print(f\"   {base_model_responses[i]['base_response'][:200]}...\")\n    \n    # 학습 후 응답 생성\n    test_messages = [\n        {\"role\": \"system\", \"content\": sample[\"task\"]},\n        {\"role\": \"user\", \"content\": sample[\"input\"]}\n    ]\n    text = tokenizer.apply_chat_template(\n        test_messages,\n        tokenize=False,\n        add_generation_prompt=True,\n    ).removeprefix('<bos>')\n    \n    inputs = tokenizer(text, return_tensors=\"pt\").to(\"cuda\")\n    with ____[1]:\n        outputs = model.generate(\n            **inputs,\n            max_new_tokens=64,\n            temperature=0.7,\n            top_p=0.95,\n            do_sample=True,\n            pad_token_id=tokenizer.pad_token_id,\n        )\n    \n    finetuned_response = tokenizer.decode(\n        outputs[0][inputs[\"input_ids\"].shape[1]:], \n        skip_special_tokens=True\n    ).strip()\n    \n    print(f\"\\n[✅ 학습 후 파인튜닝 모델 응답]\")\n    print(f\"   {finetuned_response[:200]}...\")\n    \n    # 정답 출력\n    print(f\"\\n[🎯 정답 (expected_output)]\")\n    print(f\"   {sample['expected_output'][:200]}...\")\n\nprint(f\"\\n{'=' * 70}\")\nprint(\"📊 비교 완료!\")\nprint(\"=\" * 70)\nprint(\"\\n💡 관찰 포인트:\")\nprint(\"   1. 학습 전: 체스 기보(notation) 해석이 어려움\")\nprint(\"   2. 학습 후: 체스 도메인 지식이 향상되어 더 정확한 응답\")\nprint(\"   3. 단 100 step 학습으로도 도메인 적응 효과 확인 가능\")\nprint(\"\\n✅ LoRA 파인튜닝이 실제로 작동하는 것을 체감했습니다!\")",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "torch.no_grad()",
+          "choices": [
+            "torch.no_grad()",
+            "torch.enable_grad()",
+            "model.eval()",
+            "torch.set_grad_enabled()"
+          ]
+        }
+      ],
+      "solution": "# 재현성을 위한 seed 설정 (학습 전과 동일한 조건)\ntorch.manual_seed(42)\nif torch.cuda.is_available():\n    torch.cuda.manual_seed_all(42)\n\n# 파인튜닝 전후 비교 실행\nprint(\"=\" * 70)\nprint(\"📊 LoRA 파인튜닝 전후 비교 결과\")\nprint(\"=\" * 70)\n\n# 파인튜닝된 모델로 테스트 데이터에 대한 응답 생성\nfor i, sample in enumerate(test_dataset):\n    print(f\"\\n{'─' * 70}\")\n    print(f\"🎯 테스트 샘플 {i+1}/{len(test_dataset)}\")\n    print(f\"{'─' * 70}\")\n    \n    # 질문 출력\n    print(f\"\\n[📝 질문]\")\n    print(f\"   Task: {sample['task'][:80]}...\")\n    print(f\"   Input: {sample['input'][:100]}...\")\n    \n    # 학습 전 응답 (Step 1에서 저장)\n    print(f\"\\n[❌ 학습 전 베이스 모델 응답]\")\n    print(f\"   {base_model_responses[i]['base_response'][:200]}...\")\n    \n    # 학습 후 응답 생성\n    test_messages = [\n        {\"role\": \"system\", \"content\": sample[\"task\"]},\n        {\"role\": \"user\", \"content\": sample[\"input\"]}\n    ]\n    text = tokenizer.apply_chat_template(\n        test_messages,\n        tokenize=False,\n        add_generation_prompt=True,\n    ).removeprefix('<bos>')\n    \n    inputs = tokenizer(text, return_tensors=\"pt\").to(\"cuda\")\n    with torch.no_grad():\n        outputs = model.generate(\n            **inputs,\n            max_new_tokens=64,\n            temperature=0.7,\n            top_p=0.95,\n            do_sample=True,\n            pad_token_id=tokenizer.pad_token_id,\n        )\n    \n    finetuned_response = tokenizer.decode(\n        outputs[0][inputs[\"input_ids\"].shape[1]:], \n        skip_special_tokens=True\n    ).strip()\n    \n    print(f\"\\n[✅ 학습 후 파인튜닝 모델 응답]\")\n    print(f\"   {finetuned_response[:200]}...\")\n    \n    # 정답 출력\n    print(f\"\\n[🎯 정답 (expected_output)]\")\n    print(f\"   {sample['expected_output'][:200]}...\")\n\nprint(f\"\\n{'=' * 70}\")\nprint(\"📊 비교 완료!\")\nprint(\"=\" * 70)\nprint(\"\\n💡 관찰 포인트:\")\nprint(\"   1. 학습 전: 체스 기보(notation) 해석이 어려움\")\nprint(\"   2. 학습 후: 체스 도메인 지식이 향상되어 더 정확한 응답\")\nprint(\"   3. 단 100 step 학습으로도 도메인 적응 효과 확인 가능\")\nprint(\"\\n✅ LoRA 파인튜닝이 실제로 작동하는 것을 체감했습니다!\")",
+      "explanation": "빈칸 1\n정답: `torch.no_grad()`\n역할: 평가·생성 구간의 autograd 그래프 생성을 꺼 메모리와 연산량을 줄입니다.\n판단 근거: `with` 블록 안에서는 예측이나 generate만 수행하고 backward를 호출하지 않습니다.\n\n완성하면 'PyTorch 모델 평가 모드와 추론' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-026",
+      "type": "api"
+    },
+    {
+      "unit": "5-1",
+      "title": "대화형 학습 데이터 변환 함수 구현",
+      "content": "이 코드는 5-1 실습의 전체 과정 중 '대화형 학습 데이터 변환 함수 구현' 단계를 구현하는 부분입니다. 빈칸 앞에서 필요한 객체와 입력 데이터가 준비되어 있으며, 코드를 완성하면 대화형 학습 데이터 변환 함수 구현의 결과가 반환값·출력 또는 다음 연산으로 전달됩니다. 함수 시그니처, 주석, 빈칸 뒤 연산이 요구하는 타입과 shape를 근거로 알맞은 API와 인자를 선택하세요.",
+      "requirements": [
+        "빈칸 이외의 코드와 이미 준비된 객체·입력은 변경하지 않는다.",
+        "각 선택은 바로 다음 연산이 요구하는 입력 타입, 반환값과 실행 순서를 유지해야 한다."
+      ],
+      "skeleton": "def convert_to_conversation(examples):\n    train_data = []\n    for i in range(len(examples)):\n        # system, user, assistant 역할의 메시지를 포함해야 합니다\n        example = examples.iloc[i]\n\n        messages = [\n            {\"role\": \"system\", \"content\":system_prompt },\n            {\"role\": \"user\", \"content\" : user_prompt.format(\n                context = example[\"context\"],\n                question = example[\"question\"]\n            )},\n            {\"role\": \"assistant\", \"content\": example[\"answer\"]},\n\n        ]\n        # chat template을 적용하여 모델 입력 형식의 텍스트로 변환\n        text = ____[1]\n        train_data.append({\"text\": text})\n    return train_data",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)",
+          "choices": [
+            "tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)",
+            "tokenizer.encode(messages, tokenize=False, add_generation_prompt=False)",
+            "tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=False)",
+            "tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)"
+          ]
+        }
+      ],
+      "solution": "def convert_to_conversation(examples):\n    train_data = []\n    for i in range(len(examples)):\n        # system, user, assistant 역할의 메시지를 포함해야 합니다\n        example = examples.iloc[i]\n\n        messages = [\n            {\"role\": \"system\", \"content\":system_prompt },\n            {\"role\": \"user\", \"content\" : user_prompt.format(\n                context = example[\"context\"],\n                question = example[\"question\"]\n            )},\n            {\"role\": \"assistant\", \"content\": example[\"answer\"]},\n\n        ]\n        # chat template을 적용하여 모델 입력 형식의 텍스트로 변환\n        text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)\n        train_data.append({\"text\": text})\n    return train_data",
+      "explanation": "빈칸 1\n정답: `tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)`\n역할: system·user·assistant 메시지를 SFT 학습용 단일 채팅 문자열로 직렬화합니다.\n판단 근거: 정답 assistant 메시지까지 학습하므로 문자열을 반환하고 generation prompt는 붙이지 않습니다.\n\n완성하면 '대화형 학습 데이터 변환 함수 구현' 단계의 입력 준비 → 핵심 API 호출 → 결과 사용 흐름이 연결됩니다.",
+      "example": "",
+      "id": "api-generated-033",
+      "type": "api"
+    }
+  ]
+}
