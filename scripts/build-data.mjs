@@ -1,11 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseProblems } from './parser.mjs';
+import { loadProjectProblems } from './parser.mjs';
 import { validateProblems } from './problem-pack.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const problems = parseProblems(path.join(root, 'problems'));
+const problems = loadProjectProblems(root);
 const errors = validateProblems(problems);
 if (errors.length) throw new Error(`변환된 문제 검증 실패:\n- ${errors.join('\n- ')}`);
 const output = path.join(root, 'problem-packs', 'monthly-ai', 'problems.json');

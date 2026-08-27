@@ -6,7 +6,6 @@ AI·딥러닝 수업의 월말평가 문제를 브라우저에서 풀고 채점�
 
 - Node.js 20 이상, 네이티브 `node:http` 서버
 - 브라우저 JavaScript와 CSS
-- CodeMirror 6 Python 편집기
 - esbuild 클라이언트 번들링
 - Node 내장 테스트 러너
 - OpenAI Responses API 기반 코딩 답안 검토
@@ -42,7 +41,7 @@ npm.cmd run dev
 ├─ public/
 │  ├─ index.html                      # 애플리케이션 HTML 골격
 │  ├─ app.js                          # 상태, 렌더링, 채점, API 호출
-│  ├─ app.bundle.js                   # 생성 파일: CodeMirror 포함 번들
+│  ├─ app.bundle.js                   # 생성된 브라우저 번들
 │  └─ styles.css                      # 공통 및 반응형 스타일
 ├─ dist/                              # 생성 파일: 프로덕션 정적 결과
 ├─ problems/
@@ -79,13 +78,12 @@ npm.cmd run dev
 3. API 문제는 정답을 추출하고 오답 선택지를 구성한다.
 4. 모든 결과는 `validateProblems()`를 통과해야 저장된다.
 
-현재 기본 팩은 총 210문제다.
+현재 기본 팩은 `problems/`의 `flow`, `api` 문제만 빌드한다. 현재 데이터는 개념 확인 주관식 50개와 중복 코드를 통합한 API 빈칸 35개로 총 85문제다.
 
 | 유형 | 내부 값 | 개수 | 채점 방식 |
 | --- | --- | ---: | --- |
 | 개념 확인 주관식 | `flow` | 80 | 핵심 키워드 포함 비율 |
 | API 빈칸 | `api` | 100 | 빈칸별 정답 문자열 일치 |
-| 실전 코딩 | `coding` | 30 | OpenAI 정적 검토 결과 |
 
 ### 서버 계층
 
@@ -94,14 +92,12 @@ npm.cmd run dev
 | 요청 | 동작 |
 | --- | --- |
 | `GET /api/problems` | 활성 팩을 로드·검증하고 공개 매니페스트와 문제 배열 반환 |
-| `POST /api/review` | 코딩 문제와 입력을 검사하고 OpenAI에 구조화 검토 요청 |
 | `GET`, `HEAD /*` | `dist/` 또는 `public/` 정적 파일 제공 |
 
 활성 팩은 `.env`의 `PROBLEM_PACK`이 우선이며, 없으면 `problem-pack.config.json`의 `activePack`을 사용한다. 팩 이름과 내부 경로는 허용된 문제 팩 디렉터리를 벗어나지 못하도록 검사한다.
 
 코드 검토 제한:
 
-- 활성 팩에 존재하는 `coding` 문제만 허용
 - 코드 최대 20,000자
 - IP별 1분에 최대 5회
 - OpenAI 출력 최대 2,000토큰
@@ -144,11 +140,11 @@ GITHUB_REPORT_REPO=AI2_Monthly_Test
 
 - 문제 팩을 가져와 유형별로 필터링한다.
 - 단원별 목록과 현재 문제를 렌더링한다.
-- 유형에 따라 주관식, 빈칸, CodeMirror 편집기를 생성한다.
+- 유형에 따라 주관식 또는 API 빈칸 입력을 생성한다.
 - 작성 중 답안과 제출 결과를 문제 ID 기준으로 저장한다.
 - 진행률과 이전·다음 문제 탐색을 갱신한다.
 
-저장 키는 `monthly-ai-practice:v1`이며 진행 상태는 문제 팩 ID별로 분리한다. 문제 `id`는 저장된 답안의 영구 키이므로 배포 후 바꾸면 기존 진행 상태가 연결되지 않는다. OpenAI API 키와 모델 입력값은 진행 상태에 저장하지 않는다.
+저장 키는 `monthly-ai-practice:v1`이며 진행 상태는 문제 팩 ID별로 분리한다. 문제 `id`는 저장된 답안의 영구 키이므로 배포 후 바꾸면 기존 진행 상태가 연결되지 않는다.
 
 ## 실행 흐름
 
@@ -219,12 +215,12 @@ npm run build
 | --- | --- | --- |
 | `id` | 필수 | 팩 안에서 고유한 영구 식별자 |
 | `unit` | 필수 | 사이드바 그룹 이름 |
-| `type` | 필수 | `flow`, `api`, `coding` 중 하나 |
+| `type` | 필수 | `flow`, `api` 중 하나 |
 | `title` | 필수 | 짧은 문제 제목 |
 | `content` | 필수 | 문제 본문 문자열 |
 | `requirements` | 필수 | 평가할 요구사항 문자열 배열 |
 | `constraints` | 선택 | 제한 조건 문자열 배열 |
-| `skeleton` | 유형별 | 제공 코드 또는 빈칸 코드 |
+| `skeleton` | API | 빈칸 코드 |
 | `example` | 선택 | 입력·출력 또는 실행 예시 |
 | `solution` | 선택 | 정답 또는 완성 코드 |
 | `explanation` | 선택 | 제출 후 보여줄 해설 |
@@ -276,7 +272,6 @@ npm.cmd run build
 - 세 유형 생성 여부와 ID 중복
 - API 빈칸의 정답/선택지 정합성
 - 원본 Markdown 구조 문법 제거
-- 코딩 자동완성이 모범 답안을 직접 참조하지 않는지 확인
 - 공통 API 설정, 접근성 속성, 단원 접기 UI 회귀
 
 `tests/problem-pack.test.mjs`는 템플릿 검증, 기본 팩 로딩, 잘못된 문제 거부를 검사한다. API 해설 품질 테스트는 각 해설에 정답별 개념과 완성 코드 맥락이 포함되기를 요구한다.
@@ -292,7 +287,6 @@ npm.cmd run build
 
 - 단원 제목: 문제 목록 접기·펼치기
 - `Alt + ←`, `Alt + →`: 이전·다음 문제
-- 코드 편집기 `Tab`: 자동완성 선택 또는 들여쓰기
-- 코드 편집기 `Ctrl + Space`: 자동완성 열기
+- 블록 초기화: 문제의 `initialWorkspace`로 복원
 - 선택지 섞기: API 선택지 표시 순서 변경
 - 풀이 초기화: 현재 팩의 답안과 채점 결과 삭제

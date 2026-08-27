@@ -4,9 +4,12 @@ import path from 'node:path';
 const TYPE_MAP = {
   '01_구현흐름': 'flow',
   '02_API빈칸': 'api',
-  '03_실전코딩': 'coding',
 };
 export const BLANK_MARKER_PATTERN = /_{2,}\[(\d+)\]/g;
+
+export function loadProjectProblems(root) {
+  return parseProblems(path.join(root, 'problems'));
+}
 
 const clean = (value = '') => value
   .replace(/<a id="[^"]+"><\/a>/g, '')
@@ -119,7 +122,7 @@ export function parseProblems(root) {
       const explanation = section(part.answer, '핵심 해설');
       raw.push({
         id: `${unit}-${topic}-${type}-${part.number}`.replace(/\s+/g, '-'), unit, type,
-        title: part.title || titleMatch?.[1]?.trim() || markdown.match(/^#\s+(.+?)(?::\s*(?:구현 흐름|API 빈칸|실전 코딩))?$/m)?.[1] || `문제 ${part.number}`,
+        title: part.title || titleMatch?.[1]?.trim() || markdown.match(/^#\s+(.+?)(?::\s*(?:구현 흐름|API 빈칸))?$/m)?.[1] || `문제 ${part.number}`,
         content: problemText, requirements,
         skeleton, example, solution, explanation, source: relative,
       });

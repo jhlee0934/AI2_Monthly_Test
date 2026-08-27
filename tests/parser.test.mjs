@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import fs from 'node:fs';
-import { BLANK_MARKER_PATTERN, parseProblems } from '../scripts/parser.mjs';
+import { BLANK_MARKER_PATTERN, loadProjectProblems } from '../scripts/parser.mjs';
 
-const problems = parseProblems(path.resolve('problems'));
-test('세 문제 유형이 모두 변환된다', () => {
-  assert.ok(problems.length > 30);
-  assert.deepEqual(new Set(problems.map((item) => item.type)), new Set(['flow', 'api', 'coding']));
+const problems = loadProjectProblems(path.resolve('.'));
+test('원본 문제는 flow와 api 유형만 포함한다', () => {
+  assert.ok(problems.length > 0);
+  assert.ok(problems.every((item) => item.type === 'flow' || item.type === 'api'));
+  assert.ok(problems.some((item) => item.type === 'api'));
 });
 test('ID가 중복되지 않는다', () => assert.equal(new Set(problems.map((item) => item.id)).size, problems.length));
 test('난이도 분류를 생성하지 않는다', () => assert.ok(problems.every((item) => !('difficulty' in item))));
@@ -21,6 +22,17 @@ test('API 문제에는 채점 가능한 빈칸이 있다', () => {
   assert.ok(api.every((item) => item.blanks.length > 0));
   assert.ok(api.every((item) => item.blanks.every((blank) => blank.answer && blank.choices.includes(blank.answer))));
 });
+test('문제 파일은 개념형 50개와 중복 통합된 API 문제를 제공한다', () => {
+  const sample = JSON.parse(fs.readFileSync(path.resolve('problems/exam_questions.json'), 'utf8')).problems;
+  assert.equal(sample.filter((item) => item.type === 'flow').length, 50);
+  assert.equal(sample.filter((item) => item.type === 'api').length, 35);
+  assert.ok(sample.filter((item) => item.type === 'flow').every((item) => item.keywords.length >= 1 && item.keywords.length <= 2));
+  assert.ok(sample.filter((item) => item.type === 'api').every((item) => item.content.includes('전체 과정 중') || item.id === 'api-generated-001'));
+  assert.ok(sample.filter((item) => item.type === 'api').every((item) => item.blanks.length >= 1 && item.blanks.length <= 5));
+  const solutions = sample.filter((item) => item.type === 'api').map((item) => item.solution.replace(/\s+/g, ' ').trim());
+  assert.equal(new Set(solutions).size, solutions.length);
+  assert.deepEqual(validateSampleIds(sample), []);
+});
 test('Python 던더 이름은 API 빈칸으로 인식하지 않는다', () => {
   assert.deepEqual([...`def __init__(self):\n    ____[1]\n    return ①`.matchAll(BLANK_MARKER_PATTERN)].map((match) => match[0]), ['____[1]']);
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
@@ -30,24 +42,21 @@ test('Python 던더 이름은 API 빈칸으로 인식하지 않는다', () => {
 
 test('API 문제 해설은 정답별 개념과 완성 코드 맥락을 제공한다', () => {
   const api = problems.filter((item) => item.type === 'api');
-  assert.equal(new Set(api.map((item) => item.explanation)).size, api.length);
-  assert.ok(api.every((item) => item.explanation.includes('완성하면')));
-  assert.ok(api.every((item) => item.blanks.every((blank) => item.explanation.includes(blank.answer))));
-  assert.ok(api.every((item) => !item.explanation.includes('노트북이 사용한 핵심 호출 또는 옵션')));
+  const samples = api.filter((item) => item.id.startsWith('api-generated-'));
+  assert.equal(new Set(samples.map((item) => item.explanation)).size, samples.length);
+  assert.ok(samples.every((item) => item.explanation.includes('완성하면')));
+  assert.ok(samples.every((item) => item.blanks.every((blank) => item.explanation.includes(blank.answer))));
+  assert.ok(samples.every((item) => !item.explanation.includes('노트북이 사용한 핵심 호출 또는 옵션')));
 });
-test('실전 코딩 문제는 요구사항과 스켈레톤을 보존한다', () => assert.ok(problems.filter((item) => item.type === 'coding').every((item) => item.requirements.length && item.skeleton)));
-test('자동완성 후보가 모범 답안을 직접 사용하지 않는다', () => {
+test('기존 coding 유형과 CodeMirror 구현을 포함하지 않는다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
-  assert.doesNotMatch(client, /buildPythonCompletions[\s\S]*?problem\.solution[\s\S]*?return \[\.\.\.suggestions\.values\(\)\]/);
+  assert.doesNotMatch(client, /CodeMirror|buildPythonCompletions|renderCoding|type === 'coding'/);
 });
-test('공통 API 설정과 Tab 자동완성 적용이 유지된다', () => {
+test('Blockly 편집기와 사용자 API 키 입력을 포함하지 않는다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
   const html = fs.readFileSync(path.resolve('public/index.html'), 'utf8');
-  assert.match(client, /key: 'Tab', run: acceptCompletion/);
-  assert.match(html, /id="globalApiKey"/);
-  assert.match(html, /id="globalModel"[^>]*value="gpt-5\.4-mini"/);
-  assert.match(html, /<details class="api-settings-dropdown">/);
-  assert.doesNotMatch(client, /id="apiKey"|id="reviewModel"/);
+  assert.doesNotMatch(client, /Blockly|pythonGenerator|\/api\/review/);
+  assert.doesNotMatch(html, /blockly|globalApiKey|globalModel|api-settings-dropdown/i);
 });
 test('문제 목록은 단원별 접기·펼치기 구조를 사용한다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
@@ -57,6 +66,8 @@ test('문제 목록은 단원별 접기·펼치기 구조를 사용한다', () =
   assert.match(client, /querySelectorAll\('\.problem-link'\)/);
   assert.doesNotMatch(client, /els\.list\.querySelectorAll\('button'\)/);
   assert.doesNotMatch(html, /id="unitFilter"/);
+  assert.match(client, /unit\.localeCompare\(b\.unit, 'ko', \{ numeric: true \}\)/);
+  assert.doesNotMatch(client, /\$\{index \+ 1\}\. \$\{escapeHtml\(item\.title\)\}/);
 });
 test('문제 신고는 서버 API를 통하고 GitHub 토큰을 클라이언트에 포함하지 않는다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
@@ -68,3 +79,9 @@ test('문제 신고는 서버 API를 통하고 GitHub 토큰을 클라이언트�
   assert.match(server, /REPORT_CATEGORIES/);
   assert.doesNotMatch(`${client}\n${html}`, /GITHUB_REPORT_TOKEN|gh[pousr]_[A-Za-z0-9]/);
 });
+
+function validateSampleIds(items) {
+  const seen = new Set(); const errors = [];
+  for (const item of items) { if (seen.has(item.id)) errors.push(item.id); seen.add(item.id); }
+  return errors;
+}

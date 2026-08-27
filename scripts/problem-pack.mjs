@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const TYPES = new Set(['flow', 'api', 'coding']);
+const TYPES = new Set(['flow', 'api']);
 
 export function loadActiveProblemPack(root) {
   const configPath = path.join(root, 'problem-pack.config.json');
@@ -45,7 +45,7 @@ export function validateProblems(problems) {
     for (const field of ['id', 'unit', 'type', 'title']) if (typeof problem[field] !== 'string' || !problem[field].trim()) errors.push(`${at}: ${field}는 비어 있지 않은 문자열이어야 합니다.`);
     if (typeof problem.content !== 'string') errors.push(`${at}: content는 문자열이어야 합니다.`);
     if (problem.id) { if (ids.has(problem.id)) errors.push(`${at}: ID '${problem.id}'가 중복됩니다.`); ids.add(problem.id); }
-    if (!TYPES.has(problem.type)) errors.push(`${at}: type은 flow, api, coding 중 하나여야 합니다.`);
+    if (!TYPES.has(problem.type)) errors.push(`${at}: type은 flow 또는 api여야 합니다.`);
     if (!Array.isArray(problem.requirements)) errors.push(`${at}: requirements는 문자열 배열이어야 합니다.`);
     else if (problem.requirements.some((item) => typeof item !== 'string')) errors.push(`${at}: requirements의 모든 항목은 문자열이어야 합니다.`);
     if (problem.constraints != null && (!Array.isArray(problem.constraints) || problem.constraints.some((item) => typeof item !== 'string'))) errors.push(`${at}: constraints는 문자열 배열이어야 합니다.`);
@@ -62,7 +62,6 @@ export function validateProblems(problems) {
         else if (!blank.choices.includes(blank.answer)) errors.push(`${at} 빈칸 ${blankIndex + 1}: choices에 answer가 포함되어야 합니다.`);
       });
     }
-    if (problem.type === 'coding' && (!problem.skeleton || !problem.requirements?.length)) errors.push(`${at}: coding 문제에는 skeleton과 requirements가 필요합니다.`);
   });
   return errors;
 }
