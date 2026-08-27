@@ -76,10 +76,22 @@ test('GitHub Pages 정적 배포는 상대 경로 데이터만 사용하고 신�
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
   const html = fs.readFileSync(path.resolve('public/index.html'), 'utf8');
   const server = fs.readFileSync(path.resolve('server.mjs'), 'utf8');
-  assert.match(client, /fetch\('\.\/data\/problems\.json'/);
+  assert.match(client, /fetch\('\.\/data\/problems\.json', \{ cache: 'no-store' \}\)/);
   assert.match(html, /href="\.\/styles\.css"/);
   assert.match(html, /src="\.\/app\.bundle\.js"/);
   assert.doesNotMatch(`${client}\n${html}\n${server}`, /\/api\/reports|reportDialog/);
+});
+test('API 피드백은 문제 파일의 explanation만 해설로 출력한다', () => {
+  const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
+  const feedback = client.match(/function showApiFeedback[\s\S]*?\nfunction /)?.[0] || '';
+  assert.match(feedback, /markdown\(problem\.explanation\)/);
+  assert.doesNotMatch(feedback, /problem\.solution|problem\.blanks\[index\]\.answer|정답 코드/);
+});
+test('API 정답 보기는 빈칸 선택 여부와 관계없이 실행된다', () => {
+  const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
+  const grading = client.match(/function gradeApi[\s\S]*?\nfunction /)?.[0] || '';
+  assert.match(grading, /const results = problem\.blanks\.map/);
+  assert.doesNotMatch(grading, /Object\.keys\(selections\)\.length|모든 빈칸의 답을 선택/);
 });
 
 function validateSampleIds(items) {

@@ -10,7 +10,7 @@ $('#resetAll').addEventListener('click', () => { if (confirm('저장된 모든 �
 document.addEventListener('keydown', (event) => { if (event.altKey && event.key === 'ArrowLeft') move(-1); if (event.altKey && event.key === 'ArrowRight') move(1); });
 
 try {
-  const response = await fetch('./data/problems.json');
+  const response = await fetch('./data/problems.json', { cache: 'no-store' });
   if (!response.ok) throw new Error('문제 자료 요청에 실패했습니다.');
   const payload = await response.json();
   if (!Array.isArray(payload.problems)) throw new Error('문제 자료 형식이 올바르지 않습니다.');
@@ -65,8 +65,8 @@ function renderApi(problem) {
   els.answer.querySelectorAll('.blank-select').forEach((select) => select.addEventListener('change', () => { els.answer.querySelectorAll(`.blank-select[data-blank-id="${select.dataset.blankId}"]`).forEach((sameBlank) => { sameBlank.value = select.value; }); const selections = collectSelections(problem); update(problem.id, { selections }, false); }));
   $('#submitApi').addEventListener('click', () => gradeApi(problem)); if (saved.submitted) showApiFeedback(problem, saved);
 }
-function gradeApi(problem) { const selections = collectSelections(problem); if (Object.keys(selections).length < problem.blanks.length) return message('모든 빈칸의 답을 선택해 주세요.', 'error'); const results = problem.blanks.map((blank) => selections[blank.id] === blank.answer); const saved = { selections, results, submitted: true, status: results.every(Boolean) ? 'correct' : 'incorrect' }; update(problem.id, saved); showApiFeedback(problem, saved); }
-function showApiFeedback(problem, saved) { const resultArea = $('#blankResults'); if (resultArea) resultArea.innerHTML = (saved.results || []).map((correct, index) => `<span class="blank-result ${correct ? 'correct' : 'incorrect'}">빈칸 ${index + 1}: ${correct ? '정답' : `오답 · 정답은 ${escapeHtml(problem.blanks[index].answer)}`}</span>`).join(''); els.feedback.innerHTML = `<div class="feedback ${saved.status}"><h3>${statusLabel(saved.status)}</h3><details open><summary>문제 설명과 정답 코드</summary>${code(problem.solution)}${markdown(problem.explanation)}</details></div>`; }
+function gradeApi(problem) { const selections = collectSelections(problem); const results = problem.blanks.map((blank) => selections[blank.id] === blank.answer); const saved = { selections, results, submitted: true, status: results.every(Boolean) ? 'correct' : 'incorrect' }; update(problem.id, saved); showApiFeedback(problem, saved); }
+function showApiFeedback(problem, saved) { const resultArea = $('#blankResults'); if (resultArea) resultArea.innerHTML = (saved.results || []).map((correct, index) => `<span class="blank-result ${correct ? 'correct' : 'incorrect'}">빈칸 ${index + 1}: ${correct ? '정답' : '오답'}</span>`).join(''); els.feedback.innerHTML = `<div class="feedback ${saved.status}"><h3>${statusLabel(saved.status)}</h3><details open><summary>해설</summary>${markdown(problem.explanation)}</details></div>`; }
 function collectSelections(problem) { const result = {}; problem.blanks.forEach((blank) => { const selected = document.querySelector(`select[data-blank-id="${blank.id}"]`); if (selected?.value) result[blank.id] = selected.value; }); return result; }
 function renderBlankCode(problem, selections) {
   const markerIndexes = new Map();
