@@ -79,6 +79,11 @@ test('GitHub Pages 정적 배포는 상대 경로 데이터만 사용하고 신�
   assert.match(html, /src="\.\/app\.bundle\.js"/);
   assert.doesNotMatch(`${client}\n${html}\n${server}`, /\/api\/reports|reportDialog/);
 });
+test('개발 서버는 dist 존재 여부와 무관하게 public 디렉터리를 제공한다', () => {
+  const server = fs.readFileSync(path.resolve('server.mjs'), 'utf8');
+  assert.match(server, /const publicDir = path\.join\(root, 'public'\);/);
+  assert.doesNotMatch(server, /existsSync\(path\.join\(root, 'dist'\)\)/);
+});
 test('API 피드백은 문제 파일의 explanation만 해설로 출력한다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
   const feedback = client.match(/function showApiFeedback[\s\S]*?\nfunction /)?.[0] || '';

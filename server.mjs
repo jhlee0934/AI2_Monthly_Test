@@ -6,7 +6,7 @@ import { loadActiveProblemPack } from './scripts/problem-pack.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 loadEnv(path.join(root, '.env'));
-const publicDir = fs.existsSync(path.join(root, 'dist')) ? path.join(root, 'dist') : path.join(root, 'public');
+const publicDir = path.join(root, 'public');
 const reportRateLimits = new Map();
 const PORT = Number(process.env.PORT) || 3000;
 const REPORT_CATEGORIES = new Map([

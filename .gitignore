@@ -1,4 +1,5 @@
 node_modules/
+dist/
 public/app.bundle.js
 public/app.bundle.js.map
 .env

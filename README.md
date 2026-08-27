@@ -28,7 +28,7 @@ npm.cmd run dev
 
 `npm run dev`는 데이터 생성, 문제 팩 검증, 클라이언트 번들링 후 서버를 watch 모드로 시작한다.
 
-> `dist/`가 존재하면 서버는 `public/`보다 `dist/`를 우선 제공한다. 소스 변경이 화면에 반영되지 않으면 프로덕션 빌드 결과가 최신인지 먼저 확인한다.
+개발 서버는 항상 `public/`을 제공한다. `dist/`는 `npm run build`와 GitHub Actions에서 생성하는 배포 전용 결과이며 Git에서 추적하지 않는다.
 
 ## 디렉터리 구조
 
@@ -92,7 +92,7 @@ npm.cmd run dev
 | 요청 | 동작 |
 | --- | --- |
 | `./data/problems.json` | GitHub Pages에서 읽는 정적 문제 팩 |
-| `GET`, `HEAD /*` | `dist/` 또는 `public/` 정적 파일 제공 |
+| `GET`, `HEAD /*` | `public/` 정적 파일 제공 |
 
 활성 팩은 `.env`의 `PROBLEM_PACK`이 우선이며, 없으면 `problem-pack.config.json`의 `activePack`을 사용한다. 팩 이름과 내부 경로는 허용된 문제 팩 디렉터리를 벗어나지 못하도록 검사한다.
 
@@ -280,7 +280,7 @@ npm.cmd run build
 
 - API 키를 소스, 예제 환경파일, 클라이언트 저장소에 넣지 않는다.
 - 현재 구조는 개인 또는 제한된 교육 환경을 전제로 한다. 공개 서비스라면 인증, 중앙 rate limit, HTTPS, CSP, 요청 로깅 정책이 필요하다.
-- `dist/` 존재 여부가 정적 파일 선택을 결정하므로 배포 전 `npm run build`를 실행한다.
+- 개발 서버는 `public/`을 제공하고, GitHub Actions는 배포 시 `npm run build`로 생성한 `dist/`를 artifact로 업로드한다.
 - 정답 데이터도 클라이언트로 전송되므로 보안이 필요한 실제 시험의 정답 저장소로 사용할 수 없다.
 
 ## GitHub Pages 배포
