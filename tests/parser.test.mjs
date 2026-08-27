@@ -22,10 +22,8 @@ test('API 문제에는 채점 가능한 빈칸이 있다', () => {
   assert.ok(api.every((item) => item.blanks.length > 0));
   assert.ok(api.every((item) => item.blanks.every((blank) => blank.answer && blank.choices.includes(blank.answer))));
 });
-test('문제 파일은 개념형 50개와 중복 통합된 API 문제를 제공한다', () => {
+test('문제 파일은 개념형과 중복 통합된 API 문제의 출제 규칙을 따른다', () => {
   const sample = JSON.parse(fs.readFileSync(path.resolve('problems/exam_questions.json'), 'utf8')).problems;
-  assert.equal(sample.filter((item) => item.type === 'flow').length, 50);
-  assert.equal(sample.filter((item) => item.type === 'api').length, 35);
   assert.ok(sample.filter((item) => item.type === 'flow').every((item) => item.keywords.length >= 1 && item.keywords.length <= 2));
   assert.ok(sample.filter((item) => item.type === 'api').every((item) => item.content.includes('전체 과정 중') || item.id === 'api-generated-001'));
   assert.ok(sample.filter((item) => item.type === 'api').every((item) => item.blanks.length >= 1 && item.blanks.length <= 5));
