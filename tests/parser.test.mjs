@@ -48,6 +48,8 @@ test('API 문제 해설은 정답별 개념과 완성 코드 맥락을 제공한
   assert.ok(samples.every((item) => !item.explanation.includes('노트북이 사용한 핵심 호출 또는 옵션')));
   assert.ok(samples.every((item) => !/\[\d+\] 정답은/.test(item.explanation)));
   assert.ok(samples.every((item) => item.blanks.every((_, index) => item.explanation.split(`빈칸 ${index + 1}\n정답:`).length === 2)));
+  assert.ok(samples.every((item) => !item.explanation.includes('앞에서 준비된 객체와 입력을 사용해 다음 줄이 요구하는 반환값 또는 상태를 만듭니다.')));
+  assert.ok(samples.every((item) => !item.explanation.includes('빈칸 앞에서 준비된 객체·입력과 뒤 연산이 요구하는 타입, shape 또는 실행 순서가 일치해야 합니다.')));
 });
 test('기존 coding 유형과 CodeMirror 구현을 포함하지 않는다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
