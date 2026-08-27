@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="AI 월말평가 대비 문제은행"><title>월말평가 연습장</title><link rel="stylesheet" href="./styles.css"></head>
+<body>
+  <a class="skip" href="#problem">문제로 바로가기</a>
+  <header><div><p class="eyebrow" id="packTitle">문제 자료 불러오는 중</p><h1>월말평가 연습장</h1><p id="packDescription">단원별 핵심 문제를 풀고 바로 확인하세요.</p></div><div class="progress-card" aria-live="polite"><strong id="progressText">0 / 0 완료</strong><div class="bar"><span id="progressBar"></span></div></div></header>
+  <main>
+    <nav class="tabs" aria-label="문제 유형"><button data-type="flow" aria-selected="true">개념 확인 주관식</button><button data-type="api">API 빈칸 문제</button></nav>
+    <section class="toolbar" aria-label="풀이 설정"><label class="shuffle"><input id="shuffleChoices" type="checkbox"> 선택지 섞기</label><button id="resetAll" class="ghost">풀이 초기화</button></section>
+    <div id="loading" class="notice">문제 자료를 불러오는 중입니다…</div>
+    <div id="workspace" class="workspace" hidden>
+      <aside><div class="list-head"><strong id="listTitle">문제 목록</strong><span id="count"></span></div><div id="problemList" class="problem-list"></div></aside>
+      <article id="problem" tabindex="-1"><div class="problem-meta"><span id="unitBadge"></span><span id="statusBadge"></span></div><p id="position" class="position"></p><h2 id="title"></h2><div id="content"></div><div id="answerArea"></div><div id="feedback" aria-live="polite"></div><div class="nav-buttons"><button id="previous" class="ghost">← 이전 문제</button><button id="next">다음 문제 →</button></div></article>
+    </div>
+  </main>
+  <template id="errorTemplate"><div class="notice error"><strong>문제를 표시할 수 없습니다.</strong><p></p><button onclick="location.reload()">다시 시도</button></div></template>
+  <script type="module" src="./app.bundle.js"></script>
+</body></html>
