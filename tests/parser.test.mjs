@@ -56,12 +56,20 @@ test('1-1과 5-2 신규 문제는 유형별 출제 수와 빈칸 계약을 만�
 });
 test('TODO 코드 조립 문제는 클릭 가능한 토큰과 슬롯 계약을 만족한다', () => {
   const assembly = problems.filter((item) => item.type === 'assembly');
-  assert.equal(assembly.length, 52);
+  assert.equal(assembly.length, 46);
   assert.ok(assembly.every((item) => item.source.includes('/문제/') && item.source.endsWith('.ipynb')));
   assert.ok(assembly.every((item) => item.slots.length >= 1));
   assert.ok(assembly.every((item) => [...item.skeleton.matchAll(BLANK_MARKER_PATTERN)].length === item.slots.length));
   assert.ok(assembly.every((item) => item.slots.every((slot) => item.tokens.includes(slot.answer))));
   assert.ok(assembly.every((item) => !item.slots.reduce((code, slot, index) => code.replace(`____[${index + 1}]`, slot.answer), item.skeleton).includes('____[')));
+  assert.ok(assembly.every((item) => !/\bprint\s*\(/.test(item.skeleton) && !/\bprint\s*\(/.test(item.solution)));
+  assert.ok(assembly.every((item) => !item.tokens.includes('print') && !item.slots.some((slot) => slot.answer === 'print')));
+  assert.equal(new Set(assembly.map((item) => item.title)).size, assembly.length);
+  assert.ok(assembly.every((item) => item.title.length <= 40 && !/TODO|rando$/.test(item.title)));
+  const scaling = assembly.find((item) => item.title === 'StandardScaler 전처리');
+  const logistic = assembly.find((item) => item.title === '로지스틱 회귀 학습과 평가');
+  assert.ok(scaling.solution.includes('StandardScaler') && !scaling.solution.includes('LogisticRegression'));
+  assert.ok(logistic.solution.includes('from sklearn.linear_model import LogisticRegression'));
   const exploration = assembly.find((item) => item.solution.includes('wine_dataset = load_wine()'));
   assert.match(exploration.skeleton, /wine_dataset = ____\[\d+\]\(\)/);
   assert.ok(exploration.slots.some((slot) => slot.answer === 'load_wine'));
@@ -89,6 +97,10 @@ test('세 번째 탭은 클릭 방식의 TODO 코드 조립 UI를 사용한다',
   assert.match(client, /function ensureAssemblySlotVisible\(/);
   assert.match(client, /function moveAssemblySlot\(/);
   assert.match(client, /현재 슬롯 \$\{activeIndex \+ 1\}/);
+  assert.match(client, /function resetAssembly\(/);
+  assert.match(client, /function nextEmptyAssemblySlot\(/);
+  assert.match(client, /정답 코드는 모두 맞힌 뒤/);
+  assert.match(client, /const resultClass = result === true/);
 });
 test('Python 던더 이름은 API 빈칸으로 인식하지 않는다', () => {
   assert.deepEqual([...`def __init__(self):\n    ____[1]\n    return ①`.matchAll(BLANK_MARKER_PATTERN)].map((match) => match[0]), ['____[1]']);

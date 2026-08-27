@@ -114,139 +114,117 @@
       "id": "assembly-1-1-01-02",
       "unit": "1-1",
       "type": "assembly",
-      "title": "Wine 데이터 탐색: 데이터의 크기와 처음 3행을 출력",
-      "content": "1. 데이터의 크기와 처음 3행을 출력해봅시다.\n2. 수치형 컬럼의 기술통계량을 확인해봅시다.\n3. quality 컬럼의 고유 클래스 수와 클래스별 샘플 수를 확인해봅시다.\n4. 클래스별 alcohol 평균을 구하고, 평균이 가장 높은 클래스를 찾아봅시다.",
+      "title": "기초 통계와 상관행렬 계산",
+      "content": "1. 클래스별 alcohol 평균을 구하고, 평균이 가장 높은 클래스를 찾아봅시다.\n2. malicacid의 평균과 표준편차를 구해봅시다.\n3. colorintensity가 10 이상인 샘플의 비율(%)을 구해봅시다.\n4. winedataframe의 상관행렬을 구해봅시다. (수치형 데이터만 선택합니다.)",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: 데이터의 크기와 처음 3행을 출력해봅시다.\n____[1](wine_dataframe.____[2])\n\n____[3](wine_dataframe.____[4](____[5]))\n\n# TODO 2: 수치형 컬럼의 기술통계량을 확인해봅시다.\n____[6](wine_dataframe.____[7]())\n\n# TODO 3: quality 컬럼의 고유 클래스 수와 클래스별 샘플 수를 확인해봅시다.\n____[8](f____[9])\n\n____[10](wine_dataframe[____[11]].____[12]().____[13]())\n\n# TODO 4: 클래스별 alcohol 평균을 구하고, 평균이 가장 높은 클래스를 찾아봅시다.\nalcohol_by_class = wine_dataframe.____[14](____[15])[____[16]].____[17]()\n____[18](alcohol_by_class)\n\ntop_class = alcohol_by_class.____[19]()\n____[20](f____[21])",
+      "skeleton": "# TODO 1: 클래스별 alcohol 평균을 구하고, 평균이 가장 높은 클래스를 찾아봅시다.\nalcohol_by_class = wine_dataframe.____[1](____[2])[____[3]].____[4]()\n\ntop_class = alcohol_by_class.____[5]()\n\n# TODO 2: malicacid의 평균과 표준편차를 구해봅시다.\nmalic_mean = wine_dataframe[____[6]].____[7]()\n\nmalic_std = wine_dataframe[____[8]].____[9]()\n\n# TODO 3: colorintensity가 10 이상인 샘플의 비율(%)을 구해봅시다.\nhigh_color_ratio = (wine_dataframe[____[10]] >= ____[11]).____[12]() * ____[13]\n\n# TODO 4: winedataframe의 상관행렬을 구해봅시다. (수치형 데이터만 선택합니다.)\nwine_correlation = wine_dataframe.____[14](____[15]=____[16])",
       "slots": [
         {
           "id": "slot-1",
-          "answer": "print"
-        },
-        {
-          "id": "slot-2",
-          "answer": "shape"
-        },
-        {
-          "id": "slot-3",
-          "answer": "print"
-        },
-        {
-          "id": "slot-4",
-          "answer": "head"
-        },
-        {
-          "id": "slot-5",
-          "answer": "3"
-        },
-        {
-          "id": "slot-6",
-          "answer": "print"
-        },
-        {
-          "id": "slot-7",
-          "answer": "describe"
-        },
-        {
-          "id": "slot-8",
-          "answer": "print"
-        },
-        {
-          "id": "slot-9",
-          "answer": "\"클래스 수: {wine_dataframe['quality'].nunique()}\""
-        },
-        {
-          "id": "slot-10",
-          "answer": "print"
-        },
-        {
-          "id": "slot-11",
-          "answer": "'quality'"
-        },
-        {
-          "id": "slot-12",
-          "answer": "value_counts"
-        },
-        {
-          "id": "slot-13",
-          "answer": "sort_index"
-        },
-        {
-          "id": "slot-14",
           "answer": "groupby"
         },
         {
-          "id": "slot-15",
+          "id": "slot-2",
           "answer": "\"quality\""
         },
         {
-          "id": "slot-16",
+          "id": "slot-3",
           "answer": "\"alcohol\""
         },
         {
-          "id": "slot-17",
+          "id": "slot-4",
           "answer": "mean"
         },
         {
-          "id": "slot-18",
-          "answer": "print"
-        },
-        {
-          "id": "slot-19",
+          "id": "slot-5",
           "answer": "idxmax"
         },
         {
-          "id": "slot-20",
-          "answer": "print"
+          "id": "slot-6",
+          "answer": "\"malic_acid\""
         },
         {
-          "id": "slot-21",
-          "answer": "\"\\nalcohol 평균이 가장 높은 클래스: {top_class}\""
+          "id": "slot-7",
+          "answer": "mean"
+        },
+        {
+          "id": "slot-8",
+          "answer": "\"malic_acid\""
+        },
+        {
+          "id": "slot-9",
+          "answer": "std"
+        },
+        {
+          "id": "slot-10",
+          "answer": "\"color_intensity\""
+        },
+        {
+          "id": "slot-11",
+          "answer": "10"
+        },
+        {
+          "id": "slot-12",
+          "answer": "mean"
+        },
+        {
+          "id": "slot-13",
+          "answer": "100"
+        },
+        {
+          "id": "slot-14",
+          "answer": "corr"
+        },
+        {
+          "id": "slot-15",
+          "answer": "numeric_only"
+        },
+        {
+          "id": "slot-16",
+          "answer": "True"
         }
       ],
       "tokens": [
-        "print",
-        "shape",
-        "head",
-        "3",
-        "describe",
-        "\"클래스 수: {wine_dataframe['quality'].nunique()}\"",
-        "'quality'",
-        "value_counts",
-        "sort_index",
         "groupby",
         "\"quality\"",
         "\"alcohol\"",
         "mean",
         "idxmax",
-        "\"\\nalcohol 평균이 가장 높은 클래스: {top_class}\"",
+        "\"malic_acid\"",
+        "std",
+        "\"color_intensity\"",
+        "10",
+        "100",
+        "corr",
+        "numeric_only",
+        "True",
         "load",
         "transform",
-        "\"auto\"",
-        "None"
+        "None",
+        "False"
       ],
-      "solution": "# TODO 1: 데이터의 크기와 처음 3행을 출력해봅시다.\nprint(wine_dataframe.shape)\n\nprint(wine_dataframe.head(3))\n\n# TODO 2: 수치형 컬럼의 기술통계량을 확인해봅시다.\nprint(wine_dataframe.describe())\n\n# TODO 3: quality 컬럼의 고유 클래스 수와 클래스별 샘플 수를 확인해봅시다.\nprint(f\"클래스 수: {wine_dataframe['quality'].nunique()}\")\n\nprint(wine_dataframe['quality'].value_counts().sort_index())\n\n# TODO 4: 클래스별 alcohol 평균을 구하고, 평균이 가장 높은 클래스를 찾아봅시다.\nalcohol_by_class = wine_dataframe.groupby(\"quality\")[\"alcohol\"].mean()\nprint(alcohol_by_class)\n\ntop_class = alcohol_by_class.idxmax()\nprint(f\"\\nalcohol 평균이 가장 높은 클래스: {top_class}\")",
+      "solution": "# TODO 1: 클래스별 alcohol 평균을 구하고, 평균이 가장 높은 클래스를 찾아봅시다.\nalcohol_by_class = wine_dataframe.groupby(\"quality\")[\"alcohol\"].mean()\n\ntop_class = alcohol_by_class.idxmax()\n\n# TODO 2: malicacid의 평균과 표준편차를 구해봅시다.\nmalic_mean = wine_dataframe[\"malic_acid\"].mean()\n\nmalic_std = wine_dataframe[\"malic_acid\"].std()\n\n# TODO 3: colorintensity가 10 이상인 샘플의 비율(%)을 구해봅시다.\nhigh_color_ratio = (wine_dataframe[\"color_intensity\"] >= 10).mean() * 100\n\n# TODO 4: winedataframe의 상관행렬을 구해봅시다. (수치형 데이터만 선택합니다.)\nwine_correlation = wine_dataframe.corr(numeric_only=True)",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 33
+          "end": 53
         },
         {
-          "start": 93,
-          "end": 126
+          "start": 164,
+          "end": 202
         },
         {
-          "start": 160,
-          "end": 211
+          "start": 300,
+          "end": 351
         },
         {
-          "start": 329,
-          "end": 383
+          "start": 426,
+          "end": 482
         }
       ],
-      "explanation": "정답 노트북의 TODO 4, 5, 6, 7 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "explanation": "정답 노트북의 TODO 7, 8, 9, 10 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_001_데이터 탐색.ipynb"
     },
@@ -254,143 +232,82 @@
       "id": "assembly-1-1-01-03",
       "unit": "1-1",
       "type": "assembly",
-      "title": "데이터 탐색: malicacid의 평균과 표준편차를 구",
-      "content": "1. malicacid의 평균과 표준편차를 구해봅시다.\n2. colorintensity가 10 이상인 샘플의 비율(%)을 구해봅시다.\n3. winedataframe의 상관행렬을 구해봅시다. (수치형 데이터만 선택합니다.)\n4. winecorrelation에서 \"alcohol\" 컬럼의 상관계수를 추출하고, 자기 자신(alcohol)을 제외해봅시다.",
+      "title": "상관관계 기반 특성 선택",
+      "content": "1. winecorrelation에서 \"alcohol\" 컬럼의 상관계수를 추출하고, 자기 자신(alcohol)을 제외해봅시다.\n2. 절대값 기준으로 alcohol과 상관관계가 가장 높은 특성을 찾아봅시다.\n3. winenumberdataframe에 winedataframe에서 '수치형' 컬럼만 저장해봅시다.\n4. winenumberdataframe의 상관행렬을 구해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: malicacid의 평균과 표준편차를 구해봅시다.\nmalic_mean = wine_dataframe[____[1]].____[2]()\n\nmalic_std = wine_dataframe[____[3]].____[4]()\n\n____[5](f____[6])\n____[7](f____[8])\n\n# TODO 2: colorintensity가 10 이상인 샘플의 비율(%)을 구해봅시다.\nhigh_color_ratio = (wine_dataframe[____[9]] >= ____[10]).____[11]() * ____[12]\n____[13](f____[14])\n\n# TODO 3: winedataframe의 상관행렬을 구해봅시다. (수치형 데이터만 선택합니다.)\nwine_correlation = wine_dataframe.____[15](____[16]=____[17])\n____[18](wine_correlation)\n\n# TODO 4: winecorrelation에서 \"alcohol\" 컬럼의 상관계수를 추출하고, 자기 자신(alcohol)을 제외해봅시다.\ncorrelation_with_alcohol = wine_correlation[____[19]].____[20](____[21])\n____[22](correlation_with_alcohol)",
+      "skeleton": "# TODO 1: winecorrelation에서 \"alcohol\" 컬럼의 상관계수를 추출하고, 자기 자신(alcohol)을 제외해봅시다.\ncorrelation_with_alcohol = wine_correlation[____[1]].____[2](____[3])\n\n# TODO 2: 절대값 기준으로 alcohol과 상관관계가 가장 높은 특성을 찾아봅시다.\ntop_correlation_feature = correlation_with_alcohol.____[4]().____[5]()\n\ntop_correlation_value = correlation_with_alcohol[top_correlation_feature]\n\n# TODO 3: winenumberdataframe에 winedataframe에서 '수치형' 컬럼만 저장해봅시다.\nwine_number_dataframe = wine_dataframe.____[6](____[7]=____[8])\n\n# TODO 4: winenumberdataframe의 상관행렬을 구해봅시다.\ncorrelation_matrix = wine_number_dataframe.____[9]()",
       "slots": [
         {
           "id": "slot-1",
-          "answer": "\"malic_acid\""
+          "answer": "\"alcohol\""
         },
         {
           "id": "slot-2",
-          "answer": "mean"
-        },
-        {
-          "id": "slot-3",
-          "answer": "\"malic_acid\""
-        },
-        {
-          "id": "slot-4",
-          "answer": "std"
-        },
-        {
-          "id": "slot-5",
-          "answer": "print"
-        },
-        {
-          "id": "slot-6",
-          "answer": "\"malic_acid 평균: {malic_mean:.4f}\""
-        },
-        {
-          "id": "slot-7",
-          "answer": "print"
-        },
-        {
-          "id": "slot-8",
-          "answer": "\"malic_acid 표준편차: {malic_std:.4f}\""
-        },
-        {
-          "id": "slot-9",
-          "answer": "\"color_intensity\""
-        },
-        {
-          "id": "slot-10",
-          "answer": "10"
-        },
-        {
-          "id": "slot-11",
-          "answer": "mean"
-        },
-        {
-          "id": "slot-12",
-          "answer": "100"
-        },
-        {
-          "id": "slot-13",
-          "answer": "print"
-        },
-        {
-          "id": "slot-14",
-          "answer": "\"color_intensity >= 10 비율: {high_color_ratio:.2f}%\""
-        },
-        {
-          "id": "slot-15",
-          "answer": "corr"
-        },
-        {
-          "id": "slot-16",
-          "answer": "numeric_only"
-        },
-        {
-          "id": "slot-17",
-          "answer": "True"
-        },
-        {
-          "id": "slot-18",
-          "answer": "print"
-        },
-        {
-          "id": "slot-19",
-          "answer": "\"alcohol\""
-        },
-        {
-          "id": "slot-20",
           "answer": "drop"
         },
         {
-          "id": "slot-21",
+          "id": "slot-3",
           "answer": "\"alcohol\""
         },
         {
-          "id": "slot-22",
-          "answer": "print"
+          "id": "slot-4",
+          "answer": "abs"
+        },
+        {
+          "id": "slot-5",
+          "answer": "idxmax"
+        },
+        {
+          "id": "slot-6",
+          "answer": "select_dtypes"
+        },
+        {
+          "id": "slot-7",
+          "answer": "include"
+        },
+        {
+          "id": "slot-8",
+          "answer": "\"number\""
+        },
+        {
+          "id": "slot-9",
+          "answer": "corr"
         }
       ],
       "tokens": [
-        "\"malic_acid\"",
-        "mean",
-        "std",
-        "print",
-        "\"malic_acid 평균: {malic_mean:.4f}\"",
-        "\"malic_acid 표준편차: {malic_std:.4f}\"",
-        "\"color_intensity\"",
-        "10",
-        "100",
-        "\"color_intensity >= 10 비율: {high_color_ratio:.2f}%\"",
-        "corr",
-        "numeric_only",
-        "True",
         "\"alcohol\"",
         "drop",
-        "False",
+        "abs",
+        "idxmax",
+        "select_dtypes",
+        "include",
+        "\"number\"",
+        "corr",
         "\"auto\"",
-        "transform",
-        "invoke"
+        "predict"
       ],
-      "solution": "# TODO 1: malicacid의 평균과 표준편차를 구해봅시다.\nmalic_mean = wine_dataframe[\"malic_acid\"].mean()\n\nmalic_std = wine_dataframe[\"malic_acid\"].std()\n\nprint(f\"malic_acid 평균: {malic_mean:.4f}\")\nprint(f\"malic_acid 표준편차: {malic_std:.4f}\")\n\n# TODO 2: colorintensity가 10 이상인 샘플의 비율(%)을 구해봅시다.\nhigh_color_ratio = (wine_dataframe[\"color_intensity\"] >= 10).mean() * 100\nprint(f\"color_intensity >= 10 비율: {high_color_ratio:.2f}%\")\n\n# TODO 3: winedataframe의 상관행렬을 구해봅시다. (수치형 데이터만 선택합니다.)\nwine_correlation = wine_dataframe.corr(numeric_only=True)\nprint(wine_correlation)\n\n# TODO 4: winecorrelation에서 \"alcohol\" 컬럼의 상관계수를 추출하고, 자기 자신(alcohol)을 제외해봅시다.\ncorrelation_with_alcohol = wine_correlation[\"alcohol\"].drop(\"alcohol\")\nprint(correlation_with_alcohol)",
+      "solution": "# TODO 1: winecorrelation에서 \"alcohol\" 컬럼의 상관계수를 추출하고, 자기 자신(alcohol)을 제외해봅시다.\ncorrelation_with_alcohol = wine_correlation[\"alcohol\"].drop(\"alcohol\")\n\n# TODO 2: 절대값 기준으로 alcohol과 상관관계가 가장 높은 특성을 찾아봅시다.\ntop_correlation_feature = correlation_with_alcohol.abs().idxmax()\n\ntop_correlation_value = correlation_with_alcohol[top_correlation_feature]\n\n# TODO 3: winenumberdataframe에 winedataframe에서 '수치형' 컬럼만 저장해봅시다.\nwine_number_dataframe = wine_dataframe.select_dtypes(include=\"number\")\n\n# TODO 4: winenumberdataframe의 상관행렬을 구해봅시다.\ncorrelation_matrix = wine_number_dataframe.corr()",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 37
+          "end": 77
         },
         {
-          "start": 221,
-          "end": 272
+          "start": 149,
+          "end": 200
         },
         {
-          "start": 407,
-          "end": 463
+          "start": 342,
+          "end": 407
         },
         {
-          "start": 546,
-          "end": 624
+          "start": 479,
+          "end": 523
         }
       ],
-      "explanation": "정답 노트북의 TODO 8, 9, 10, 11 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "explanation": "정답 노트북의 TODO 11, 12, 13, 14 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_001_데이터 탐색.ipynb"
     },
@@ -398,86 +315,7 @@
       "id": "assembly-1-1-01-04",
       "unit": "1-1",
       "type": "assembly",
-      "title": "특성 상관관계 분석: 절대값 기준으로 alcohol과 상관관계가 가장 높은 ",
-      "content": "1. 절대값 기준으로 alcohol과 상관관계가 가장 높은 특성을 찾아봅시다.\n2. winenumberdataframe에 winedataframe에서 '수치형' 컬럼만 저장해봅시다.\n3. winenumberdataframe의 상관행렬을 출력해봅시다.",
-      "requirements": [
-        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
-      ],
-      "skeleton": "# TODO 1: 절대값 기준으로 alcohol과 상관관계가 가장 높은 특성을 찾아봅시다.\ntop_correlation_feature = correlation_with_alcohol.____[1]().____[2]()\n\ntop_correlation_value = correlation_with_alcohol[top_correlation_feature]\n____[3](f____[4])\n\n# TODO 2: winenumberdataframe에 winedataframe에서 '수치형' 컬럼만 저장해봅시다.\nwine_number_dataframe = wine_dataframe.____[5](____[6]=____[7])\n\n# TODO 3: winenumberdataframe의 상관행렬을 출력해봅시다.\ncorrelation_matrix = wine_number_dataframe.____[8]()\n____[9](correlation_matrix)",
-      "slots": [
-        {
-          "id": "slot-1",
-          "answer": "abs"
-        },
-        {
-          "id": "slot-2",
-          "answer": "idxmax"
-        },
-        {
-          "id": "slot-3",
-          "answer": "print"
-        },
-        {
-          "id": "slot-4",
-          "answer": "\"alcohol과 가장 상관 높은 특성: {top_correlation_feature} (r={top_correlation_value:.4f})\""
-        },
-        {
-          "id": "slot-5",
-          "answer": "select_dtypes"
-        },
-        {
-          "id": "slot-6",
-          "answer": "include"
-        },
-        {
-          "id": "slot-7",
-          "answer": "\"number\""
-        },
-        {
-          "id": "slot-8",
-          "answer": "corr"
-        },
-        {
-          "id": "slot-9",
-          "answer": "print"
-        }
-      ],
-      "tokens": [
-        "abs",
-        "idxmax",
-        "print",
-        "\"alcohol과 가장 상관 높은 특성: {top_correlation_feature} (r={top_correlation_value:.4f})\"",
-        "select_dtypes",
-        "include",
-        "\"number\"",
-        "corr",
-        "True",
-        "invoke"
-      ],
-      "solution": "# TODO 1: 절대값 기준으로 alcohol과 상관관계가 가장 높은 특성을 찾아봅시다.\ntop_correlation_feature = correlation_with_alcohol.abs().idxmax()\n\ntop_correlation_value = correlation_with_alcohol[top_correlation_feature]\nprint(f\"alcohol과 가장 상관 높은 특성: {top_correlation_feature} (r={top_correlation_value:.4f})\")\n\n# TODO 2: winenumberdataframe에 winedataframe에서 '수치형' 컬럼만 저장해봅시다.\nwine_number_dataframe = wine_dataframe.select_dtypes(include=\"number\")\n\n# TODO 3: winenumberdataframe의 상관행렬을 출력해봅시다.\ncorrelation_matrix = wine_number_dataframe.corr()\nprint(correlation_matrix)",
-      "protectedRanges": [
-        {
-          "start": 0,
-          "end": 50
-        },
-        {
-          "start": 282,
-          "end": 347
-        },
-        {
-          "start": 419,
-          "end": 464
-        }
-      ],
-      "explanation": "정답 노트북의 TODO 12, 13, 14 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
-      "example": "",
-      "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_001_데이터 탐색.ipynb"
-    },
-    {
-      "id": "assembly-1-1-01-05",
-      "unit": "1-1",
-      "type": "assembly",
-      "title": "데이터 탐색: winedataframe에서 'alcohol'의 히스토",
+      "title": "Alcohol 히스토그램",
       "content": "winedataframe에서 'alcohol'의 히스토그램을 확인해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -541,9 +379,9 @@
         "ylabel",
         "\"Frequency\"",
         "show",
-        "fit",
         "True",
-        "invoke"
+        "invoke",
+        "transform"
       ],
       "solution": "# TODO 1: winedataframe에서 'alcohol'의 히스토그램을 확인해봅시다.\nwine_dataframe[\"alcohol\"].hist(bins=30)\n\nplt.title(\"Alcohol Distribution\")\nplt.xlabel(\"Alcohol\")\nplt.ylabel(\"Frequency\")\nplt.show()",
       "protectedRanges": [
@@ -557,10 +395,10 @@
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_001_데이터 탐색.ipynb"
     },
     {
-      "id": "assembly-1-1-01-06",
+      "id": "assembly-1-1-01-05",
       "unit": "1-1",
       "type": "assembly",
-      "title": "데이터 시각화: 클래스별 alcohol 분포를 histplot으로 비교",
+      "title": "클래스별 분포 시각화",
       "content": "1. 클래스별 alcohol 분포를 histplot으로 비교해봅시다. (hue=\"quality\", kde=True)\n2. 클래스별 flavanoids를 boxplot으로 비교해봅시다.\n3. winenumberdataframe의 상관행렬을 시각화하여 확인해봅시다. (annot=True, cmap=\"coolwarm\", fmt=\".2f\")",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -726,10 +564,10 @@
         "fmt",
         "\".2f\"",
         "\"Correlation Heatmap\"",
-        "1",
-        "predict",
-        "fit",
-        "invoke"
+        "0",
+        "load",
+        "invoke",
+        "fit"
       ],
       "solution": "# TODO 1: 클래스별 alcohol 분포를 histplot으로 비교해봅시다. (hue=\"quality\", kde=True)\nsns.histplot(data=wine_dataframe, x=\"alcohol\", hue=\"quality\", bins=20, kde=True)\nplt.title(\"Alcohol Distribution by Quality\")\nplt.show()\n\n# TODO 2: 클래스별 flavanoids를 boxplot으로 비교해봅시다.\nsns.boxplot(data=wine_dataframe, x=\"quality\", y=\"flavanoids\")\nplt.title(\"Flavanoids by Quality Class\")\nplt.show()\n\n# TODO 3: winenumberdataframe의 상관행렬을 시각화하여 확인해봅시다. (annot=True, cmap=\"coolwarm\", fmt=\".2f\")\nsns.heatmap(wine_number_dataframe.corr(),\n            annot=True, cmap=\"coolwarm\", fmt=\".2f\")\nplt.title(\"Correlation Heatmap\")\nplt.show()",
       "protectedRanges": [
@@ -751,10 +589,10 @@
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_001_데이터 탐색.ipynb"
     },
     {
-      "id": "assembly-1-1-01-07",
+      "id": "assembly-1-1-01-06",
       "unit": "1-1",
       "type": "assembly",
-      "title": "데이터 탐색: x=\"alcohol\", y=\"flavanoids\", h",
+      "title": "Alcohol·Flavanoids 산점도",
       "content": "x=\"alcohol\", y=\"flavanoids\", hue=\"quality\"로 산점도를 확인해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -833,10 +671,10 @@
         "title",
         "\"Alcohol vs Flavanoids\"",
         "show",
-        "transform",
-        "None",
+        "False",
         "True",
-        "invoke"
+        "invoke",
+        "transform"
       ],
       "solution": "# TODO 1: x=\"alcohol\", y=\"flavanoids\", hue=\"quality\"로 산점도를 확인해봅시다.\nsns.scatterplot(data=wine_dataframe, x=\"alcohol\", y=\"flavanoids\", hue=\"quality\", palette=\"Set2\")\nplt.title(\"Alcohol vs Flavanoids\")\nplt.show()",
       "protectedRanges": [
@@ -850,15 +688,15 @@
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_001_데이터 탐색.ipynb"
     },
     {
-      "id": "assembly-1-1-01-08",
+      "id": "assembly-1-1-01-07",
       "unit": "1-1",
       "type": "assembly",
-      "title": "데이터 시각화: quality와 상관관계 상위 5개 특성으로 pairp",
+      "title": "상위 상관 특성 Pairplot",
       "content": "quality와 상관관계 상위 5개 특성으로 pairplot을 그려봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: quality와 상관관계 상위 5개 특성으로 pairplot을 그려봅시다.\ncorr_with_quality = wine_dataframe.____[1](____[2]=____[3])[____[4]].____[5]().____[6](____[7]=____[8])\n\ntop_features = corr_with_quality.____[9][____[10]:____[11]].____[12]()\n____[13](____[14], top_features)\n\nplot_df = wine_dataframe[top_features + [____[15]]]\n\nsns.____[16](____[17]=plot_df, ____[18]=____[19], ____[20]=____[21], ____[22]=____[23])\n\nplt.____[24](____[25], ____[26]=____[27])\nplt.____[28]()",
+      "skeleton": "# TODO 1: quality와 상관관계 상위 5개 특성으로 pairplot을 그려봅시다.\ncorr_with_quality = wine_dataframe.____[1](____[2]=____[3])[____[4]].____[5]().____[6](____[7]=____[8])\n\ntop_features = corr_with_quality.____[9][____[10]:____[11]].____[12]()\n\nplot_df = wine_dataframe[top_features + [____[13]]]\n\nsns.____[14](____[15]=plot_df, ____[16]=____[17], ____[18]=____[19], ____[20]=____[21])\n\nplt.____[22](____[23], ____[24]=____[25])\nplt.____[26]()",
       "slots": [
         {
           "id": "slot-1",
@@ -910,66 +748,58 @@
         },
         {
           "id": "slot-13",
-          "answer": "print"
+          "answer": "\"quality\""
         },
         {
           "id": "slot-14",
-          "answer": "\"선택된 특성:\""
-        },
-        {
-          "id": "slot-15",
-          "answer": "\"quality\""
-        },
-        {
-          "id": "slot-16",
           "answer": "pairplot"
         },
         {
-          "id": "slot-17",
+          "id": "slot-15",
           "answer": "data"
         },
         {
-          "id": "slot-18",
+          "id": "slot-16",
           "answer": "hue"
         },
         {
-          "id": "slot-19",
+          "id": "slot-17",
           "answer": "\"quality\""
         },
         {
-          "id": "slot-20",
+          "id": "slot-18",
           "answer": "corner"
         },
         {
-          "id": "slot-21",
+          "id": "slot-19",
           "answer": "True"
         },
         {
-          "id": "slot-22",
+          "id": "slot-20",
           "answer": "palette"
         },
         {
-          "id": "slot-23",
+          "id": "slot-21",
           "answer": "\"Set2\""
         },
         {
-          "id": "slot-24",
+          "id": "slot-22",
           "answer": "suptitle"
         },
         {
-          "id": "slot-25",
+          "id": "slot-23",
           "answer": "\"Pairplot of Top 5 Correlated Features\""
         },
         {
-          "id": "slot-26",
+          "id": "slot-24",
           "answer": "y"
         },
         {
-          "id": "slot-27",
+          "id": "slot-25",
           "answer": "1.02"
         },
         {
-          "id": "slot-28",
+          "id": "slot-26",
           "answer": "show"
         }
       ],
@@ -986,8 +816,6 @@
         "1",
         "6",
         "tolist",
-        "print",
-        "\"선택된 특성:\"",
         "pairplot",
         "data",
         "hue",
@@ -999,12 +827,12 @@
         "y",
         "1.02",
         "show",
-        "load",
-        "None",
+        "\"auto\"",
+        "fit",
         "predict",
         "transform"
       ],
-      "solution": "# TODO 1: quality와 상관관계 상위 5개 특성으로 pairplot을 그려봅시다.\ncorr_with_quality = wine_dataframe.corr(numeric_only=True)[\"quality\"].abs().sort_values(ascending=False)\n\ntop_features = corr_with_quality.index[1:6].tolist()\nprint(\"선택된 특성:\", top_features)\n\nplot_df = wine_dataframe[top_features + [\"quality\"]]\n\nsns.pairplot(data=plot_df, hue=\"quality\", corner=True, palette=\"Set2\")\n\nplt.suptitle(\"Pairplot of Top 5 Correlated Features\", y=1.02)\nplt.show()",
+      "solution": "# TODO 1: quality와 상관관계 상위 5개 특성으로 pairplot을 그려봅시다.\ncorr_with_quality = wine_dataframe.corr(numeric_only=True)[\"quality\"].abs().sort_values(ascending=False)\n\ntop_features = corr_with_quality.index[1:6].tolist()\n\nplot_df = wine_dataframe[top_features + [\"quality\"]]\n\nsns.pairplot(data=plot_df, hue=\"quality\", corner=True, palette=\"Set2\")\n\nplt.suptitle(\"Pairplot of Top 5 Correlated Features\", y=1.02)\nplt.show()",
       "protectedRanges": [
         {
           "start": 0,
@@ -1019,7 +847,7 @@
       "id": "assembly-1-1-02-01",
       "unit": "1-1",
       "type": "assembly",
-      "title": "이상치 결측치 처리: 결과를 재현할 수 있도록 난수 시드를 고정",
+      "title": "결측치 생성",
       "content": "1. 결과를 재현할 수 있도록 난수 시드를 고정해봅시다.\n2. flavanoids에 결측치를 만들 행 3개를 무작위로 골라봅시다.\n3. TODO 2에서 고른 행의 flavanoids 값을 결측치로 바꿔봅시다.\n4. colorintensity에 결측치를 만들 행 5개를 무작위로 골라봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -1163,12 +991,12 @@
       "id": "assembly-1-1-02-02",
       "unit": "1-1",
       "type": "assembly",
-      "title": "결측치 생성 및 처리: TODO 4에서 고른 행의 colorintensity ",
+      "title": "결측치 현황과 대체값 계산",
       "content": "1. TODO 4에서 고른 행의 colorintensity 값을 결측치로 바꿔봅시다.\n2. missingcount에 컬럼별 결측치 수를 저장해봅시다.\n3. TODO 지시 사항에 맞게 코드를 완성하세요.\n4. colorintensitymedian에 \"colorintensity\"의 중앙값을 저장해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: TODO 4에서 고른 행의 colorintensity 값을 결측치로 바꿔봅시다.\n____[1].____[2][missing_index_color, ____[3]] = np.____[4]\n\n# TODO 2: missingcount에 컬럼별 결측치 수를 저장해봅시다.\nmissing_count = wine_dataframe.____[5]().____[6]()\n____[7](missing_count)\n\n# TODO 3: TODO 지시 사항에 맞게 코드를 완성하세요.\ntotal_missing = wine_dataframe.____[8]().____[9]().____[10]()\n\nmissing_ratio = (wine_dataframe.____[11]().____[12]() * ____[13]).____[14](____[15])\n\n____[16](f____[17])\n____[18](f____[19])\n\n# TODO 4: colorintensitymedian에 \"colorintensity\"의 중앙값을 저장해봅시다.\ncolor_intensity_median = wine_dataframe[____[20]].____[21]()\n____[22](f____[23])",
+      "skeleton": "# TODO 1: TODO 4에서 고른 행의 colorintensity 값을 결측치로 바꿔봅시다.\n____[1].____[2][missing_index_color, ____[3]] = np.____[4]\n\n# TODO 2: missingcount에 컬럼별 결측치 수를 저장해봅시다.\nmissing_count = wine_dataframe.____[5]().____[6]()\n\n# TODO 3: TODO 지시 사항에 맞게 코드를 완성하세요.\ntotal_missing = wine_dataframe.____[7]().____[8]().____[9]()\n\nmissing_ratio = (wine_dataframe.____[10]().____[11]() * ____[12]).____[13](____[14])\n\n# TODO 4: colorintensitymedian에 \"colorintensity\"의 중앙값을 저장해봅시다.\ncolor_intensity_median = wine_dataframe[____[15]].____[16]()",
       "slots": [
         {
           "id": "slot-1",
@@ -1196,11 +1024,11 @@
         },
         {
           "id": "slot-7",
-          "answer": "print"
+          "answer": "isnull"
         },
         {
           "id": "slot-8",
-          "answer": "isnull"
+          "answer": "sum"
         },
         {
           "id": "slot-9",
@@ -1208,59 +1036,31 @@
         },
         {
           "id": "slot-10",
-          "answer": "sum"
-        },
-        {
-          "id": "slot-11",
           "answer": "isnull"
         },
         {
-          "id": "slot-12",
+          "id": "slot-11",
           "answer": "mean"
         },
         {
-          "id": "slot-13",
+          "id": "slot-12",
           "answer": "100"
         },
         {
-          "id": "slot-14",
+          "id": "slot-13",
           "answer": "round"
         },
         {
-          "id": "slot-15",
+          "id": "slot-14",
           "answer": "1"
         },
         {
-          "id": "slot-16",
-          "answer": "print"
-        },
-        {
-          "id": "slot-17",
-          "answer": "\"전체 결측치: {total_missing}\""
-        },
-        {
-          "id": "slot-18",
-          "answer": "print"
-        },
-        {
-          "id": "slot-19",
-          "answer": "\"\\n결측 비율(%):\\n{missing_ratio}\""
-        },
-        {
-          "id": "slot-20",
+          "id": "slot-15",
           "answer": "\"color_intensity\""
         },
         {
-          "id": "slot-21",
+          "id": "slot-16",
           "answer": "median"
-        },
-        {
-          "id": "slot-22",
-          "answer": "print"
-        },
-        {
-          "id": "slot-23",
-          "answer": "\"color_intensity 중앙값: {color_intensity_median}\""
         }
       ],
       "tokens": [
@@ -1270,21 +1070,16 @@
         "nan",
         "isnull",
         "sum",
-        "print",
         "mean",
         "100",
         "round",
         "1",
-        "\"전체 결측치: {total_missing}\"",
-        "\"\\n결측 비율(%):\\n{missing_ratio}\"",
         "median",
-        "\"color_intensity 중앙값: {color_intensity_median}\"",
         "True",
         "\"auto\"",
-        "transform",
-        "invoke"
+        "transform"
       ],
-      "solution": "# TODO 1: TODO 4에서 고른 행의 colorintensity 값을 결측치로 바꿔봅시다.\nwine_dataframe.loc[missing_index_color, \"color_intensity\"] = np.nan\n\n# TODO 2: missingcount에 컬럼별 결측치 수를 저장해봅시다.\nmissing_count = wine_dataframe.isnull().sum()\nprint(missing_count)\n\n# TODO 3: TODO 지시 사항에 맞게 코드를 완성하세요.\ntotal_missing = wine_dataframe.isnull().sum().sum()\n\nmissing_ratio = (wine_dataframe.isnull().mean() * 100).round(1)\n\nprint(f\"전체 결측치: {total_missing}\")\nprint(f\"\\n결측 비율(%):\\n{missing_ratio}\")\n\n# TODO 4: colorintensitymedian에 \"colorintensity\"의 중앙값을 저장해봅시다.\ncolor_intensity_median = wine_dataframe[\"color_intensity\"].median()\nprint(f\"color_intensity 중앙값: {color_intensity_median}\")",
+      "solution": "# TODO 1: TODO 4에서 고른 행의 colorintensity 값을 결측치로 바꿔봅시다.\nwine_dataframe.loc[missing_index_color, \"color_intensity\"] = np.nan\n\n# TODO 2: missingcount에 컬럼별 결측치 수를 저장해봅시다.\nmissing_count = wine_dataframe.isnull().sum()\n\n# TODO 3: TODO 지시 사항에 맞게 코드를 완성하세요.\ntotal_missing = wine_dataframe.isnull().sum().sum()\n\nmissing_ratio = (wine_dataframe.isnull().mean() * 100).round(1)\n\n# TODO 4: colorintensitymedian에 \"colorintensity\"의 중앙값을 저장해봅시다.\ncolor_intensity_median = wine_dataframe[\"color_intensity\"].median()",
       "protectedRanges": [
         {
           "start": 0,
@@ -1295,12 +1090,12 @@
           "end": 166
         },
         {
-          "start": 234,
-          "end": 270
+          "start": 213,
+          "end": 249
         },
         {
-          "start": 462,
-          "end": 525
+          "start": 367,
+          "end": 430
         }
       ],
       "explanation": "정답 노트북의 TODO 5, 6, 7, 8 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
@@ -1311,12 +1106,12 @@
       "id": "assembly-1-1-02-03",
       "unit": "1-1",
       "type": "assembly",
-      "title": "이상치 결측치 처리: TODO 지시 사항에 맞게 코드를 완성",
+      "title": "결측치 대체와 사분위수 계산",
       "content": "1. TODO 지시 사항에 맞게 코드를 완성하세요.\n2. flavanoidsmean에 \"flavanoids\"의 평균값으로 대체해봅시다.\n3. 모든 결측치가 처리되었는지 확인해봅시다.\n4. \"malicacid\"의 Q1, Q3를 각각 malicacidq1, malicacidq3에 저장해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: TODO 지시 사항에 맞게 코드를 완성하세요.\nwine_dataframe[____[1]] = wine_dataframe[____[2]].____[3](color_intensity_median)\n\n____[4](f____[5])\n\n# TODO 2: flavanoidsmean에 \"flavanoids\"의 평균값으로 대체해봅시다.\nflavanoids_mean = wine_dataframe[____[6]].____[7]()\nwine_dataframe[____[8]] = wine_dataframe[____[9]].____[10](flavanoids_mean)\n____[11](f____[12])\n\n# TODO 3: 모든 결측치가 처리되었는지 확인해봅시다.\nremaining_missing = wine_dataframe.____[13]().____[14]().____[15]()\n____[16](f____[17])\n\n# TODO 4: \"malicacid\"의 Q1, Q3를 각각 malicacidq1, malicacidq3에 저장해봅시다.\nmalic_acid_q1 = wine_dataframe[____[18]].____[19](____[20])\nmalic_acid_q3 = wine_dataframe[____[21]].____[22](____[23])\n____[24](f____[25])",
+      "skeleton": "# TODO 1: TODO 지시 사항에 맞게 코드를 완성하세요.\nwine_dataframe[____[1]] = wine_dataframe[____[2]].____[3](color_intensity_median)\n\n# TODO 2: flavanoidsmean에 \"flavanoids\"의 평균값으로 대체해봅시다.\nflavanoids_mean = wine_dataframe[____[4]].____[5]()\nwine_dataframe[____[6]] = wine_dataframe[____[7]].____[8](flavanoids_mean)\n\n# TODO 3: 모든 결측치가 처리되었는지 확인해봅시다.\nremaining_missing = wine_dataframe.____[9]().____[10]().____[11]()\n\n# TODO 4: \"malicacid\"의 Q1, Q3를 각각 malicacidq1, malicacidq3에 저장해봅시다.\nmalic_acid_q1 = wine_dataframe[____[12]].____[13](____[14])\nmalic_acid_q3 = wine_dataframe[____[15]].____[16](____[17])",
       "slots": [
         {
           "id": "slot-1",
@@ -1332,11 +1127,11 @@
         },
         {
           "id": "slot-4",
-          "answer": "print"
+          "answer": "\"flavanoids\""
         },
         {
           "id": "slot-5",
-          "answer": "\"대체 후 color_intensity 결측치: {wine_dataframe['color_intensity'].isnull().sum()}\""
+          "answer": "mean"
         },
         {
           "id": "slot-6",
@@ -1344,119 +1139,81 @@
         },
         {
           "id": "slot-7",
-          "answer": "mean"
+          "answer": "\"flavanoids\""
         },
         {
           "id": "slot-8",
-          "answer": "\"flavanoids\""
-        },
-        {
-          "id": "slot-9",
-          "answer": "\"flavanoids\""
-        },
-        {
-          "id": "slot-10",
           "answer": "fillna"
         },
         {
-          "id": "slot-11",
-          "answer": "print"
-        },
-        {
-          "id": "slot-12",
-          "answer": "\"대체 후 flavanoids 결측치: {wine_dataframe['flavanoids'].isnull().sum()}\""
-        },
-        {
-          "id": "slot-13",
+          "id": "slot-9",
           "answer": "isnull"
         },
         {
-          "id": "slot-14",
+          "id": "slot-10",
           "answer": "sum"
         },
         {
-          "id": "slot-15",
+          "id": "slot-11",
           "answer": "sum"
         },
         {
-          "id": "slot-16",
-          "answer": "print"
-        },
-        {
-          "id": "slot-17",
-          "answer": "\"남은 결측치: {remaining_missing}\""
-        },
-        {
-          "id": "slot-18",
+          "id": "slot-12",
           "answer": "\"malic_acid\""
         },
         {
-          "id": "slot-19",
+          "id": "slot-13",
           "answer": "quantile"
         },
         {
-          "id": "slot-20",
+          "id": "slot-14",
           "answer": "0.25"
         },
         {
-          "id": "slot-21",
+          "id": "slot-15",
           "answer": "\"malic_acid\""
         },
         {
-          "id": "slot-22",
+          "id": "slot-16",
           "answer": "quantile"
         },
         {
-          "id": "slot-23",
+          "id": "slot-17",
           "answer": "0.75"
-        },
-        {
-          "id": "slot-24",
-          "answer": "print"
-        },
-        {
-          "id": "slot-25",
-          "answer": "\"Q1: {malic_acid_q1}, Q3: {malic_acid_q3}\""
         }
       ],
       "tokens": [
         "\"color_intensity\"",
         "fillna",
-        "print",
-        "\"대체 후 color_intensity 결측치: {wine_dataframe['color_intensity'].isnull().sum()}\"",
         "\"flavanoids\"",
         "mean",
-        "\"대체 후 flavanoids 결측치: {wine_dataframe['flavanoids'].isnull().sum()}\"",
         "isnull",
         "sum",
-        "\"남은 결측치: {remaining_missing}\"",
         "\"malic_acid\"",
         "quantile",
         "0.25",
         "0.75",
-        "\"Q1: {malic_acid_q1}, Q3: {malic_acid_q3}\"",
         "True",
         "invoke",
-        "transform",
-        "\"auto\""
+        "transform"
       ],
-      "solution": "# TODO 1: TODO 지시 사항에 맞게 코드를 완성하세요.\nwine_dataframe[\"color_intensity\"] = wine_dataframe[\"color_intensity\"].fillna(color_intensity_median)\n\nprint(f\"대체 후 color_intensity 결측치: {wine_dataframe['color_intensity'].isnull().sum()}\")\n\n# TODO 2: flavanoidsmean에 \"flavanoids\"의 평균값으로 대체해봅시다.\nflavanoids_mean = wine_dataframe[\"flavanoids\"].mean()\nwine_dataframe[\"flavanoids\"] = wine_dataframe[\"flavanoids\"].fillna(flavanoids_mean)\nprint(f\"대체 후 flavanoids 결측치: {wine_dataframe['flavanoids'].isnull().sum()}\")\n\n# TODO 3: 모든 결측치가 처리되었는지 확인해봅시다.\nremaining_missing = wine_dataframe.isnull().sum().sum()\nprint(f\"남은 결측치: {remaining_missing}\")\n\n# TODO 4: \"malicacid\"의 Q1, Q3를 각각 malicacidq1, malicacidq3에 저장해봅시다.\nmalic_acid_q1 = wine_dataframe[\"malic_acid\"].quantile(0.25)\nmalic_acid_q3 = wine_dataframe[\"malic_acid\"].quantile(0.75)\nprint(f\"Q1: {malic_acid_q1}, Q3: {malic_acid_q3}\")",
+      "solution": "# TODO 1: TODO 지시 사항에 맞게 코드를 완성하세요.\nwine_dataframe[\"color_intensity\"] = wine_dataframe[\"color_intensity\"].fillna(color_intensity_median)\n\n# TODO 2: flavanoidsmean에 \"flavanoids\"의 평균값으로 대체해봅시다.\nflavanoids_mean = wine_dataframe[\"flavanoids\"].mean()\nwine_dataframe[\"flavanoids\"] = wine_dataframe[\"flavanoids\"].fillna(flavanoids_mean)\n\n# TODO 3: 모든 결측치가 처리되었는지 확인해봅시다.\nremaining_missing = wine_dataframe.isnull().sum().sum()\n\n# TODO 4: \"malicacid\"의 Q1, Q3를 각각 malicacidq1, malicacidq3에 저장해봅시다.\nmalic_acid_q1 = wine_dataframe[\"malic_acid\"].quantile(0.25)\nmalic_acid_q3 = wine_dataframe[\"malic_acid\"].quantile(0.75)",
       "protectedRanges": [
         {
           "start": 0,
           "end": 35
         },
         {
-          "start": 225,
-          "end": 279
+          "start": 137,
+          "end": 191
         },
         {
-          "start": 495,
-          "end": 528
+          "start": 330,
+          "end": 363
         },
         {
-          "start": 623,
-          "end": 691
+          "start": 420,
+          "end": 488
         }
       ],
       "explanation": "정답 노트북의 TODO 9, 10, 11, 12 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
@@ -1467,12 +1224,12 @@
       "id": "assembly-1-1-02-04",
       "unit": "1-1",
       "type": "assembly",
-      "title": "이상치 결측치 처리: TODO 지시 사항에 맞게 코드를 완성",
-      "content": "TODO 지시 사항에 맞게 코드를 완성하세요.",
+      "title": "IQR 이상치 탐지와 제거",
+      "content": "1. TODO 지시 사항에 맞게 코드를 완성하세요.\n2. 경계를 벗어난 이상치를 malicacidoutliers에 저장해봅시다.\n3. winedataframeclean에 이상치를 제거한 데이터프레임을 만들어봅시다.\n4. 이상치가 제거되었는지 검증해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: TODO 지시 사항에 맞게 코드를 완성하세요.\nmalic_acid_iqr = malic_acid_q3 - malic_acid_q1\n\nlower_bound = malic_acid_q1 - ____[1] * malic_acid_iqr\nupper_bound = malic_acid_q3 + ____[2] * malic_acid_iqr\n\n____[3](f____[4])\n____[5](f____[6])",
+      "skeleton": "# TODO 1: TODO 지시 사항에 맞게 코드를 완성하세요.\nmalic_acid_iqr = malic_acid_q3 - malic_acid_q1\n\nlower_bound = malic_acid_q1 - ____[1] * malic_acid_iqr\nupper_bound = malic_acid_q3 + ____[2] * malic_acid_iqr\n\n# TODO 2: 경계를 벗어난 이상치를 malicacidoutliers에 저장해봅시다.\nmalic_acid_outliers = wine_dataframe[\n    (wine_dataframe[____[3]] < lower_bound) | (wine_dataframe[____[4]] > upper_bound)\n]\n\n# TODO 3: winedataframeclean에 이상치를 제거한 데이터프레임을 만들어봅시다.\nwine_dataframe_clean = wine_dataframe[~wine_dataframe.____[5].____[6](malic_acid_outliers.____[7])]\n\n# TODO 4: 이상치가 제거되었는지 검증해봅시다.\nremaining_outliers = wine_dataframe_clean[\n    (wine_dataframe_clean[____[8]] < lower_bound) | (wine_dataframe_clean[____[9]] > upper_bound)\n]",
       "slots": [
         {
           "id": "slot-1",
@@ -1484,37 +1241,61 @@
         },
         {
           "id": "slot-3",
-          "answer": "print"
+          "answer": "\"malic_acid\""
         },
         {
           "id": "slot-4",
-          "answer": "\"IQR: {malic_acid_iqr}\""
+          "answer": "\"malic_acid\""
         },
         {
           "id": "slot-5",
-          "answer": "print"
+          "answer": "index"
         },
         {
           "id": "slot-6",
-          "answer": "\"이상치 범위: {lower_bound:.2f} 미만 또는 {upper_bound:.2f} 초과\""
+          "answer": "isin"
+        },
+        {
+          "id": "slot-7",
+          "answer": "index"
+        },
+        {
+          "id": "slot-8",
+          "answer": "\"malic_acid\""
+        },
+        {
+          "id": "slot-9",
+          "answer": "\"malic_acid\""
         }
       ],
       "tokens": [
         "1.5",
-        "print",
-        "\"IQR: {malic_acid_iqr}\"",
-        "\"이상치 범위: {lower_bound:.2f} 미만 또는 {upper_bound:.2f} 초과\"",
+        "\"malic_acid\"",
+        "index",
+        "isin",
         "fit",
         "True"
       ],
-      "solution": "# TODO 1: TODO 지시 사항에 맞게 코드를 완성하세요.\nmalic_acid_iqr = malic_acid_q3 - malic_acid_q1\n\nlower_bound = malic_acid_q1 - 1.5 * malic_acid_iqr\nupper_bound = malic_acid_q3 + 1.5 * malic_acid_iqr\n\nprint(f\"IQR: {malic_acid_iqr}\")\nprint(f\"이상치 범위: {lower_bound:.2f} 미만 또는 {upper_bound:.2f} 초과\")",
+      "solution": "# TODO 1: TODO 지시 사항에 맞게 코드를 완성하세요.\nmalic_acid_iqr = malic_acid_q3 - malic_acid_q1\n\nlower_bound = malic_acid_q1 - 1.5 * malic_acid_iqr\nupper_bound = malic_acid_q3 + 1.5 * malic_acid_iqr\n\n# TODO 2: 경계를 벗어난 이상치를 malicacidoutliers에 저장해봅시다.\nmalic_acid_outliers = wine_dataframe[\n    (wine_dataframe[\"malic_acid\"] < lower_bound) | (wine_dataframe[\"malic_acid\"] > upper_bound)\n]\n\n# TODO 3: winedataframeclean에 이상치를 제거한 데이터프레임을 만들어봅시다.\nwine_dataframe_clean = wine_dataframe[~wine_dataframe.index.isin(malic_acid_outliers.index)]\n\n# TODO 4: 이상치가 제거되었는지 검증해봅시다.\nremaining_outliers = wine_dataframe_clean[\n    (wine_dataframe_clean[\"malic_acid\"] < lower_bound) | (wine_dataframe_clean[\"malic_acid\"] > upper_bound)\n]",
       "protectedRanges": [
         {
           "start": 0,
           "end": 35
+        },
+        {
+          "start": 186,
+          "end": 236
+        },
+        {
+          "start": 373,
+          "end": 428
+        },
+        {
+          "start": 522,
+          "end": 552
         }
       ],
-      "explanation": "정답 노트북의 TODO 13 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "explanation": "정답 노트북의 TODO 13, 14, 15, 16 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_002_이상치_결측치 처리.ipynb"
     },
@@ -1522,152 +1303,7 @@
       "id": "assembly-1-1-02-05",
       "unit": "1-1",
       "type": "assembly",
-      "title": "이상치 탐지 및 처리: 경계를 벗어난 이상치를 malicacidoutliers",
-      "content": "경계를 벗어난 이상치를 malicacidoutliers에 저장해봅시다.",
-      "requirements": [
-        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
-      ],
-      "skeleton": "# TODO 1: 경계를 벗어난 이상치를 malicacidoutliers에 저장해봅시다.\nmalic_acid_outliers = wine_dataframe[\n    (wine_dataframe[____[1]] < lower_bound) | (wine_dataframe[____[2]] > upper_bound)\n]\n____[3](f____[4])\n\n____[5](malic_acid_outliers[[____[6]]])",
-      "slots": [
-        {
-          "id": "slot-1",
-          "answer": "\"malic_acid\""
-        },
-        {
-          "id": "slot-2",
-          "answer": "\"malic_acid\""
-        },
-        {
-          "id": "slot-3",
-          "answer": "print"
-        },
-        {
-          "id": "slot-4",
-          "answer": "\"이상치 개수: {len(malic_acid_outliers)}\""
-        },
-        {
-          "id": "slot-5",
-          "answer": "print"
-        },
-        {
-          "id": "slot-6",
-          "answer": "\"malic_acid\""
-        }
-      ],
-      "tokens": [
-        "\"malic_acid\"",
-        "print",
-        "\"이상치 개수: {len(malic_acid_outliers)}\"",
-        "False",
-        "True"
-      ],
-      "solution": "# TODO 1: 경계를 벗어난 이상치를 malicacidoutliers에 저장해봅시다.\nmalic_acid_outliers = wine_dataframe[\n    (wine_dataframe[\"malic_acid\"] < lower_bound) | (wine_dataframe[\"malic_acid\"] > upper_bound)\n]\nprint(f\"이상치 개수: {len(malic_acid_outliers)}\")\n\nprint(malic_acid_outliers[[\"malic_acid\"]])",
-      "protectedRanges": [
-        {
-          "start": 0,
-          "end": 49
-        }
-      ],
-      "explanation": "정답 노트북의 TODO 14 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
-      "example": "",
-      "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_002_이상치_결측치 처리.ipynb"
-    },
-    {
-      "id": "assembly-1-1-02-06",
-      "unit": "1-1",
-      "type": "assembly",
-      "title": "이상치 탐지 및 처리: winedataframeclean에 이상치를 제거한 데",
-      "content": "1. winedataframeclean에 이상치를 제거한 데이터프레임을 만들어봅시다.\n2. 이상치가 제거되었는지 검증해봅시다.",
-      "requirements": [
-        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
-      ],
-      "skeleton": "# TODO 1: winedataframeclean에 이상치를 제거한 데이터프레임을 만들어봅시다.\nwine_dataframe_clean = wine_dataframe[~wine_dataframe.____[1].____[2](malic_acid_outliers.____[3])]\n____[4](f____[5])\n____[6](f____[7])\n____[8](f____[9])\n\n# TODO 2: 이상치가 제거되었는지 검증해봅시다.\nremaining_outliers = wine_dataframe_clean[\n    (wine_dataframe_clean[____[10]] < lower_bound) | (wine_dataframe_clean[____[11]] > upper_bound)\n]\n____[12](f____[13])",
-      "slots": [
-        {
-          "id": "slot-1",
-          "answer": "index"
-        },
-        {
-          "id": "slot-2",
-          "answer": "isin"
-        },
-        {
-          "id": "slot-3",
-          "answer": "index"
-        },
-        {
-          "id": "slot-4",
-          "answer": "print"
-        },
-        {
-          "id": "slot-5",
-          "answer": "\"제거 전: {len(wine_dataframe)}개\""
-        },
-        {
-          "id": "slot-6",
-          "answer": "print"
-        },
-        {
-          "id": "slot-7",
-          "answer": "\"제거 후: {len(wine_dataframe_clean)}개\""
-        },
-        {
-          "id": "slot-8",
-          "answer": "print"
-        },
-        {
-          "id": "slot-9",
-          "answer": "\"제거된 샘플: {len(wine_dataframe) - len(wine_dataframe_clean)}개\""
-        },
-        {
-          "id": "slot-10",
-          "answer": "\"malic_acid\""
-        },
-        {
-          "id": "slot-11",
-          "answer": "\"malic_acid\""
-        },
-        {
-          "id": "slot-12",
-          "answer": "print"
-        },
-        {
-          "id": "slot-13",
-          "answer": "\"남은 이상치: {len(remaining_outliers)}개\""
-        }
-      ],
-      "tokens": [
-        "index",
-        "isin",
-        "print",
-        "\"제거 전: {len(wine_dataframe)}개\"",
-        "\"제거 후: {len(wine_dataframe_clean)}개\"",
-        "\"제거된 샘플: {len(wine_dataframe) - len(wine_dataframe_clean)}개\"",
-        "\"malic_acid\"",
-        "\"남은 이상치: {len(remaining_outliers)}개\"",
-        "transform",
-        "None"
-      ],
-      "solution": "# TODO 1: winedataframeclean에 이상치를 제거한 데이터프레임을 만들어봅시다.\nwine_dataframe_clean = wine_dataframe[~wine_dataframe.index.isin(malic_acid_outliers.index)]\nprint(f\"제거 전: {len(wine_dataframe)}개\")\nprint(f\"제거 후: {len(wine_dataframe_clean)}개\")\nprint(f\"제거된 샘플: {len(wine_dataframe) - len(wine_dataframe_clean)}개\")\n\n# TODO 2: 이상치가 제거되었는지 검증해봅시다.\nremaining_outliers = wine_dataframe_clean[\n    (wine_dataframe_clean[\"malic_acid\"] < lower_bound) | (wine_dataframe_clean[\"malic_acid\"] > upper_bound)\n]\nprint(f\"남은 이상치: {len(remaining_outliers)}개\")",
-      "protectedRanges": [
-        {
-          "start": 0,
-          "end": 54
-        },
-        {
-          "start": 301,
-          "end": 331
-        }
-      ],
-      "explanation": "정답 노트북의 TODO 15, 16 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
-      "example": "",
-      "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_002_이상치_결측치 처리.ipynb"
-    },
-    {
-      "id": "assembly-1-1-02-07",
-      "unit": "1-1",
-      "type": "assembly",
-      "title": "이상치 탐지 및 처리: 이상치 제거 전후를 박스플롯으로 비교",
+      "title": "이상치 제거 전후 시각화",
       "content": "이상치 제거 전후를 박스플롯으로 비교해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -1807,10 +1443,10 @@
         "\"After: Malic Acid (Outliers Removed)\"",
         "tight_layout",
         "show",
+        "load",
         "invoke",
-        "False",
-        "transform",
-        "True"
+        "None",
+        "transform"
       ],
       "solution": "# TODO 1: 이상치 제거 전후를 박스플롯으로 비교해봅시다.\nfig, axes = plt.subplots(1, 2, figsize=(12, 5))\n\nsns.boxplot(data=wine_dataframe, y=\"malic_acid\", ax=axes[0])\naxes[0].set_title(\"Before: Malic Acid\")\n\nsns.boxplot(data=wine_dataframe_clean, y=\"malic_acid\", ax=axes[1])\naxes[1].set_title(\"After: Malic Acid (Outliers Removed)\")\n\nplt.tight_layout()\nplt.show()",
       "protectedRanges": [
@@ -1827,12 +1463,12 @@
       "id": "assembly-1-1-03-01",
       "unit": "1-1",
       "type": "assembly",
-      "title": "분류 모델 학습 및 평가: 가진 데이터를 학습용과 평가용으로 나누어 모델이 처음 ",
-      "content": "1. 가진 데이터를 학습용과 평가용으로 나누어 모델이 처음 보는 데이터에서도 잘 동작하는지 확인하는 과정입니다. 모델을 학습시킨 데이터로 다시 성능을 측정하면 점수는 언제나 높게 나옵니다. 이미 본 문제를 다시 푸는 것과 같기 때문입니다. 우리가 알아야 하는 것은 처음 보는 데이터도 맞힐 수 있는가 입니다. 시험에 비유하면 학습 데이터는 공부한 문제집이고, 테스트 데이터는 실제 시험 문제입니다. 테스트 데이터가 학습에 섞이면 시험 문제를 미리 본 것과 같아집니다. 이렇게 평가용 정보가 학습에 새어 들어가는 것을 데이터 누수(Data Leakage) 라고 합니다. 학습 점수와 테스트 점수를 함께 보면 모델의 상태를 진단할 수 있습니다. 상태 학습 점수 테스트 점수 의미 정상 높음 높음 일반화가 잘 된 상태 과적합(Overfitting) 매우 높음 낮음 학습 데이터를 외워버린 상태 과소적합(Underfitting) 낮음 낮음 아직 충분히 학습하지 못한 상태 💡데이터를 나누는 이유 과적합은 학습 데이터의 잡음까지 외워버린 상태를 말합니다. 데이터를 나누어 두어야만 이 상태를 발견할 수 있습니다. traintestsplit은 실습을 위한 준비 과정이 아니라 평가를 신뢰할 수 있게 만드는 장치입니다.\n2. traintestsplit을 import 해봅시다.\n3. features, target을 학습용과 테스트용으로 분할해봅시다. (testsize=0.2, randomstate=42, stratify=target)",
+      "title": "학습·테스트 데이터 분할",
+      "content": "1. 가진 데이터를 학습용과 평가용으로 나누어 모델이 처음 보는 데이터에서도 잘 동작하는지 확인하는 과정입니다.\n2. traintestsplit을 import 해봅시다.\n3. features, target을 학습용과 테스트용으로 분할해봅시다. (testsize=0.2, randomstate=42, stratify=target)\n4. 분할된 데이터의 클래스 비율이 유지되는지 확인해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: 가진 데이터를 학습용과 평가용으로 나누어 모델이 처음 보는 데이터에서도 잘 동작하는지 확인하는 과정입니다. 모델을 학습시킨 데이터로 다시 성능을 측정하면 점수는 언제나 높게 나옵니다. 이미 본 문제를 다시 푸는 것과 같기 때문입니다. 우리가 알아야 하는 것은 처음 보는 데이터도 맞힐 수 있는가 입니다. 시험에 비유하면 학습 데이터는 공부한 문제집이고, 테스트 데이터는 실제 시험 문제입니다. 테스트 데이터가 학습에 섞이면 시험 문제를 미리 본 것과 같아집니다. 이렇게 평가용 정보가 학습에 새어 들어가는 것을 데이터 누수(Data Leakage) 라고 합니다. 학습 점수와 테스트 점수를 함께 보면 모델의 상태를 진단할 수 있습니다. 상태 학습 점수 테스트 점수 의미 정상 높음 높음 일반화가 잘 된 상태 과적합(Overfitting) 매우 높음 낮음 학습 데이터를 외워버린 상태 과소적합(Underfitting) 낮음 낮음 아직 충분히 학습하지 못한 상태 💡데이터를 나누는 이유 과적합은 학습 데이터의 잡음까지 외워버린 상태를 말합니다. 데이터를 나누어 두어야만 이 상태를 발견할 수 있습니다. traintestsplit은 실습을 위한 준비 과정이 아니라 평가를 신뢰할 수 있게 만드는 장치입니다.\nfeatures = wine_dataframe.____[1](____[2], ____[3]=____[4]).____[5]\n\ntarget = wine_dataframe[____[6]].____[7]\n\n____[8](f____[9])\n\n# TODO 2: traintestsplit을 import 해봅시다.\nfrom ____[10].____[11] import ____[12]\n\n# TODO 3: features, target을 학습용과 테스트용으로 분할해봅시다. (testsize=0.2, randomstate=42, stratify=target)\nfeatures_train, features_test, target_train, ____[13] = ____[14](\n    features, target, ____[15]=____[16], ____[17]=____[18], ____[19]=target\n)\n\n____[20](f____[21])",
+      "skeleton": "# TODO 1: 가진 데이터를 학습용과 평가용으로 나누어 모델이 처음 보는 데이터에서도 잘 동작하는지 확인하는 과정입니다.\nfeatures = wine_dataframe.____[1](____[2], ____[3]=____[4]).____[5]\n\ntarget = wine_dataframe[____[6]].____[7]\n\n# TODO 2: traintestsplit을 import 해봅시다.\nfrom ____[8].____[9] import ____[10]\n\n# TODO 3: features, target을 학습용과 테스트용으로 분할해봅시다. (testsize=0.2, randomstate=42, stratify=target)\nfeatures_train, features_test, target_train, ____[11] = ____[12](\n    features, target, ____[13]=____[14], ____[15]=____[16], ____[17]=target\n)\n\n# TODO 4: 분할된 데이터의 클래스 비율이 유지되는지 확인해봅시다.\nfor name, data in [(____[18], target), (____[19], target_train), (____[20], target_test)]:\n    counts = collections.____[21](data)\n    total = ____[22](data)\n\n    ratios = {k: f____[23] for k, v in ____[24](counts.____[25]())}",
       "slots": [
         {
           "id": "slot-1",
@@ -1864,19 +1500,19 @@
         },
         {
           "id": "slot-8",
-          "answer": "print"
-        },
-        {
-          "id": "slot-9",
-          "answer": "\"피처 shape: {features.shape}, 타겟 shape: {target.shape}\""
-        },
-        {
-          "id": "slot-10",
           "answer": "sklearn"
         },
         {
-          "id": "slot-11",
+          "id": "slot-9",
           "answer": "model_selection"
+        },
+        {
+          "id": "slot-10",
+          "answer": "train_test_split"
+        },
+        {
+          "id": "slot-11",
+          "answer": "target_test"
         },
         {
           "id": "slot-12",
@@ -1884,39 +1520,55 @@
         },
         {
           "id": "slot-13",
-          "answer": "target_test"
-        },
-        {
-          "id": "slot-14",
-          "answer": "train_test_split"
-        },
-        {
-          "id": "slot-15",
           "answer": "test_size"
         },
         {
-          "id": "slot-16",
+          "id": "slot-14",
           "answer": "0.2"
         },
         {
-          "id": "slot-17",
+          "id": "slot-15",
           "answer": "random_state"
         },
         {
-          "id": "slot-18",
+          "id": "slot-16",
           "answer": "42"
         },
         {
-          "id": "slot-19",
+          "id": "slot-17",
           "answer": "stratify"
         },
         {
+          "id": "slot-18",
+          "answer": "\"전체\""
+        },
+        {
+          "id": "slot-19",
+          "answer": "\"학습\""
+        },
+        {
           "id": "slot-20",
-          "answer": "print"
+          "answer": "\"테스트\""
         },
         {
           "id": "slot-21",
-          "answer": "\"학습 데이터: {features_train.shape}, 테스트 데이터: {features_test.shape}\""
+          "answer": "Counter"
+        },
+        {
+          "id": "slot-22",
+          "answer": "len"
+        },
+        {
+          "id": "slot-23",
+          "answer": "\"{v/total*100:.1f}%\""
+        },
+        {
+          "id": "slot-24",
+          "answer": "sorted"
+        },
+        {
+          "id": "slot-25",
+          "answer": "items"
         }
       ],
       "tokens": [
@@ -1925,8 +1577,6 @@
         "axis",
         "1",
         "values",
-        "print",
-        "\"피처 shape: {features.shape}, 타겟 shape: {target.shape}\"",
         "sklearn",
         "model_selection",
         "train_test_split",
@@ -1936,84 +1586,6 @@
         "random_state",
         "42",
         "stratify",
-        "\"학습 데이터: {features_train.shape}, 테스트 데이터: {features_test.shape}\"",
-        "True",
-        "\"auto\"",
-        "transform",
-        "invoke"
-      ],
-      "solution": "# TODO 1: 가진 데이터를 학습용과 평가용으로 나누어 모델이 처음 보는 데이터에서도 잘 동작하는지 확인하는 과정입니다. 모델을 학습시킨 데이터로 다시 성능을 측정하면 점수는 언제나 높게 나옵니다. 이미 본 문제를 다시 푸는 것과 같기 때문입니다. 우리가 알아야 하는 것은 처음 보는 데이터도 맞힐 수 있는가 입니다. 시험에 비유하면 학습 데이터는 공부한 문제집이고, 테스트 데이터는 실제 시험 문제입니다. 테스트 데이터가 학습에 섞이면 시험 문제를 미리 본 것과 같아집니다. 이렇게 평가용 정보가 학습에 새어 들어가는 것을 데이터 누수(Data Leakage) 라고 합니다. 학습 점수와 테스트 점수를 함께 보면 모델의 상태를 진단할 수 있습니다. 상태 학습 점수 테스트 점수 의미 정상 높음 높음 일반화가 잘 된 상태 과적합(Overfitting) 매우 높음 낮음 학습 데이터를 외워버린 상태 과소적합(Underfitting) 낮음 낮음 아직 충분히 학습하지 못한 상태 💡데이터를 나누는 이유 과적합은 학습 데이터의 잡음까지 외워버린 상태를 말합니다. 데이터를 나누어 두어야만 이 상태를 발견할 수 있습니다. traintestsplit은 실습을 위한 준비 과정이 아니라 평가를 신뢰할 수 있게 만드는 장치입니다.\nfeatures = wine_dataframe.drop(\"quality\", axis=1).values\n\ntarget = wine_dataframe[\"quality\"].values\n\nprint(f\"피처 shape: {features.shape}, 타겟 shape: {target.shape}\")\n\n# TODO 2: traintestsplit을 import 해봅시다.\nfrom sklearn.model_selection import train_test_split\n\n# TODO 3: features, target을 학습용과 테스트용으로 분할해봅시다. (testsize=0.2, randomstate=42, stratify=target)\nfeatures_train, features_test, target_train, target_test = train_test_split(\n    features, target, test_size=0.2, random_state=42, stratify=target\n)\n\nprint(f\"학습 데이터: {features_train.shape}, 테스트 데이터: {features_test.shape}\")",
-      "protectedRanges": [
-        {
-          "start": 0,
-          "end": 627
-        },
-        {
-          "start": 792,
-          "end": 831
-        },
-        {
-          "start": 885,
-          "end": 981
-        }
-      ],
-      "explanation": "정답 노트북의 TODO 1, 2, 3 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
-      "example": "",
-      "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_003_전처리 및 모델 학습.ipynb"
-    },
-    {
-      "id": "assembly-1-1-03-02",
-      "unit": "1-1",
-      "type": "assembly",
-      "title": "학습·평가 데이터 분할: 분할된 데이터의 클래스 비율이 유지되는지 확인",
-      "content": "분할된 데이터의 클래스 비율이 유지되는지 확인해봅시다.",
-      "requirements": [
-        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
-      ],
-      "skeleton": "# TODO 1: 분할된 데이터의 클래스 비율이 유지되는지 확인해봅시다.\nfor name, data in [(____[1], target), (____[2], target_train), (____[3], target_test)]:\n    counts = collections.____[4](data)\n    total = ____[5](data)\n\n    ratios = {k: f____[6] for k, v in ____[7](counts.____[8]())}\n    ____[9](f____[10])",
-      "slots": [
-        {
-          "id": "slot-1",
-          "answer": "\"전체\""
-        },
-        {
-          "id": "slot-2",
-          "answer": "\"학습\""
-        },
-        {
-          "id": "slot-3",
-          "answer": "\"테스트\""
-        },
-        {
-          "id": "slot-4",
-          "answer": "Counter"
-        },
-        {
-          "id": "slot-5",
-          "answer": "len"
-        },
-        {
-          "id": "slot-6",
-          "answer": "\"{v/total*100:.1f}%\""
-        },
-        {
-          "id": "slot-7",
-          "answer": "sorted"
-        },
-        {
-          "id": "slot-8",
-          "answer": "items"
-        },
-        {
-          "id": "slot-9",
-          "answer": "print"
-        },
-        {
-          "id": "slot-10",
-          "answer": "\"{name} ({total}개): {ratios}\""
-        }
-      ],
-      "tokens": [
         "\"전체\"",
         "\"학습\"",
         "\"테스트\"",
@@ -2022,33 +1594,44 @@
         "\"{v/total*100:.1f}%\"",
         "sorted",
         "items",
-        "print",
-        "\"{name} ({total}개): {ratios}\"",
         "True",
-        "invoke",
-        "transform"
+        "\"auto\"",
+        "transform",
+        "invoke"
       ],
-      "solution": "# TODO 1: 분할된 데이터의 클래스 비율이 유지되는지 확인해봅시다.\nfor name, data in [(\"전체\", target), (\"학습\", target_train), (\"테스트\", target_test)]:\n    counts = collections.Counter(data)\n    total = len(data)\n\n    ratios = {k: f\"{v/total*100:.1f}%\" for k, v in sorted(counts.items())}\n    print(f\"{name} ({total}개): {ratios}\")",
+      "solution": "# TODO 1: 가진 데이터를 학습용과 평가용으로 나누어 모델이 처음 보는 데이터에서도 잘 동작하는지 확인하는 과정입니다.\nfeatures = wine_dataframe.drop(\"quality\", axis=1).values\n\ntarget = wine_dataframe[\"quality\"].values\n\n# TODO 2: traintestsplit을 import 해봅시다.\nfrom sklearn.model_selection import train_test_split\n\n# TODO 3: features, target을 학습용과 테스트용으로 분할해봅시다. (testsize=0.2, randomstate=42, stratify=target)\nfeatures_train, features_test, target_train, target_test = train_test_split(\n    features, target, test_size=0.2, random_state=42, stratify=target\n)\n\n# TODO 4: 분할된 데이터의 클래스 비율이 유지되는지 확인해봅시다.\nfor name, data in [(\"전체\", target), (\"학습\", target_train), (\"테스트\", target_test)]:\n    counts = collections.Counter(data)\n    total = len(data)\n\n    ratios = {k: f\"{v/total*100:.1f}%\" for k, v in sorted(counts.items())}",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 40
+          "end": 69
+        },
+        {
+          "start": 170,
+          "end": 209
+        },
+        {
+          "start": 263,
+          "end": 359
+        },
+        {
+          "start": 509,
+          "end": 550
         }
       ],
-      "explanation": "정답 노트북의 TODO 4 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "explanation": "정답 노트북의 TODO 1, 2, 3, 4 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_003_전처리 및 모델 학습.ipynb"
     },
     {
-      "id": "assembly-1-1-03-03",
+      "id": "assembly-1-1-03-02",
       "unit": "1-1",
       "type": "assembly",
-      "title": "특성 스케일링: StandardScaler를 import",
-      "content": "1. StandardScaler를 import 해봅시다.\n2. 학습 데이터에 StandardScaler를 학습(fit)하고 변환(transform)해봅시다.\n3. 테스트 데이터에는 변환(transform)만 적용해봅시다.\n4. LogisticRegression을 import 해봅시다.",
+      "title": "StandardScaler 전처리",
+      "content": "1. StandardScaler를 import 해봅시다.\n2. 학습 데이터에 StandardScaler를 학습(fit)하고 변환(transform)해봅시다.\n3. 테스트 데이터에는 변환(transform)만 적용해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: StandardScaler를 import 해봅시다.\nfrom ____[1].____[2] import ____[3]\n\n# TODO 2: 학습 데이터에 StandardScaler를 학습(fit)하고 변환(transform)해봅시다.\nstandard_scaler = ____[4]()\n\nfeatures_train_scaled = standard_scaler.____[5](features_train)\n\n____[6](f____[7])\n____[8](f____[9])\n\n# TODO 3: 테스트 데이터에는 변환(transform)만 적용해봅시다.\nfeatures_test_scaled = standard_scaler.____[10](features_test)\n\n____[11](f____[12])\n\n# TODO 4: LogisticRegression을 import 해봅시다.\nfrom ____[13].____[14] import ____[15]",
+      "skeleton": "# TODO 1: StandardScaler를 import 해봅시다.\nfrom ____[1].____[2] import ____[3]\n\n# TODO 2: 학습 데이터에 StandardScaler를 학습(fit)하고 변환(transform)해봅시다.\nstandard_scaler = ____[4]()\n\nfeatures_train_scaled = standard_scaler.____[5](features_train)\n\n# TODO 3: 테스트 데이터에는 변환(transform)만 적용해봅시다.\nfeatures_test_scaled = standard_scaler.____[6](features_test)",
       "slots": [
         {
           "id": "slot-1",
@@ -2072,43 +1655,7 @@
         },
         {
           "id": "slot-6",
-          "answer": "print"
-        },
-        {
-          "id": "slot-7",
-          "answer": "\"스케일링 전 - 평균: {features_train[:, 0].mean():.2f}, 표준편차: {features_train[:, 0].std():.2f}\""
-        },
-        {
-          "id": "slot-8",
-          "answer": "print"
-        },
-        {
-          "id": "slot-9",
-          "answer": "\"스케일링 후 - 평균: {features_train_scaled[:, 0].mean():.2f}, 표준편차: {features_train_scaled[:, 0].std():.2f}\""
-        },
-        {
-          "id": "slot-10",
           "answer": "transform"
-        },
-        {
-          "id": "slot-11",
-          "answer": "print"
-        },
-        {
-          "id": "slot-12",
-          "answer": "\"테스트 스케일링 후 - 평균: {features_test_scaled[:, 0].mean():.2f}, 표준편차: {features_test_scaled[:, 0].std():.2f}\""
-        },
-        {
-          "id": "slot-13",
-          "answer": "sklearn"
-        },
-        {
-          "id": "slot-14",
-          "answer": "linear_model"
-        },
-        {
-          "id": "slot-15",
-          "answer": "LogisticRegression"
         }
       ],
       "tokens": [
@@ -2116,18 +1663,11 @@
         "preprocessing",
         "StandardScaler",
         "fit_transform",
-        "print",
-        "\"스케일링 전 - 평균: {features_train[:, 0].mean():.2f}, 표준편차: {features_train[:, 0].std():.2f}\"",
-        "\"스케일링 후 - 평균: {features_train_scaled[:, 0].mean():.2f}, 표준편차: {features_train_scaled[:, 0].std():.2f}\"",
         "transform",
-        "\"테스트 스케일링 후 - 평균: {features_test_scaled[:, 0].mean():.2f}, 표준편차: {features_test_scaled[:, 0].std():.2f}\"",
-        "linear_model",
-        "LogisticRegression",
-        "0",
-        "True",
-        "load"
+        "None",
+        "0"
       ],
-      "solution": "# TODO 1: StandardScaler를 import 해봅시다.\nfrom sklearn.preprocessing import StandardScaler\n\n# TODO 2: 학습 데이터에 StandardScaler를 학습(fit)하고 변환(transform)해봅시다.\nstandard_scaler = StandardScaler()\n\nfeatures_train_scaled = standard_scaler.fit_transform(features_train)\n\nprint(f\"스케일링 전 - 평균: {features_train[:, 0].mean():.2f}, 표준편차: {features_train[:, 0].std():.2f}\")\nprint(f\"스케일링 후 - 평균: {features_train_scaled[:, 0].mean():.2f}, 표준편차: {features_train_scaled[:, 0].std():.2f}\")\n\n# TODO 3: 테스트 데이터에는 변환(transform)만 적용해봅시다.\nfeatures_test_scaled = standard_scaler.transform(features_test)\n\nprint(f\"테스트 스케일링 후 - 평균: {features_test_scaled[:, 0].mean():.2f}, 표준편차: {features_test_scaled[:, 0].std():.2f}\")\n\n# TODO 4: LogisticRegression을 import 해봅시다.\nfrom sklearn.linear_model import LogisticRegression",
+      "solution": "# TODO 1: StandardScaler를 import 해봅시다.\nfrom sklearn.preprocessing import StandardScaler\n\n# TODO 2: 학습 데이터에 StandardScaler를 학습(fit)하고 변환(transform)해봅시다.\nstandard_scaler = StandardScaler()\n\nfeatures_train_scaled = standard_scaler.fit_transform(features_train)\n\n# TODO 3: 테스트 데이터에는 변환(transform)만 적용해봅시다.\nfeatures_test_scaled = standard_scaler.transform(features_test)",
       "protectedRanges": [
         {
           "start": 0,
@@ -2138,99 +1678,77 @@
           "end": 151
         },
         {
-          "start": 467,
-          "end": 510
-        },
-        {
-          "start": 689,
-          "end": 732
+          "start": 258,
+          "end": 301
         }
       ],
-      "explanation": "정답 노트북의 TODO 5, 6, 7, 8 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "explanation": "정답 노트북의 TODO 5, 6, 7 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_003_전처리 및 모델 학습.ipynb"
     },
     {
-      "id": "assembly-1-1-03-04",
+      "id": "assembly-1-1-03-03",
       "unit": "1-1",
       "type": "assembly",
-      "title": "전처리 및 모델 학습: 로지스틱 회귀 모델(maxiter=5000, rando",
-      "content": "1. 로지스틱 회귀 모델(maxiter=5000, randomstate=42)을 생성해봅시다.\n2. 스케일링된 학습 데이터로 모델을 학습시켜봅시다.\n3. 스케일링된 테스트 데이터로 예측해봅시다.\n4. 테스트 데이터에 대한 정확도를 출력해봅시다.",
+      "title": "로지스틱 회귀 학습과 평가",
+      "content": "1. LogisticRegression을 import 해봅시다.\n2. 로지스틱 회귀 모델(maxiter=5000, randomstate=42)을 생성해봅시다.\n3. 스케일링된 학습 데이터로 모델을 학습시켜봅시다.\n4. 스케일링된 테스트 데이터로 예측해봅시다.\n5. 테스트 데이터에 대한 정확도를 구해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: 로지스틱 회귀 모델(maxiter=5000, randomstate=42)을 생성해봅시다.\nlogistic_model = ____[1](____[2]=____[3], ____[4]=____[5])\n\n# TODO 2: 스케일링된 학습 데이터로 모델을 학습시켜봅시다.\n____[6].____[7](features_train_scaled, target_train)\n____[8](____[9])\n\n# TODO 3: 스케일링된 테스트 데이터로 예측해봅시다.\ntarget_predicted = logistic_model.____[10](features_test_scaled)\n\n____[11](f____[12])\n____[13](f____[14])\n\n# TODO 4: 테스트 데이터에 대한 정확도를 출력해봅시다.\naccuracy = logistic_model.____[15](features_test_scaled, target_test)\n____[16](f____[17])",
+      "skeleton": "# TODO 1: LogisticRegression을 import 해봅시다.\nfrom ____[1].____[2] import ____[3]\n\n# TODO 2: 로지스틱 회귀 모델(maxiter=5000, randomstate=42)을 생성해봅시다.\nlogistic_model = ____[4](____[5]=____[6], ____[7]=____[8])\n\n# TODO 3: 스케일링된 학습 데이터로 모델을 학습시켜봅시다.\n____[9].____[10](features_train_scaled, target_train)\n\n# TODO 4: 스케일링된 테스트 데이터로 예측해봅시다.\ntarget_predicted = logistic_model.____[11](features_test_scaled)\n\n# TODO 5: 테스트 데이터에 대한 정확도를 구해봅시다.\naccuracy = logistic_model.____[12](features_test_scaled, target_test)",
       "slots": [
         {
           "id": "slot-1",
-          "answer": "LogisticRegression"
+          "answer": "sklearn"
         },
         {
           "id": "slot-2",
-          "answer": "max_iter"
+          "answer": "linear_model"
         },
         {
           "id": "slot-3",
-          "answer": "5000"
+          "answer": "LogisticRegression"
         },
         {
           "id": "slot-4",
-          "answer": "random_state"
+          "answer": "LogisticRegression"
         },
         {
           "id": "slot-5",
-          "answer": "42"
+          "answer": "max_iter"
         },
         {
           "id": "slot-6",
-          "answer": "logistic_model"
+          "answer": "5000"
         },
         {
           "id": "slot-7",
-          "answer": "fit"
+          "answer": "random_state"
         },
         {
           "id": "slot-8",
-          "answer": "print"
+          "answer": "42"
         },
         {
           "id": "slot-9",
-          "answer": "\"모델 학습 완료!\""
+          "answer": "logistic_model"
         },
         {
           "id": "slot-10",
-          "answer": "predict"
+          "answer": "fit"
         },
         {
           "id": "slot-11",
-          "answer": "print"
+          "answer": "predict"
         },
         {
           "id": "slot-12",
-          "answer": "\"예측 결과 (처음 10개): {target_predicted[:10]}\""
-        },
-        {
-          "id": "slot-13",
-          "answer": "print"
-        },
-        {
-          "id": "slot-14",
-          "answer": "\"실제 결과 (처음 10개): {target_test[:10]}\""
-        },
-        {
-          "id": "slot-15",
           "answer": "score"
-        },
-        {
-          "id": "slot-16",
-          "answer": "print"
-        },
-        {
-          "id": "slot-17",
-          "answer": "\"테스트 정확도: {accuracy:.4f}\""
         }
       ],
       "tokens": [
+        "sklearn",
+        "linear_model",
         "LogisticRegression",
         "max_iter",
         "5000",
@@ -2238,38 +1756,36 @@
         "42",
         "logistic_model",
         "fit",
-        "print",
-        "\"모델 학습 완료!\"",
         "predict",
-        "\"예측 결과 (처음 10개): {target_predicted[:10]}\"",
-        "\"실제 결과 (처음 10개): {target_test[:10]}\"",
         "score",
-        "\"테스트 정확도: {accuracy:.4f}\"",
-        "False",
+        "transform",
         "True",
-        "1",
-        "invoke"
+        "\"auto\""
       ],
-      "solution": "# TODO 1: 로지스틱 회귀 모델(maxiter=5000, randomstate=42)을 생성해봅시다.\nlogistic_model = LogisticRegression(max_iter=5000, random_state=42)\n\n# TODO 2: 스케일링된 학습 데이터로 모델을 학습시켜봅시다.\nlogistic_model.fit(features_train_scaled, target_train)\nprint(\"모델 학습 완료!\")\n\n# TODO 3: 스케일링된 테스트 데이터로 예측해봅시다.\ntarget_predicted = logistic_model.predict(features_test_scaled)\n\nprint(f\"예측 결과 (처음 10개): {target_predicted[:10]}\")\nprint(f\"실제 결과 (처음 10개): {target_test[:10]}\")\n\n# TODO 4: 테스트 데이터에 대한 정확도를 출력해봅시다.\naccuracy = logistic_model.score(features_test_scaled, target_test)\nprint(f\"테스트 정확도: {accuracy:.4f}\")",
+      "solution": "# TODO 1: LogisticRegression을 import 해봅시다.\nfrom sklearn.linear_model import LogisticRegression\n\n# TODO 2: 로지스틱 회귀 모델(maxiter=5000, randomstate=42)을 생성해봅시다.\nlogistic_model = LogisticRegression(max_iter=5000, random_state=42)\n\n# TODO 3: 스케일링된 학습 데이터로 모델을 학습시켜봅시다.\nlogistic_model.fit(features_train_scaled, target_train)\n\n# TODO 4: 스케일링된 테스트 데이터로 예측해봅시다.\ntarget_predicted = logistic_model.predict(features_test_scaled)\n\n# TODO 5: 테스트 데이터에 대한 정확도를 구해봅시다.\naccuracy = logistic_model.score(features_test_scaled, target_test)",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 59
+          "end": 42
         },
         {
-          "start": 128,
-          "end": 165
+          "start": 95,
+          "end": 155
         },
         {
-          "start": 241,
-          "end": 274
+          "start": 224,
+          "end": 261
         },
         {
-          "start": 435,
-          "end": 470
+          "start": 318,
+          "end": 351
+        },
+        {
+          "start": 416,
+          "end": 450
         }
       ],
-      "explanation": "정답 노트북의 TODO 9, 10, 11, 12 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "explanation": "정답 노트북의 TODO 8, 9, 10, 11, 12 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_003_전처리 및 모델 학습.ipynb"
     },
@@ -2277,12 +1793,12 @@
       "id": "assembly-1-1-04-01",
       "unit": "1-1",
       "type": "assembly",
-      "title": "모델 검증 및 해석: crossvalscore를 import",
+      "title": "교차검증과 혼동행렬",
       "content": "1. crossvalscore를 import 해봅시다.\n2. 5-Fold 교차검증(cv=5, scoring=\"accuracy\")을 수행해봅시다.\n3. confusionmatrix, classificationreport를 import 해봅시다.\n4. 혼동 행렬을 구해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: crossvalscore를 import 해봅시다.\nfrom ____[1].____[2] import ____[3]\n\n# TODO 2: 5-Fold 교차검증(cv=5, scoring=\"accuracy\")을 수행해봅시다.\ncross_validation_scores = ____[4](logistic_model, features, target, ____[5]=____[6], ____[7]=____[8])\n\n____[9](f____[10])\n\n# TODO 3: confusionmatrix, classificationreport를 import 해봅시다.\nfrom ____[11].____[12] import ____[13], ____[14]\n\n# TODO 4: 혼동 행렬을 구해봅시다.\nconfusion_matrix_result = ____[15](target_test, target_predicted)\n____[16](____[17])\n____[18](confusion_matrix_result)",
+      "skeleton": "# TODO 1: crossvalscore를 import 해봅시다.\nfrom ____[1].____[2] import ____[3]\n\n# TODO 2: 5-Fold 교차검증(cv=5, scoring=\"accuracy\")을 수행해봅시다.\ncross_validation_scores = ____[4](logistic_model, features, target, ____[5]=____[6], ____[7]=____[8])\n\n# TODO 3: confusionmatrix, classificationreport를 import 해봅시다.\nfrom ____[9].____[10] import ____[11], ____[12]\n\n# TODO 4: 혼동 행렬을 구해봅시다.\nconfusion_matrix_result = ____[13](target_test, target_predicted)",
       "slots": [
         {
           "id": "slot-1",
@@ -2318,43 +1834,23 @@
         },
         {
           "id": "slot-9",
-          "answer": "print"
-        },
-        {
-          "id": "slot-10",
-          "answer": "\"각 Fold 정확도: {cross_validation_scores.round(4)}\""
-        },
-        {
-          "id": "slot-11",
           "answer": "sklearn"
         },
         {
-          "id": "slot-12",
+          "id": "slot-10",
           "answer": "metrics"
+        },
+        {
+          "id": "slot-11",
+          "answer": "confusion_matrix"
+        },
+        {
+          "id": "slot-12",
+          "answer": "classification_report"
         },
         {
           "id": "slot-13",
           "answer": "confusion_matrix"
-        },
-        {
-          "id": "slot-14",
-          "answer": "classification_report"
-        },
-        {
-          "id": "slot-15",
-          "answer": "confusion_matrix"
-        },
-        {
-          "id": "slot-16",
-          "answer": "print"
-        },
-        {
-          "id": "slot-17",
-          "answer": "\"혼동 행렬:\""
-        },
-        {
-          "id": "slot-18",
-          "answer": "print"
         }
       ],
       "tokens": [
@@ -2365,18 +1861,14 @@
         "5",
         "scoring",
         "\"accuracy\"",
-        "print",
-        "\"각 Fold 정확도: {cross_validation_scores.round(4)}\"",
         "metrics",
         "confusion_matrix",
         "classification_report",
-        "\"혼동 행렬:\"",
         "True",
         "invoke",
-        "transform",
-        "\"auto\""
+        "transform"
       ],
-      "solution": "# TODO 1: crossvalscore를 import 해봅시다.\nfrom sklearn.model_selection import cross_val_score\n\n# TODO 2: 5-Fold 교차검증(cv=5, scoring=\"accuracy\")을 수행해봅시다.\ncross_validation_scores = cross_val_score(logistic_model, features, target, cv=5, scoring=\"accuracy\")\n\nprint(f\"각 Fold 정확도: {cross_validation_scores.round(4)}\")\n\n# TODO 3: confusionmatrix, classificationreport를 import 해봅시다.\nfrom sklearn.metrics import confusion_matrix, classification_report\n\n# TODO 4: 혼동 행렬을 구해봅시다.\nconfusion_matrix_result = confusion_matrix(target_test, target_predicted)\nprint(\"혼동 행렬:\")\nprint(confusion_matrix_result)",
+      "solution": "# TODO 1: crossvalscore를 import 해봅시다.\nfrom sklearn.model_selection import cross_val_score\n\n# TODO 2: 5-Fold 교차검증(cv=5, scoring=\"accuracy\")을 수행해봅시다.\ncross_validation_scores = cross_val_score(logistic_model, features, target, cv=5, scoring=\"accuracy\")\n\n# TODO 3: confusionmatrix, classificationreport를 import 해봅시다.\nfrom sklearn.metrics import confusion_matrix, classification_report\n\n# TODO 4: 혼동 행렬을 구해봅시다.\nconfusion_matrix_result = confusion_matrix(target_test, target_predicted)",
       "protectedRanges": [
         {
           "start": 0,
@@ -2387,12 +1879,12 @@
           "end": 147
         },
         {
-          "start": 308,
-          "end": 370
+          "start": 250,
+          "end": 312
         },
         {
-          "start": 439,
-          "end": 463
+          "start": 381,
+          "end": 405
         }
       ],
       "explanation": "정답 노트북의 TODO 1, 2, 3, 4 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
@@ -2403,12 +1895,12 @@
       "id": "assembly-1-1-04-02",
       "unit": "1-1",
       "type": "assembly",
-      "title": "분류 성능 평가: 분류 보고서를 출력",
-      "content": "1. 분류 보고서를 출력해봅시다.\n2. roccurve, rocaucscore를 import 해봅시다.\n3. ROC 곡선에 필요한 실제 라벨과 예측 확률을 준비해봅시다.",
+      "title": "분류 보고서와 ROC 데이터 준비",
+      "content": "1. 분류 보고서를 구해봅시다.\n2. roccurve, rocaucscore를 import 해봅시다.\n3. ROC 곡선에 필요한 실제 라벨과 예측 확률을 준비해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: 분류 보고서를 출력해봅시다.\nclassification_report_result = ____[1](target_test, target_predicted)\n____[2](____[3])\n____[4](classification_report_result)\n\n# TODO 2: roccurve, rocaucscore를 import 해봅시다.\nfrom ____[5].____[6] import ____[7], ____[8]\n\n# TODO 3: ROC 곡선에 필요한 실제 라벨과 예측 확률을 준비해봅시다.\ntarget_test_binary = (____[9] == ____[10]).____[11](int)\n\npositive_probabilities = logistic_model.____[12](features_test_scaled)[:, ____[13]]",
+      "skeleton": "# TODO 1: 분류 보고서를 구해봅시다.\nclassification_report_result = ____[1](target_test, target_predicted)\n\n# TODO 2: roccurve, rocaucscore를 import 해봅시다.\nfrom ____[2].____[3] import ____[4], ____[5]\n\n# TODO 3: ROC 곡선에 필요한 실제 라벨과 예측 확률을 준비해봅시다.\ntarget_test_binary = (____[6] == ____[7]).____[8](int)\n\npositive_probabilities = logistic_model.____[9](features_test_scaled)[:, ____[10]]",
       "slots": [
         {
           "id": "slot-1",
@@ -2416,57 +1908,43 @@
         },
         {
           "id": "slot-2",
-          "answer": "print"
-        },
-        {
-          "id": "slot-3",
-          "answer": "\"분류 보고서:\""
-        },
-        {
-          "id": "slot-4",
-          "answer": "print"
-        },
-        {
-          "id": "slot-5",
           "answer": "sklearn"
         },
         {
-          "id": "slot-6",
+          "id": "slot-3",
           "answer": "metrics"
         },
         {
-          "id": "slot-7",
+          "id": "slot-4",
           "answer": "roc_curve"
         },
         {
-          "id": "slot-8",
+          "id": "slot-5",
           "answer": "roc_auc_score"
         },
         {
-          "id": "slot-9",
+          "id": "slot-6",
           "answer": "target_test"
         },
         {
-          "id": "slot-10",
+          "id": "slot-7",
           "answer": "0"
         },
         {
-          "id": "slot-11",
+          "id": "slot-8",
           "answer": "astype"
         },
         {
-          "id": "slot-12",
+          "id": "slot-9",
           "answer": "predict_proba"
         },
         {
-          "id": "slot-13",
+          "id": "slot-10",
           "answer": "0"
         }
       ],
       "tokens": [
         "classification_report",
-        "print",
-        "\"분류 보고서:\"",
         "sklearn",
         "metrics",
         "roc_curve",
@@ -2479,19 +1957,19 @@
         "load",
         "invoke"
       ],
-      "solution": "# TODO 1: 분류 보고서를 출력해봅시다.\nclassification_report_result = classification_report(target_test, target_predicted)\nprint(\"분류 보고서:\")\nprint(classification_report_result)\n\n# TODO 2: roccurve, rocaucscore를 import 해봅시다.\nfrom sklearn.metrics import roc_curve, roc_auc_score\n\n# TODO 3: ROC 곡선에 필요한 실제 라벨과 예측 확률을 준비해봅시다.\ntarget_test_binary = (target_test == 0).astype(int)\n\npositive_probabilities = logistic_model.predict_proba(features_test_scaled)[:, 0]",
+      "solution": "# TODO 1: 분류 보고서를 구해봅시다.\nclassification_report_result = classification_report(target_test, target_predicted)\n\n# TODO 2: roccurve, rocaucscore를 import 해봅시다.\nfrom sklearn.metrics import roc_curve, roc_auc_score\n\n# TODO 3: ROC 곡선에 필요한 실제 라벨과 예측 확률을 준비해봅시다.\ntarget_test_binary = (target_test == 0).astype(int)\n\npositive_probabilities = logistic_model.predict_proba(features_test_scaled)[:, 0]",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 25
+          "end": 24
         },
         {
-          "start": 163,
-          "end": 209
+          "start": 109,
+          "end": 155
         },
         {
-          "start": 263,
-          "end": 307
+          "start": 209,
+          "end": 253
         }
       ],
       "explanation": "정답 노트북의 TODO 5, 6, 7 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
@@ -2502,7 +1980,7 @@
       "id": "assembly-1-1-04-03",
       "unit": "1-1",
       "type": "assembly",
-      "title": "ROC·AUC 평가: ROC 곡선을 그리고 AUC 값을 확인",
+      "title": "ROC 곡선과 AUC 평가",
       "content": "ROC 곡선을 그리고 AUC 값을 확인해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -2691,12 +2169,12 @@
       "id": "assembly-1-1-04-04",
       "unit": "1-1",
       "type": "assembly",
-      "title": "PCA 차원 축소: PCA를 import",
-      "content": "PCA를 import 해봅시다.",
+      "title": "PCA 차원 축소와 K-Means 군집화",
+      "content": "1. PCA를 import 해봅시다.\n2. PCA로 featuresallscaled를 2차원으로 축소해봅시다.\n3. KMeans를 import 해봅시다.\n4. KMeans(nclusters=3, randomstate=42, ninit=10)로 featuresallscaled를 클러스터링해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: PCA를 import 해봅시다.\nfrom ____[1].____[2] import ____[3]",
+      "skeleton": "# TODO 1: PCA를 import 해봅시다.\nfrom ____[1].____[2] import ____[3]\n\n# TODO 2: PCA로 featuresallscaled를 2차원으로 축소해봅시다.\npca_model = ____[4](____[5]=____[6])\n\nfeatures_pca = pca_model.____[7](features_all_scaled)\n\n# TODO 3: KMeans를 import 해봅시다.\nfrom ____[8].____[9] import ____[10]\n\n# TODO 4: KMeans(nclusters=3, randomstate=42, ninit=10)로 featuresallscaled를 클러스터링해봅시다.\nkmeans_model = ____[11](____[12]=____[13], ____[14]=____[15], ____[16]=____[17])\n\ncluster_labels = kmeans_model.____[18](features_all_scaled)",
       "slots": [
         {
           "id": "slot-1",
@@ -2709,185 +2187,75 @@
         {
           "id": "slot-3",
           "answer": "PCA"
+        },
+        {
+          "id": "slot-4",
+          "answer": "PCA"
+        },
+        {
+          "id": "slot-5",
+          "answer": "n_components"
+        },
+        {
+          "id": "slot-6",
+          "answer": "2"
+        },
+        {
+          "id": "slot-7",
+          "answer": "fit_transform"
+        },
+        {
+          "id": "slot-8",
+          "answer": "sklearn"
+        },
+        {
+          "id": "slot-9",
+          "answer": "cluster"
+        },
+        {
+          "id": "slot-10",
+          "answer": "KMeans"
+        },
+        {
+          "id": "slot-11",
+          "answer": "KMeans"
+        },
+        {
+          "id": "slot-12",
+          "answer": "n_clusters"
+        },
+        {
+          "id": "slot-13",
+          "answer": "3"
+        },
+        {
+          "id": "slot-14",
+          "answer": "random_state"
+        },
+        {
+          "id": "slot-15",
+          "answer": "42"
+        },
+        {
+          "id": "slot-16",
+          "answer": "n_init"
+        },
+        {
+          "id": "slot-17",
+          "answer": "10"
+        },
+        {
+          "id": "slot-18",
+          "answer": "fit_predict"
         }
       ],
       "tokens": [
         "sklearn",
         "decomposition",
         "PCA",
-        "transform",
-        "None"
-      ],
-      "solution": "# TODO 1: PCA를 import 해봅시다.\nfrom sklearn.decomposition import PCA",
-      "protectedRanges": [
-        {
-          "start": 0,
-          "end": 27
-        }
-      ],
-      "explanation": "정답 노트북의 TODO 9 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
-      "example": "",
-      "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_004_모델 검증 및 해석.ipynb"
-    },
-    {
-      "id": "assembly-1-1-04-05",
-      "unit": "1-1",
-      "type": "assembly",
-      "title": "PCA 차원 축소: PCA로 featuresallscaled를 2차원으로 ",
-      "content": "PCA로 featuresallscaled를 2차원으로 축소해봅시다.",
-      "requirements": [
-        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
-      ],
-      "skeleton": "# TODO 1: PCA로 featuresallscaled를 2차원으로 축소해봅시다.\npca_model = ____[1](____[2]=____[3])\n\nfeatures_pca = pca_model.____[4](features_all_scaled)\n\n____[5](f____[6])\n____[7](f____[8])\n\n____[9](f____[10])\n\n____[11](f____[12])",
-      "slots": [
-        {
-          "id": "slot-1",
-          "answer": "PCA"
-        },
-        {
-          "id": "slot-2",
-          "answer": "n_components"
-        },
-        {
-          "id": "slot-3",
-          "answer": "2"
-        },
-        {
-          "id": "slot-4",
-          "answer": "fit_transform"
-        },
-        {
-          "id": "slot-5",
-          "answer": "print"
-        },
-        {
-          "id": "slot-6",
-          "answer": "\"축소 전: {features_all_scaled.shape} → 축소 후: {features_pca.shape}\""
-        },
-        {
-          "id": "slot-7",
-          "answer": "print"
-        },
-        {
-          "id": "slot-8",
-          "answer": "\"  (178개 샘플, 13개 특성) → (178개 샘플, 2개 주성분)\""
-        },
-        {
-          "id": "slot-9",
-          "answer": "print"
-        },
-        {
-          "id": "slot-10",
-          "answer": "\"\\n설명된 분산 비율: {pca_model.explained_variance_ratio_.round(4)}\""
-        },
-        {
-          "id": "slot-11",
-          "answer": "print"
-        },
-        {
-          "id": "slot-12",
-          "answer": "\"총 설명 분산: {pca_model.explained_variance_ratio_.sum():.4f}\""
-        }
-      ],
-      "tokens": [
-        "PCA",
         "n_components",
         "2",
         "fit_transform",
-        "print",
-        "\"축소 전: {features_all_scaled.shape} → 축소 후: {features_pca.shape}\"",
-        "\"  (178개 샘플, 13개 특성) → (178개 샘플, 2개 주성분)\"",
-        "\"\\n설명된 분산 비율: {pca_model.explained_variance_ratio_.round(4)}\"",
-        "\"총 설명 분산: {pca_model.explained_variance_ratio_.sum():.4f}\"",
-        "None",
-        "0",
-        "True"
-      ],
-      "solution": "# TODO 1: PCA로 featuresallscaled를 2차원으로 축소해봅시다.\npca_model = PCA(n_components=2)\n\nfeatures_pca = pca_model.fit_transform(features_all_scaled)\n\nprint(f\"축소 전: {features_all_scaled.shape} → 축소 후: {features_pca.shape}\")\nprint(f\"  (178개 샘플, 13개 특성) → (178개 샘플, 2개 주성분)\")\n\nprint(f\"\\n설명된 분산 비율: {pca_model.explained_variance_ratio_.round(4)}\")\n\nprint(f\"총 설명 분산: {pca_model.explained_variance_ratio_.sum():.4f}\")",
-      "protectedRanges": [
-        {
-          "start": 0,
-          "end": 47
-        }
-      ],
-      "explanation": "정답 노트북의 TODO 10 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
-      "example": "",
-      "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_004_모델 검증 및 해석.ipynb"
-    },
-    {
-      "id": "assembly-1-1-04-06",
-      "unit": "1-1",
-      "type": "assembly",
-      "title": "K-Means 군집화: KMeans를 import",
-      "content": "1. KMeans를 import 해봅시다.\n2. KMeans(nclusters=3, randomstate=42, ninit=10)로 featuresallscaled를 클러스터링해봅시다.",
-      "requirements": [
-        "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
-      ],
-      "skeleton": "# TODO 1: KMeans를 import 해봅시다.\nfrom ____[1].____[2] import ____[3]\n\n# TODO 2: KMeans(nclusters=3, randomstate=42, ninit=10)로 featuresallscaled를 클러스터링해봅시다.\nkmeans_model = ____[4](____[5]=____[6], ____[7]=____[8], ____[9]=____[10])\n\ncluster_labels = kmeans_model.____[11](features_all_scaled)\n\n____[12](f____[13])\n\n____[14](f____[15])",
-      "slots": [
-        {
-          "id": "slot-1",
-          "answer": "sklearn"
-        },
-        {
-          "id": "slot-2",
-          "answer": "cluster"
-        },
-        {
-          "id": "slot-3",
-          "answer": "KMeans"
-        },
-        {
-          "id": "slot-4",
-          "answer": "KMeans"
-        },
-        {
-          "id": "slot-5",
-          "answer": "n_clusters"
-        },
-        {
-          "id": "slot-6",
-          "answer": "3"
-        },
-        {
-          "id": "slot-7",
-          "answer": "random_state"
-        },
-        {
-          "id": "slot-8",
-          "answer": "42"
-        },
-        {
-          "id": "slot-9",
-          "answer": "n_init"
-        },
-        {
-          "id": "slot-10",
-          "answer": "10"
-        },
-        {
-          "id": "slot-11",
-          "answer": "fit_predict"
-        },
-        {
-          "id": "slot-12",
-          "answer": "print"
-        },
-        {
-          "id": "slot-13",
-          "answer": "\"클러스터 레이블 (처음 10개): {cluster_labels[:10]}\""
-        },
-        {
-          "id": "slot-14",
-          "answer": "print"
-        },
-        {
-          "id": "slot-15",
-          "answer": "\"클러스터별 크기: {[sum(cluster_labels == i) for i in range(3)]}\""
-        }
-      ],
-      "tokens": [
-        "sklearn",
         "cluster",
         "KMeans",
         "n_clusters",
@@ -2897,26 +2265,31 @@
         "n_init",
         "10",
         "fit_predict",
-        "print",
-        "\"클러스터 레이블 (처음 10개): {cluster_labels[:10]}\"",
-        "\"클러스터별 크기: {[sum(cluster_labels == i) for i in range(3)]}\"",
-        "predict",
-        "1",
+        "transform",
         "None",
-        "True"
+        "True",
+        "invoke"
       ],
-      "solution": "# TODO 1: KMeans를 import 해봅시다.\nfrom sklearn.cluster import KMeans\n\n# TODO 2: KMeans(nclusters=3, randomstate=42, ninit=10)로 featuresallscaled를 클러스터링해봅시다.\nkmeans_model = KMeans(n_clusters=3, random_state=42, n_init=10)\n\ncluster_labels = kmeans_model.fit_predict(features_all_scaled)\n\nprint(f\"클러스터 레이블 (처음 10개): {cluster_labels[:10]}\")\n\nprint(f\"클러스터별 크기: {[sum(cluster_labels == i) for i in range(3)]}\")",
+      "solution": "# TODO 1: PCA를 import 해봅시다.\nfrom sklearn.decomposition import PCA\n\n# TODO 2: PCA로 featuresallscaled를 2차원으로 축소해봅시다.\npca_model = PCA(n_components=2)\n\nfeatures_pca = pca_model.fit_transform(features_all_scaled)\n\n# TODO 3: KMeans를 import 해봅시다.\nfrom sklearn.cluster import KMeans\n\n# TODO 4: KMeans(nclusters=3, randomstate=42, ninit=10)로 featuresallscaled를 클러스터링해봅시다.\nkmeans_model = KMeans(n_clusters=3, random_state=42, n_init=10)\n\ncluster_labels = kmeans_model.fit_predict(features_all_scaled)",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 30
+          "end": 27
         },
         {
           "start": 66,
-          "end": 153
+          "end": 114
+        },
+        {
+          "start": 208,
+          "end": 239
+        },
+        {
+          "start": 275,
+          "end": 362
         }
       ],
-      "explanation": "정답 노트북의 TODO 11, 12 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "explanation": "정답 노트북의 TODO 9, 10, 11, 12 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_1-1_데이터 분석과 기계학습 기초/문제/Ch.1-1_004_모델 검증 및 해석.ipynb"
     }

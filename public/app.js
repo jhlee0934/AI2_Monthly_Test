@@ -80,10 +80,11 @@ function renderAssembly(problem) {
   const groups = groupAssemblyTokens(spec);
   const activeIndex = Math.max(0, spec.slots.findIndex((slot) => slot.id === state.assemblySlotId));
   const filledCount = spec.slots.filter((slot) => selections[slot.id]).length;
-  els.answer.innerHTML = `<section class="assembly"><div class="assembly-head"><div><h3>TODO 코드 조립</h3><p>채울 슬롯을 누른 뒤 코드 조각을 선택하세요. 선택 후 다음 빈 슬롯으로 자동 이동합니다.</p></div></div>${state.assemblyDifficulty === 'hard' ? '<p class="difficulty-note">어려움: 제공된 프롬프트를 제외한 완성 코드의 키워드·변수·메서드·값을 모두 직접 배치합니다.</p>' : ''}<div class="slot-navigator"><strong id="assemblySlotProgress">현재 슬롯 ${activeIndex + 1} / ${spec.slots.length}</strong><span>입력 ${filledCount} / ${spec.slots.length}</span><div><button type="button" id="previousAssemblySlot" class="ghost" aria-label="이전 코드 슬롯">← 이전</button><button type="button" id="nextAssemblySlot" class="ghost" aria-label="다음 코드 슬롯">다음 →</button></div></div><pre class="assembly-code" tabindex="0" aria-label="가로로 스크롤할 수 있는 코드 조립 영역"><code>${renderAssemblyCode(spec, selections)}</code></pre><div class="slot-help"><button type="button" id="revealAssemblySlot" class="ghost">선택 슬롯 정답 보기</button><small>확인한 슬롯은 제출 시 오답으로 처리됩니다.</small></div><div class="token-bank" aria-label="사용 가능한 코드 조각">${groups.map(({ label, tokens }) => `<section class="token-group"><h4>${label}</h4><div>${tokens.map((token) => `<button type="button" class="code-token" data-token="${escapeHtml(token)}"><code>${escapeHtml(token)}</code></button>`).join('')}</div></section>`).join('')}</div><div class="assembly-actions"><button type="button" id="clearAssembly" class="ghost">선택 슬롯 비우기</button><button type="button" id="submitAssembly">코드 확인</button></div><div id="assemblyResults" class="blank-results"></div></section>`;
+  els.answer.innerHTML = `<section class="assembly"><div class="assembly-head"><div><h3>TODO 코드 조립</h3><p>채울 슬롯을 누른 뒤 코드 조각을 선택하세요. 선택 후 다음 빈 슬롯으로 자동 이동합니다.</p></div></div>${state.assemblyDifficulty === 'hard' ? '<p class="difficulty-note">어려움: 제공된 프롬프트를 제외한 완성 코드의 키워드·변수·메서드·값을 모두 직접 배치합니다.</p>' : ''}<div class="slot-navigator"><strong id="assemblySlotProgress">현재 슬롯 ${activeIndex + 1} / ${spec.slots.length}</strong><span>입력 ${filledCount} / ${spec.slots.length}</span><div><button type="button" id="previousAssemblySlot" class="ghost" aria-label="이전 코드 슬롯">← 이전</button><button type="button" id="nextAssemblySlot" class="ghost" aria-label="다음 코드 슬롯">다음 →</button></div></div><pre class="assembly-code" tabindex="0" aria-label="가로로 스크롤할 수 있는 코드 조립 영역"><code>${renderAssemblyCode(spec, selections, saved)}</code></pre><div class="slot-help"><button type="button" id="revealAssemblySlot" class="ghost">선택 슬롯 정답 보기</button><small>확인한 슬롯은 제출 시 오답으로 처리됩니다.</small></div><div class="token-bank" aria-label="사용 가능한 코드 조각">${groups.map(({ label, tokens }) => `<section class="token-group"><h4>${label}</h4><div>${tokens.map((token) => `<button type="button" class="code-token" data-token="${escapeHtml(token)}"><code>${escapeHtml(token)}</code></button>`).join('')}</div></section>`).join('')}</div><div class="assembly-actions"><div><button type="button" id="clearAssembly" class="ghost">선택 슬롯 비우기</button><button type="button" id="resetAssembly" class="ghost" ${filledCount ? '' : 'disabled'}>전체 비우기</button></div><button type="button" id="submitAssembly">코드 확인</button></div><div id="assemblyResults" class="blank-results"></div></section>`;
   els.answer.querySelectorAll('.assembly-slot').forEach((button) => button.addEventListener('click', () => selectAssemblySlot(button.dataset.slotId)));
   els.answer.querySelectorAll('.code-token').forEach((button) => button.addEventListener('click', () => placeAssemblyToken(problem, button.dataset.token)));
   $('#clearAssembly').addEventListener('click', () => clearAssemblySlot(problem));
+  $('#resetAssembly').addEventListener('click', () => resetAssembly(problem));
   $('#revealAssemblySlot').addEventListener('click', () => revealAssemblySlot(problem));
   $('#previousAssemblySlot').addEventListener('click', () => moveAssemblySlot(spec, -1));
   $('#nextAssemblySlot').addEventListener('click', () => moveAssemblySlot(spec, 1));
@@ -112,7 +113,7 @@ function buildHardAssembly(problem) {
   }
   return { ...problem, skeleton: skeleton + problem.solution.slice(cursor), slots, tokens };
 }
-function renderAssemblyCode(spec, selections) {
+function renderAssemblyCode(spec, selections, saved = {}) {
   const markerPattern = /_{2,}\[(\d+)\]/g;
   let output = ''; let cursor = 0;
   for (const match of spec.skeleton.matchAll(markerPattern)) {
@@ -121,7 +122,9 @@ function renderAssemblyCode(spec, selections) {
     if (!slot) output += escapeHtml(match[0]);
     else {
       const value = selections[slot.id];
-      output += `<button type="button" class="assembly-slot ${state.assemblySlotId === slot.id ? 'selected' : ''} ${value ? 'filled' : ''}" data-slot-id="${escapeHtml(slot.id)}" aria-label="코드 슬롯 ${match[1]}${value ? `, 현재 값 ${escapeHtml(value)}` : ''}">${value ? escapeHtml(value) : `슬롯 ${match[1]}`}</button>`;
+      const result = saved.submitted ? saved.results?.[Number(match[1]) - 1] : undefined;
+      const resultClass = result === true ? 'correct' : result === false ? 'incorrect' : '';
+      output += `<button type="button" class="assembly-slot ${state.assemblySlotId === slot.id ? 'selected' : ''} ${value ? 'filled' : ''} ${resultClass}" data-slot-id="${escapeHtml(slot.id)}" aria-label="코드 슬롯 ${match[1]}${value ? `, 현재 값 ${escapeHtml(value)}` : ''}${result === false ? ', 오답' : result === true ? ', 정답' : ''}">${value ? escapeHtml(value) : `슬롯 ${match[1]}`}</button>`;
     }
     cursor = match.index + match[0].length;
   }
@@ -147,11 +150,12 @@ function placeAssemblyToken(problem, token) {
   const current = spec.slots.find((slot) => slot.id === state.assemblySlotId) || spec.slots.find((slot) => !saved.selections?.[slot.id]);
   if (!current) return;
   const selections = { ...(saved.selections || {}), [current.id]: token };
-  state.assemblySlotId = spec.slots.find((slot) => !selections[slot.id])?.id || current.id;
+  state.assemblySlotId = nextEmptyAssemblySlot(spec, selections, current.id)?.id || current.id;
   saveAssemblyMode(problem, { selections, submitted: false, status: 'unanswered', results: [] });
   els.feedback.innerHTML = '';
   renderAssembly(problem);
 }
+function nextEmptyAssemblySlot(spec, selections, currentId) { const start = Math.max(0, spec.slots.findIndex((slot) => slot.id === currentId)); return [...spec.slots.slice(start + 1), ...spec.slots.slice(0, start)].find((slot) => !selections[slot.id]); }
 function clearAssemblySlot(problem) {
   const spec = assemblySpec(problem); const saved = assemblySaved(problem); const current = spec.slots.find((slot) => slot.id === state.assemblySlotId);
   if (!current) return;
@@ -161,26 +165,36 @@ function clearAssemblySlot(problem) {
   els.feedback.innerHTML = '';
   renderAssembly(problem);
 }
+function resetAssembly(problem) {
+  const spec = assemblySpec(problem);
+  if (!confirm('현재 난이도에서 배치한 코드 조각을 모두 비울까요?')) return;
+  state.assemblySlotId = spec.slots[0]?.id || null;
+  saveAssemblyMode(problem, { selections: {}, revealed: [], submitted: false, status: 'unanswered', results: [] });
+  els.feedback.innerHTML = '';
+  renderAssembly(problem);
+}
 function revealAssemblySlot(problem) {
   const spec = assemblySpec(problem); const saved = assemblySaved(problem);
   const current = spec.slots.find((slot) => slot.id === state.assemblySlotId) || spec.slots.find((slot) => !saved.selections?.[slot.id]);
   if (!current) return;
   const selections = { ...(saved.selections || {}), [current.id]: current.answer };
   const revealed = [...new Set([...(saved.revealed || []), current.id])];
-  state.assemblySlotId = spec.slots.find((slot) => !selections[slot.id])?.id || current.id;
+  state.assemblySlotId = nextEmptyAssemblySlot(spec, selections, current.id)?.id || current.id;
   saveAssemblyMode(problem, { selections, revealed, submitted: false, status: 'unanswered', results: [] });
   els.feedback.innerHTML = '';
   renderAssembly(problem);
 }
 function gradeAssembly(problem) {
   const spec = assemblySpec(problem); const savedMode = assemblySaved(problem); const selections = savedMode.selections || {}; const revealed = savedMode.revealed || [];
-  if (spec.slots.some((slot) => !selections[slot.id])) return message('모든 코드 슬롯을 채워 주세요.', 'error');
+  const emptyCount = spec.slots.filter((slot) => !selections[slot.id]).length;
+  if (emptyCount) { state.assemblySlotId = spec.slots.find((slot) => !selections[slot.id])?.id; selectAssemblySlot(state.assemblySlotId); return message(`빈 코드 슬롯 ${emptyCount}개를 더 채워 주세요.`, 'error'); }
   const results = spec.slots.map((slot) => !revealed.includes(slot.id) && selections[slot.id] === slot.answer);
   const saved = { selections, revealed, results, submitted: true, status: results.every(Boolean) ? 'correct' : 'incorrect' };
+  if (saved.status === 'incorrect') state.assemblySlotId = spec.slots[results.findIndex((result) => !result)]?.id;
   saveAssemblyMode(problem, saved, true);
-  showAssemblyFeedback(problem, saved);
+  renderAssembly(problem);
 }
-function showAssemblyFeedback(problem, saved) { const resultArea = $('#assemblyResults'); const wrong = saved.results.map((correct, index) => correct ? null : index + 1).filter(Boolean); if (resultArea) resultArea.innerHTML = wrong.length ? `<span class="blank-result incorrect">다시 확인할 슬롯: ${wrong.join(', ')}</span>` : '<span class="blank-result correct">모든 코드 조각이 올바릅니다.</span>'; els.feedback.innerHTML = `<div class="feedback ${saved.status}"><h3>${statusLabel(saved.status)}</h3><details open><summary>완성 코드와 해설</summary>${code(problem.solution)}${markdown(problem.explanation)}</details></div>`; }
+function showAssemblyFeedback(problem, saved) { const resultArea = $('#assemblyResults'); const wrong = saved.results.map((correct, index) => correct ? null : index + 1).filter(Boolean); if (resultArea) resultArea.innerHTML = wrong.length ? `<span class="blank-result incorrect">다시 확인할 슬롯: ${wrong.join(', ')}</span>` : '<span class="blank-result correct">모든 코드 조각이 올바릅니다.</span>'; els.feedback.innerHTML = saved.status === 'correct' ? `<div class="feedback correct"><h3>정답</h3><details><summary>완성 코드와 해설</summary>${code(problem.solution)}${markdown(problem.explanation)}</details></div>` : `<div class="feedback incorrect"><h3>재도전해 보세요</h3><p>빨간으로 표시된 슬롯만 다시 선택하면 됩니다. 정답 코드는 모두 맞힌 뒤 확인할 수 있습니다.</p></div>`; }
 function collectSelections(problem) { const result = {}; problem.blanks.forEach((blank) => { const selected = document.querySelector(`select[data-blank-id="${blank.id}"]`); if (selected?.value) result[blank.id] = selected.value; }); return result; }
 function renderBlankCode(problem, selections) {
   const markerIndexes = new Map();

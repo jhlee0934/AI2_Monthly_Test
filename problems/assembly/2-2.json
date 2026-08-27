@@ -4,12 +4,12 @@
       "id": "assembly-2-2-05-01",
       "unit": "2-2",
       "type": "assembly",
-      "title": "환경변수 설정: .env 파일을 로드",
-      "content": "1. .env 파일을 로드해봅시다.\n2. 환경변수에서 API 키를 읽어 확인해봅시다.\n3. 환경변수에 API 키를 직접 설정해봅시다.\n4. 읽어서 앞 10자리를 출력해봅시다.",
+      "title": "API 환경변수 설정",
+      "content": "1. .env 파일을 로드해봅시다.\n2. 환경변수에서 API 키를 읽어 확인해봅시다.\n3. 환경변수에 API 키를 직접 설정해봅시다.\n4. 읽어서 앞 10자리를 구해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: .env 파일을 로드해봅시다.\nfrom ____[1] import ____[2]\nimport ____[3]\n\n____[4]()\n\n# TODO 2: 환경변수에서 API 키를 읽어 확인해봅시다.\napi_key = os.____[5](____[6])\n\n____[7](f____[8])\n____[9](f____[10] if api_key else ____[11])\n\n# TODO 3: 환경변수에 API 키를 직접 설정해봅시다.\nimport ____[12]\n\nos.____[13][____[14]] = ____[15]\n\n# TODO 4: 읽어서 앞 10자리를 출력해봅시다.\nkey = os.____[16].____[17](____[18], ____[19])\n\n____[20](f____[21])",
+      "skeleton": "# TODO 1: .env 파일을 로드해봅시다.\nfrom ____[1] import ____[2]\nimport ____[3]\n\n____[4]()\n\n# TODO 2: 환경변수에서 API 키를 읽어 확인해봅시다.\napi_key = os.____[5](____[6])\n\n# TODO 3: 환경변수에 API 키를 직접 설정해봅시다.\nimport ____[7]\n\nos.____[8][____[9]] = ____[10]\n\n# TODO 4: 읽어서 앞 10자리를 구해봅시다.\nkey = os.____[11].____[12](____[13], ____[14])",
       "slots": [
         {
           "id": "slot-1",
@@ -37,63 +37,35 @@
         },
         {
           "id": "slot-7",
-          "answer": "print"
-        },
-        {
-          "id": "slot-8",
-          "answer": "\"API Key 로드: {'성공' if api_key else '실패'}\""
-        },
-        {
-          "id": "slot-9",
-          "answer": "print"
-        },
-        {
-          "id": "slot-10",
-          "answer": "\"키 앞 5자리: {api_key[:5]}...\""
-        },
-        {
-          "id": "slot-11",
-          "answer": "\"키 없음\""
-        },
-        {
-          "id": "slot-12",
           "answer": "os"
         },
         {
-          "id": "slot-13",
+          "id": "slot-8",
           "answer": "environ"
         },
         {
-          "id": "slot-14",
+          "id": "slot-9",
           "answer": "\"GMS_KEY\""
         },
         {
-          "id": "slot-15",
+          "id": "slot-10",
           "answer": "\"your-api-key\""
         },
         {
-          "id": "slot-16",
+          "id": "slot-11",
           "answer": "environ"
         },
         {
-          "id": "slot-17",
+          "id": "slot-12",
           "answer": "get"
         },
         {
-          "id": "slot-18",
+          "id": "slot-13",
           "answer": "\"GMS_KEY\""
         },
         {
-          "id": "slot-19",
+          "id": "slot-14",
           "answer": "\"default-value\""
-        },
-        {
-          "id": "slot-20",
-          "answer": "print"
-        },
-        {
-          "id": "slot-21",
-          "answer": "\"설정된 키: {key[:10]}...\""
         }
       ],
       "tokens": [
@@ -102,21 +74,15 @@
         "os",
         "getenv",
         "\"GMS_KEY\"",
-        "print",
-        "\"API Key 로드: {'성공' if api_key else '실패'}\"",
-        "\"키 앞 5자리: {api_key[:5]}...\"",
-        "\"키 없음\"",
         "environ",
         "\"your-api-key\"",
         "get",
         "\"default-value\"",
-        "\"설정된 키: {key[:10]}...\"",
         "transform",
         "None",
-        "True",
-        "invoke"
+        "True"
       ],
-      "solution": "# TODO 1: .env 파일을 로드해봅시다.\nfrom dotenv import load_dotenv\nimport os\n\nload_dotenv()\n\n# TODO 2: 환경변수에서 API 키를 읽어 확인해봅시다.\napi_key = os.getenv(\"GMS_KEY\")\n\nprint(f\"API Key 로드: {'성공' if api_key else '실패'}\")\nprint(f\"키 앞 5자리: {api_key[:5]}...\" if api_key else \"키 없음\")\n\n# TODO 3: 환경변수에 API 키를 직접 설정해봅시다.\nimport os\n\nos.environ[\"GMS_KEY\"] = \"your-api-key\"\n\n# TODO 4: 읽어서 앞 10자리를 출력해봅시다.\nkey = os.environ.get(\"GMS_KEY\", \"default-value\")\n\nprint(f\"설정된 키: {key[:10]}...\")",
+      "solution": "# TODO 1: .env 파일을 로드해봅시다.\nfrom dotenv import load_dotenv\nimport os\n\nload_dotenv()\n\n# TODO 2: 환경변수에서 API 키를 읽어 확인해봅시다.\napi_key = os.getenv(\"GMS_KEY\")\n\n# TODO 3: 환경변수에 API 키를 직접 설정해봅시다.\nimport os\n\nos.environ[\"GMS_KEY\"] = \"your-api-key\"\n\n# TODO 4: 읽어서 앞 10자리를 구해봅시다.\nkey = os.environ.get(\"GMS_KEY\", \"default-value\")",
       "protectedRanges": [
         {
           "start": 0,
@@ -127,12 +93,12 @@
           "end": 118
         },
         {
-          "start": 260,
-          "end": 294
+          "start": 150,
+          "end": 184
         },
         {
-          "start": 345,
-          "end": 375
+          "start": 235,
+          "end": 264
         }
       ],
       "explanation": "정답 노트북의 TODO 1, 2, 3, 4 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
@@ -143,7 +109,7 @@
       "id": "assembly-2-2-06-01",
       "unit": "2-2",
       "type": "assembly",
-      "title": "LLM 호출: LLM 호출에 필요한 라이브러리를 불러오고, LLM 객",
+      "title": "LangChain LLM 클라이언트 초기화",
       "content": "LLM 호출에 필요한 라이브러리를 불러오고, LLM 객체를 생성해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -224,34 +190,24 @@
       "id": "assembly-2-2-06-02",
       "unit": "2-2",
       "type": "assembly",
-      "title": "LLM 호출: LLM을 호출해 결과를 확인",
+      "title": "Zero-shot LLM 호출",
       "content": "LLM을 호출해 결과를 확인해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"다음 문장의 감성을 '긍정' 또는 '부정'으로 분류하세요: 이 영화 정말 재미있어요!\"\n\nresponse = llm.____[1](prompt)\n____[2](response.____[3])",
+      "skeleton": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"다음 문장의 감성을 '긍정' 또는 '부정'으로 분류하세요: 이 영화 정말 재미있어요!\"\n\nresponse = llm.____[1](prompt)",
       "slots": [
         {
           "id": "slot-1",
           "answer": "invoke"
-        },
-        {
-          "id": "slot-2",
-          "answer": "print"
-        },
-        {
-          "id": "slot-3",
-          "answer": "content"
         }
       ],
       "tokens": [
         "invoke",
-        "print",
-        "content",
         "transform",
         "None"
       ],
-      "solution": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"다음 문장의 감성을 '긍정' 또는 '부정'으로 분류하세요: 이 영화 정말 재미있어요!\"\n\nresponse = llm.invoke(prompt)\nprint(response.content)",
+      "solution": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"다음 문장의 감성을 '긍정' 또는 '부정'으로 분류하세요: 이 영화 정말 재미있어요!\"\n\nresponse = llm.invoke(prompt)",
       "protectedRanges": [
         {
           "start": 0,
@@ -270,34 +226,24 @@
       "id": "assembly-2-2-06-03",
       "unit": "2-2",
       "type": "assembly",
-      "title": "LLM 호출: LLM을 호출해 결과를 확인",
+      "title": "Few-shot LLM 호출",
       "content": "LLM을 호출해 결과를 확인해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"\"\"다음 문장의 감성을 분류하세요.\n\n문장: 정말 최고의 서비스였습니다.\n감성: 긍정\n\n문장: 배송이 너무 늦어서 실망했어요.\n감성: 부정\n\n문장: 가격 대비 품질이 괜찮네요.\n감성:\n\"\"\"\n\nresponse = llm.____[1](prompt)\n____[2](response.____[3])",
+      "skeleton": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"\"\"다음 문장의 감성을 분류하세요.\n\n문장: 정말 최고의 서비스였습니다.\n감성: 긍정\n\n문장: 배송이 너무 늦어서 실망했어요.\n감성: 부정\n\n문장: 가격 대비 품질이 괜찮네요.\n\"\"\"\n\nresponse = llm.____[1](prompt)",
       "slots": [
         {
           "id": "slot-1",
           "answer": "invoke"
-        },
-        {
-          "id": "slot-2",
-          "answer": "print"
-        },
-        {
-          "id": "slot-3",
-          "answer": "content"
         }
       ],
       "tokens": [
         "invoke",
-        "print",
-        "content",
         "predict",
         "True"
       ],
-      "solution": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"\"\"다음 문장의 감성을 분류하세요.\n\n문장: 정말 최고의 서비스였습니다.\n감성: 긍정\n\n문장: 배송이 너무 늦어서 실망했어요.\n감성: 부정\n\n문장: 가격 대비 품질이 괜찮네요.\n감성:\n\"\"\"\n\nresponse = llm.invoke(prompt)\nprint(response.content)",
+      "solution": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"\"\"다음 문장의 감성을 분류하세요.\n\n문장: 정말 최고의 서비스였습니다.\n감성: 긍정\n\n문장: 배송이 너무 늦어서 실망했어요.\n감성: 부정\n\n문장: 가격 대비 품질이 괜찮네요.\n\"\"\"\n\nresponse = llm.invoke(prompt)",
       "protectedRanges": [
         {
           "start": 0,
@@ -305,7 +251,7 @@
         },
         {
           "start": 40,
-          "end": 147
+          "end": 143
         }
       ],
       "explanation": "정답 노트북의 TODO 4 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
@@ -316,34 +262,24 @@
       "id": "assembly-2-2-06-04",
       "unit": "2-2",
       "type": "assembly",
-      "title": "LLM 호출: LLM을 호출해 결과를 확인",
+      "title": "Chain-of-Thought LLM 호출",
       "content": "LLM을 호출해 결과를 확인해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"\"\"Q: 상점에 사과가 23개 있었고, 12개를 팔고 15개를 새로 받았습니다.\n현재 사과는 몇 개인가요?\n\nA: 단계별로 생각해봅시다.\n1. 처음 사과: 23개\n2. 판매 후: 23 - 12 = 11개\n3. 입고 후: 11 + 15 = 26개\n따라서 현재 사과는 26개입니다.\"\"\"\n\nresponse = llm.____[1](prompt)\n____[2](response.____[3])",
+      "skeleton": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"\"\"Q: 상점에 사과가 23개 있었고, 12개를 팔고 15개를 새로 받았습니다.\n현재 사과는 몇 개인가요?\n\nA: 단계별로 생각해봅시다.\n1. 처음 사과: 23개\n2. 판매 후: 23 - 12 = 11개\n3. 입고 후: 11 + 15 = 26개\n따라서 현재 사과는 26개입니다.\"\"\"\n\nresponse = llm.____[1](prompt)",
       "slots": [
         {
           "id": "slot-1",
           "answer": "invoke"
-        },
-        {
-          "id": "slot-2",
-          "answer": "print"
-        },
-        {
-          "id": "slot-3",
-          "answer": "content"
         }
       ],
       "tokens": [
         "invoke",
-        "print",
-        "content",
         "load",
         "transform"
       ],
-      "solution": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"\"\"Q: 상점에 사과가 23개 있었고, 12개를 팔고 15개를 새로 받았습니다.\n현재 사과는 몇 개인가요?\n\nA: 단계별로 생각해봅시다.\n1. 처음 사과: 23개\n2. 판매 후: 23 - 12 = 11개\n3. 입고 후: 11 + 15 = 26개\n따라서 현재 사과는 26개입니다.\"\"\"\n\nresponse = llm.invoke(prompt)\nprint(response.content)",
+      "solution": "# TODO 1: LLM을 호출해 결과를 확인해봅시다.\nprompt = \"\"\"Q: 상점에 사과가 23개 있었고, 12개를 팔고 15개를 새로 받았습니다.\n현재 사과는 몇 개인가요?\n\nA: 단계별로 생각해봅시다.\n1. 처음 사과: 23개\n2. 판매 후: 23 - 12 = 11개\n3. 입고 후: 11 + 15 = 26개\n따라서 현재 사과는 26개입니다.\"\"\"\n\nresponse = llm.invoke(prompt)",
       "protectedRanges": [
         {
           "start": 0,
@@ -362,7 +298,7 @@
       "id": "assembly-2-2-06-05",
       "unit": "2-2",
       "type": "assembly",
-      "title": "프롬프팅 기법: GMS API 클라이언트를 생성",
+      "title": "GMS API 클라이언트 초기화",
       "content": "GMS API 클라이언트를 생성해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -423,12 +359,12 @@
       "id": "assembly-2-2-06-06",
       "unit": "2-2",
       "type": "assembly",
-      "title": "LLM 호출: 생성 파라미터를 지정해 호출",
+      "title": "생성 파라미터 기반 LLM 호출",
       "content": "생성 파라미터를 지정해 호출해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: 생성 파라미터를 지정해 호출해봅시다.\nresponse = client.____[1].____[2].____[3](\n    model=____[4],\n    messages=[{____[5]: ____[6], ____[7]: ____[8]}],\n    temperature=____[9],\n    max_completion_tokens=____[10],\n)\n\n____[11](response.____[12][____[13]].____[14].____[15])",
+      "skeleton": "# TODO 1: 생성 파라미터를 지정해 호출해봅시다.\nresponse = client.____[1].____[2].____[3](\n    model=____[4],\n    messages=[{____[5]: ____[6], ____[7]: ____[8]}],\n    temperature=____[9],\n    max_completion_tokens=____[10],\n)",
       "slots": [
         {
           "id": "slot-1",
@@ -469,26 +405,6 @@
         {
           "id": "slot-10",
           "answer": "500"
-        },
-        {
-          "id": "slot-11",
-          "answer": "print"
-        },
-        {
-          "id": "slot-12",
-          "answer": "choices"
-        },
-        {
-          "id": "slot-13",
-          "answer": "0"
-        },
-        {
-          "id": "slot-14",
-          "answer": "message"
-        },
-        {
-          "id": "slot-15",
-          "answer": "content"
         }
       ],
       "tokens": [
@@ -502,17 +418,11 @@
         "\"AI의 미래를 한 문장으로\"",
         "1.0",
         "500",
-        "print",
-        "choices",
-        "0",
-        "message",
-        "content",
-        "True",
-        "None",
-        "invoke",
-        "load"
+        "load",
+        "predict",
+        "transform"
       ],
-      "solution": "# TODO 1: 생성 파라미터를 지정해 호출해봅시다.\nresponse = client.chat.completions.create(\n    model=\"gpt-5.4-mini\",\n    messages=[{\"role\": \"user\", \"content\": \"AI의 미래를 한 문장으로\"}],\n    temperature=1.0,\n    max_completion_tokens=500,\n)\n\nprint(response.choices[0].message.content)",
+      "solution": "# TODO 1: 생성 파라미터를 지정해 호출해봅시다.\nresponse = client.chat.completions.create(\n    model=\"gpt-5.4-mini\",\n    messages=[{\"role\": \"user\", \"content\": \"AI의 미래를 한 문장으로\"}],\n    temperature=1.0,\n    max_completion_tokens=500,\n)",
       "protectedRanges": [
         {
           "start": 0,
@@ -527,12 +437,12 @@
       "id": "assembly-2-2-07-01",
       "unit": "2-2",
       "type": "assembly",
-      "title": "구조화 응답 처리: JSON 응답을 파싱해 출력",
-      "content": "JSON 응답을 파싱해 출력해봅시다.",
+      "title": "JSON 응답 파싱",
+      "content": "JSON 응답을 파싱해 구해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: JSON 응답을 파싱해 출력해봅시다.\nimport ____[1]\n\nresult = json.____[2](response.____[3])\n\nfor r in result[____[4]]:\n    ____[5](f____[6])",
+      "skeleton": "# TODO 1: JSON 응답을 파싱해 구해봅시다.\nimport ____[1]\n\nresult = json.____[2](response.____[3])",
       "slots": [
         {
           "id": "slot-1",
@@ -545,35 +455,20 @@
         {
           "id": "slot-3",
           "answer": "content"
-        },
-        {
-          "id": "slot-4",
-          "answer": "\"reviews\""
-        },
-        {
-          "id": "slot-5",
-          "answer": "print"
-        },
-        {
-          "id": "slot-6",
-          "answer": "\"[{r['category']}] {r['customer_name']} ({r['rating']}점): {r['text'][:30]}...\""
         }
       ],
       "tokens": [
         "json",
         "loads",
         "content",
-        "\"reviews\"",
-        "print",
-        "\"[{r['category']}] {r['customer_name']} ({r['rating']}점): {r['text'][:30]}...\"",
         "predict",
         "1"
       ],
-      "solution": "# TODO 1: JSON 응답을 파싱해 출력해봅시다.\nimport json\n\nresult = json.loads(response.content)\n\nfor r in result[\"reviews\"]:\n    print(f\"[{r['category']}] {r['customer_name']} ({r['rating']}점): {r['text'][:30]}...\")",
+      "solution": "# TODO 1: JSON 응답을 파싱해 구해봅시다.\nimport json\n\nresult = json.loads(response.content)",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 30
+          "end": 29
         }
       ],
       "explanation": "정답 노트북의 TODO 3 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
@@ -584,12 +479,12 @@
       "id": "assembly-2-2-07-02",
       "unit": "2-2",
       "type": "assembly",
-      "title": "합성 데이터 생성: 리뷰 데이터를 위한 JSON Schema를 정의해봅시다",
-      "content": "리뷰 데이터를 위한 JSON Schema를 정의해봅시다. TODO 4-1: 응답 형식을 jsonschema로 지정하고 이름과 strict를 설정해봅시다. TODO 4-2: reviews를 리뷰 객체의 배열로 정의해봅시다. TODO 4-3: 리뷰 한 건의 필드(customername, rating, category, text)를 정의해봅시다. TODO 4-4: required와 additionalProperties로 필드 구성을 강제해봅시다.",
+      "title": "JSON Schema 응답 형식 정의",
+      "content": "리뷰 데이터를 위한 JSON Schema를 정의해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: 리뷰 데이터를 위한 JSON Schema를 정의해봅시다. TODO 4-1: 응답 형식을 jsonschema로 지정하고 이름과 strict를 설정해봅시다. TODO 4-2: reviews를 리뷰 객체의 배열로 정의해봅시다. TODO 4-3: 리뷰 한 건의 필드(customername, rating, category, text)를 정의해봅시다. TODO 4-4: required와 additionalProperties로 필드 구성을 강제해봅시다.\nreview_response_format = {\n    ____[1]: ____[2],\n    ____[3]: {\n        ____[4]: ____[5],\n        ____[6]: ____[7],\n        ____[8]: {\n            ____[9]: ____[10],\n            ____[11]: {\n                ____[12]: {\n                    ____[13]: ____[14],\n                    ____[15]: ____[16],\n                    ____[17]: {\n                        ____[18]: ____[19],\n                        ____[20]: {\n                            ____[21]: {\n                                ____[22]: ____[23],\n                                ____[24]: ____[25]\n                            },\n                            ____[26]: {\n                                ____[27]: ____[28],\n                                ____[29]: ____[30]\n                            },\n                            ____[31]: {\n                                ____[32]: ____[33],\n                                ____[34]: ____[35]\n                            },\n                            ____[36]: {\n                                ____[37]: ____[38],\n                                ____[39]: ____[40]\n                            }\n                        },\n                        ____[41]: [____[42], ____[43], ____[44], ____[45]],\n                        ____[46]: ____[47]\n                    }\n                }\n            },\n            ____[48]: [____[49]],\n            ____[50]: ____[51]\n        }\n    }\n}",
+      "skeleton": "# TODO 1: 리뷰 데이터를 위한 JSON Schema를 정의해봅시다.\nreview_response_format = {\n    ____[1]: ____[2],\n    ____[3]: {\n        ____[4]: ____[5],\n        ____[6]: ____[7],\n        ____[8]: {\n            ____[9]: ____[10],\n            ____[11]: {\n                ____[12]: {\n                    ____[13]: ____[14],\n                    ____[15]: ____[16],\n                    ____[17]: {\n                        ____[18]: ____[19],\n                        ____[20]: {\n                            ____[21]: {\n                                ____[22]: ____[23],\n                                ____[24]: ____[25]\n                            },\n                            ____[26]: {\n                                ____[27]: ____[28],\n                                ____[29]: ____[30]\n                            },\n                            ____[31]: {\n                                ____[32]: ____[33],\n                                ____[34]: ____[35]\n                            },\n                            ____[36]: {\n                                ____[37]: ____[38],\n                                ____[39]: ____[40]\n                            }\n                        },\n                        ____[41]: [____[42], ____[43], ____[44], ____[45]],\n                        ____[46]: ____[47]\n                    }\n                }\n            },\n            ____[48]: [____[49]],\n            ____[50]: ____[51]\n        }\n    }\n}",
       "slots": [
         {
           "id": "slot-1",
@@ -829,11 +724,11 @@
         "1",
         "0"
       ],
-      "solution": "# TODO 1: 리뷰 데이터를 위한 JSON Schema를 정의해봅시다. TODO 4-1: 응답 형식을 jsonschema로 지정하고 이름과 strict를 설정해봅시다. TODO 4-2: reviews를 리뷰 객체의 배열로 정의해봅시다. TODO 4-3: 리뷰 한 건의 필드(customername, rating, category, text)를 정의해봅시다. TODO 4-4: required와 additionalProperties로 필드 구성을 강제해봅시다.\nreview_response_format = {\n    \"type\": \"json_schema\",\n    \"json_schema\": {\n        \"name\": \"customer_reviews\",\n        \"strict\": True,\n        \"schema\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"reviews\": {\n                    \"type\": \"array\",\n                    \"description\": \"고객 리뷰 목록\",\n                    \"items\": {\n                        \"type\": \"object\",\n                        \"properties\": {\n                            \"customer_name\": {\n                                \"type\": \"string\",\n                                \"description\": \"고객 이름\"\n                            },\n                            \"rating\": {\n                                \"type\": \"integer\",\n                                \"description\": \"별점 (1-5)\"\n                            },\n                            \"category\": {\n                                \"type\": \"string\",\n                                \"description\": \"감성 분류 (긍정/부정/중립)\"\n                            },\n                            \"text\": {\n                                \"type\": \"string\",\n                                \"description\": \"리뷰 본문\"\n                            }\n                        },\n                        \"required\": [\"customer_name\", \"rating\", \"category\", \"text\"],\n                        \"additionalProperties\": False\n                    }\n                }\n            },\n            \"required\": [\"reviews\"],\n            \"additionalProperties\": False\n        }\n    }\n}",
+      "solution": "# TODO 1: 리뷰 데이터를 위한 JSON Schema를 정의해봅시다.\nreview_response_format = {\n    \"type\": \"json_schema\",\n    \"json_schema\": {\n        \"name\": \"customer_reviews\",\n        \"strict\": True,\n        \"schema\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"reviews\": {\n                    \"type\": \"array\",\n                    \"description\": \"고객 리뷰 목록\",\n                    \"items\": {\n                        \"type\": \"object\",\n                        \"properties\": {\n                            \"customer_name\": {\n                                \"type\": \"string\",\n                                \"description\": \"고객 이름\"\n                            },\n                            \"rating\": {\n                                \"type\": \"integer\",\n                                \"description\": \"별점 (1-5)\"\n                            },\n                            \"category\": {\n                                \"type\": \"string\",\n                                \"description\": \"감성 분류 (긍정/부정/중립)\"\n                            },\n                            \"text\": {\n                                \"type\": \"string\",\n                                \"description\": \"리뷰 본문\"\n                            }\n                        },\n                        \"required\": [\"customer_name\", \"rating\", \"category\", \"text\"],\n                        \"additionalProperties\": False\n                    }\n                }\n            },\n            \"required\": [\"reviews\"],\n            \"additionalProperties\": False\n        }\n    }\n}",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 258
+          "end": 41
         }
       ],
       "explanation": "정답 노트북의 TODO 4 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
@@ -844,7 +739,7 @@
       "id": "assembly-2-2-07-03",
       "unit": "2-2",
       "type": "assembly",
-      "title": "LLM 호출: 위 스키마를 responseformat으로 전달하여 L",
+      "title": "구조화 출력 LLM 호출",
       "content": "위 스키마를 responseformat으로 전달하여 LLM을 호출해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -880,12 +775,12 @@
       "id": "assembly-2-2-07-04",
       "unit": "2-2",
       "type": "assembly",
-      "title": "합성 데이터 생성: 응답을 파싱하여 출력",
-      "content": "1. 응답을 파싱하여 출력해봅시다.\n2. 페르소나·상품 목록을 정의해봅시다.",
+      "title": "응답 파싱과 합성 조건 정의",
+      "content": "1. 응답을 파싱하여 구해봅시다.\n2. 페르소나·상품 목록을 정의해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: 응답을 파싱하여 출력해봅시다.\nresult = json.____[1](response.____[2])\nfor r in result[____[3]]:\n    ____[4](f____[5])\n\n# TODO 2: 페르소나·상품 목록을 정의해봅시다.\npersonas = [____[6], ____[7], ____[8]]\nproducts = [____[9], ____[10]]",
+      "skeleton": "# TODO 1: 응답을 파싱하여 구해봅시다.\nresult = json.____[1](response.____[2])\n\n# TODO 2: 페르소나·상품 목록을 정의해봅시다.\npersonas = [____[3], ____[4], ____[5]]\nproducts = [____[6], ____[7]]",
       "slots": [
         {
           "id": "slot-1",
@@ -897,61 +792,45 @@
         },
         {
           "id": "slot-3",
-          "answer": "\"reviews\""
-        },
-        {
-          "id": "slot-4",
-          "answer": "print"
-        },
-        {
-          "id": "slot-5",
-          "answer": "\"[{r['category']}] {r['customer_name']} ({r['rating']}점): {r['text'][:50]}...\""
-        },
-        {
-          "id": "slot-6",
           "answer": "\"20대 대학생\""
         },
         {
-          "id": "slot-7",
+          "id": "slot-4",
           "answer": "\"40대 주부\""
         },
         {
-          "id": "slot-8",
+          "id": "slot-5",
           "answer": "\"60대 은퇴자\""
         },
         {
-          "id": "slot-9",
+          "id": "slot-6",
           "answer": "\"노트북\""
         },
         {
-          "id": "slot-10",
+          "id": "slot-7",
           "answer": "\"운동화\""
         }
       ],
       "tokens": [
         "loads",
         "content",
-        "\"reviews\"",
-        "print",
-        "\"[{r['category']}] {r['customer_name']} ({r['rating']}점): {r['text'][:50]}...\"",
         "\"20대 대학생\"",
         "\"40대 주부\"",
         "\"60대 은퇴자\"",
         "\"노트북\"",
         "\"운동화\"",
         "1",
-        "transform",
-        "fit"
+        "transform"
       ],
-      "solution": "# TODO 1: 응답을 파싱하여 출력해봅시다.\nresult = json.loads(response.content)\nfor r in result[\"reviews\"]:\n    print(f\"[{r['category']}] {r['customer_name']} ({r['rating']}점): {r['text'][:50]}...\")\n\n# TODO 2: 페르소나·상품 목록을 정의해봅시다.\npersonas = [\"20대 대학생\", \"40대 주부\", \"60대 은퇴자\"]\nproducts = [\"노트북\", \"운동화\"]",
+      "solution": "# TODO 1: 응답을 파싱하여 구해봅시다.\nresult = json.loads(response.content)\n\n# TODO 2: 페르소나·상품 목록을 정의해봅시다.\npersonas = [\"20대 대학생\", \"40대 주부\", \"60대 은퇴자\"]\nproducts = [\"노트북\", \"운동화\"]",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 26
+          "end": 25
         },
         {
-          "start": 184,
-          "end": 214
+          "start": 64,
+          "end": 94
         }
       ],
       "explanation": "정답 노트북의 TODO 6, 7 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
@@ -962,7 +841,7 @@
       "id": "assembly-2-2-07-05",
       "unit": "2-2",
       "type": "assembly",
-      "title": "LLM 호출: 조합마다 LLM을 호출해 리뷰를 수집",
+      "title": "페르소나·상품별 리뷰 생성",
       "content": "조합마다 LLM을 호출해 리뷰를 수집해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
@@ -1023,87 +902,55 @@
       "id": "assembly-2-2-07-06",
       "unit": "2-2",
       "type": "assembly",
-      "title": "합성 데이터 생성: 생성 결과를 확인",
-      "content": "1. 생성 결과를 확인해봅시다.\n2. JSON 파일로 저장해봅시다.",
+      "title": "합성 리뷰 JSON 저장",
+      "content": "JSON 파일로 저장해봅시다.",
       "requirements": [
         "TODO 지시 사항에 맞게 함수, 메서드, 인자와 값을 배치한다."
       ],
-      "skeleton": "# TODO 1: 생성 결과를 확인해봅시다.\n____[1](f____[2])\nfor r in results[:____[3]]:\n    ____[4](f____[5])\n\n# TODO 2: JSON 파일로 저장해봅시다.\nwith ____[6](____[7], ____[8], ____[9]=____[10]) as f:\n    json.____[11](results, f, ____[12]=____[13], ____[14]=____[15])\n____[16](f____[17])",
+      "skeleton": "# TODO 1: JSON 파일로 저장해봅시다.\nwith ____[1](____[2], ____[3], ____[4]=____[5]) as f:\n    json.____[6](results, f, ____[7]=____[8], ____[9]=____[10])",
       "slots": [
         {
           "id": "slot-1",
-          "answer": "print"
-        },
-        {
-          "id": "slot-2",
-          "answer": "\"생성된 리뷰 수: {len(results)}개\""
-        },
-        {
-          "id": "slot-3",
-          "answer": "2"
-        },
-        {
-          "id": "slot-4",
-          "answer": "print"
-        },
-        {
-          "id": "slot-5",
-          "answer": "\"[{r['persona']}] {r['product']}: {r['review'][:40]}...\""
-        },
-        {
-          "id": "slot-6",
           "answer": "open"
         },
         {
-          "id": "slot-7",
+          "id": "slot-2",
           "answer": "\"synthetic_reviews.json\""
         },
         {
-          "id": "slot-8",
+          "id": "slot-3",
           "answer": "\"w\""
         },
         {
-          "id": "slot-9",
+          "id": "slot-4",
           "answer": "encoding"
         },
         {
-          "id": "slot-10",
+          "id": "slot-5",
           "answer": "\"utf-8\""
         },
         {
-          "id": "slot-11",
+          "id": "slot-6",
           "answer": "dump"
         },
         {
-          "id": "slot-12",
+          "id": "slot-7",
           "answer": "ensure_ascii"
         },
         {
-          "id": "slot-13",
+          "id": "slot-8",
           "answer": "False"
         },
         {
-          "id": "slot-14",
+          "id": "slot-9",
           "answer": "indent"
         },
         {
-          "id": "slot-15",
+          "id": "slot-10",
           "answer": "2"
-        },
-        {
-          "id": "slot-16",
-          "answer": "print"
-        },
-        {
-          "id": "slot-17",
-          "answer": "\"\\nsynthetic_reviews.json 저장 완료 ({len(results)}건)\""
         }
       ],
       "tokens": [
-        "print",
-        "\"생성된 리뷰 수: {len(results)}개\"",
-        "2",
-        "\"[{r['persona']}] {r['product']}: {r['review'][:40]}...\"",
         "open",
         "\"synthetic_reviews.json\"",
         "\"w\"",
@@ -1113,24 +960,19 @@
         "ensure_ascii",
         "False",
         "indent",
-        "\"\\nsynthetic_reviews.json 저장 완료 ({len(results)}건)\"",
+        "2",
         "None",
         "load",
-        "fit",
-        "invoke"
+        "fit"
       ],
-      "solution": "# TODO 1: 생성 결과를 확인해봅시다.\nprint(f\"생성된 리뷰 수: {len(results)}개\")\nfor r in results[:2]:\n    print(f\"[{r['persona']}] {r['product']}: {r['review'][:40]}...\")\n\n# TODO 2: JSON 파일로 저장해봅시다.\nwith open(\"synthetic_reviews.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(results, f, ensure_ascii=False, indent=2)\nprint(f\"\\nsynthetic_reviews.json 저장 완료 ({len(results)}건)\")",
+      "solution": "# TODO 1: JSON 파일로 저장해봅시다.\nwith open(\"synthetic_reviews.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(results, f, ensure_ascii=False, indent=2)",
       "protectedRanges": [
         {
           "start": 0,
-          "end": 24
-        },
-        {
-          "start": 152,
-          "end": 179
+          "end": 26
         }
       ],
-      "explanation": "정답 노트북의 TODO 9, 10 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
+      "explanation": "정답 노트북의 TODO 10 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_2-2_합성 데이터와 프롬프팅/문제/Ch.2-2_003_합성 데이터 생성.ipynb"
     }

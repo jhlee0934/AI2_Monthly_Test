@@ -38,9 +38,10 @@ for (const problemFile of problemFiles) {
     const answerCell = answerByTodo.get(label) || answerNotebook.cells[cellIndex] || answerCodeCells[currentCodeOrdinal];
     if (!answerCell || answerCell.cell_type !== 'code') throw new Error(`TODO 정답 셀을 찾을 수 없습니다: ${problemFile} / ${todoOrdinal}`);
     const problemCode = sanitizeCode(problemSource);
-    const answerCode = sanitizeCode(joinSource(answerCell));
-    if (!answerCode) throw new Error(`TODO 정답 코드가 비어 있습니다: ${answerFile} / ${todoOrdinal}`);
+    const answerCode = removePrintStatements(sanitizeCode(joinSource(answerCell)));
+    if (!answerCode) return;
     const context = markdownContext(problemNotebook.cells, cellIndex, problemSource);
+    if (/프롬프트.*(?:작성|만들)/.test(context.content)) { if (promptVariable(answerCode)) pendingPrompt = answerCode; return; }
     if (isPromptOnly(answerCode)) { pendingPrompt = answerCode; return; }
     const pendingName = promptVariable(pendingPrompt);
     const usesPendingPrompt = pendingName && new RegExp(`\\b${pendingName}\\b`).test(answerCode);
@@ -49,13 +50,13 @@ for (const problemFile of problemFiles) {
   });
 
   const idBase = path.basename(problemFile, '.ipynb').replace(/^Ch\.[^_]+_?/, '').replace(/[^A-Za-z0-9가-힣]+/g, '-').replace(/^-|-$/g, '');
-  groupTodoItems(todoItems).forEach((items, groupIndex) => {
-    const contents = items.map((item) => stripTodoPrefix(item.context.content));
+  rebalanceTodoGroups(groupTodoItems(todoItems)).forEach((items, groupIndex) => {
+    const contents = items.map((item) => conciseInstruction(stripTodoPrefix(item.context.content)));
     const solution = items.map((item, index) => `# TODO ${index + 1}: ${contents[index]}\n${item.answerCode}`).join('\n\n');
     const protectedRanges = [...commentRanges(solution), ...promptRanges(solution)].sort((a, b) => a.start - b.start);
     const { skeleton, slots } = buildNormalAssembly('', solution, protectedRanges);
     const id = `assembly-${unit}-${String(problemFiles.indexOf(problemFile) + 1).padStart(2, '0')}-${String(groupIndex + 1).padStart(2, '0')}`;
-    const title = conceptTitle(idBase, contents);
+    const title = conceptTitle(idBase, contents, solution);
     const requirements = [...new Set(items.flatMap((item) => item.context.requirements))];
     generated.push({
       id, unit, type: 'assembly', title,
@@ -125,6 +126,15 @@ function groupTodoItems(items) {
   return groups;
 }
 
+function rebalanceTodoGroups(groups) {
+  for (let index = 0; index < groups.length - 1; index += 1) {
+    while (groups[index].length > 1 && isImportOnly(groups[index].at(-1).answerCode)) groups[index + 1].unshift(groups[index].pop());
+  }
+  return groups.filter((group) => group.length);
+}
+
+function isImportOnly(code) { return code.split(/\r?\n/).filter((line) => line.trim()).every((line) => /^\s*(?:from\s+\S+\s+import\s+.+|import\s+.+)$/.test(line)); }
+
 function isPromptOnly(code) {
   const ranges = findStringRanges(code);
   let remainder = code;
@@ -163,37 +173,57 @@ function findStringRanges(code) {
 
 function codeLineCount(code) { return code.split(/\r?\n/).filter((line) => line.trim()).length; }
 function stripTodoPrefix(value) { return value.replace(/^TODO\s*\d+(?:-\d+)?\s*:\s*/i, '').trim(); }
-function conceptTitle(idBase, contents) {
-  const text = contents[0] || '';
+function conciseInstruction(value) { if (value.length <= 180) return value; return value.match(/^.{1,180}?(?:입니다|합니다|됩니다|봅시다)\./u)?.[0] || `${value.slice(0, 177).trim()}...`; }
+function conceptTitle(idBase, contents, solution) {
   const rules = [
-    [/패키지.*import|wine.*로드/i, 'Wine 데이터셋 로드'],
-    [/기술통계|고유 클래스|클래스별.*평균|처음 .*행/i, 'Wine 데이터 탐색'],
-    [/histogram|histplot|boxplot|pairplot|시각화/i, '데이터 시각화'],
-    [/상관행렬|상관관계/i, '특성 상관관계 분석'],
-    [/결측/i, '결측치 생성 및 처리'],
-    [/IQR|이상치/i, '이상치 탐지 및 처리'],
-    [/train_test_split|학습용.*테스트용|분할/i, '학습·평가 데이터 분할'],
-    [/StandardScaler|스케일/i, '특성 스케일링'],
-    [/LogisticRegression|모델.*학습|정확도/i, '분류 모델 학습 및 평가'],
-    [/교차검증|cross_val_score/i, '교차검증'],
-    [/혼동 행렬|분류 보고서/i, '분류 성능 평가'],
-    [/ROC|AUC/i, 'ROC·AUC 평가'],
-    [/PCA/i, 'PCA 차원 축소'],
-    [/KMeans/i, 'K-Means 군집화'],
-    [/환경변수|API 키|dotenv/i, 'API 환경변수 설정'],
-    [/LLM|invoke|호출/i, 'LLM 호출'],
-    [/JSON.*파싱|response.format/i, '구조화 응답 처리'],
-    [/PDF|문서 로더/i, 'PDF 문서 로드'],
-    [/키워드 검색/i, '키워드 검색'],
-    [/임베딩|벡터 데이터베이스/i, '벡터 검색 구성'],
-    [/Retriever|검색기/i, 'Retriever 구성'],
-    [/청크|TextSplitter/i, '문서 청킹'],
-    [/RAGState|StateGraph|노드 함수/i, 'RAG 그래프 구성'],
+    [/load_wine\(|pd\.DataFrame/, 'Wine 데이터셋 로드'],
+    [/alcohol_by_class[\s\S]*malic_mean/, '기초 통계와 상관행렬 계산'],
+    [/correlation_with_alcohol/, '상관관계 기반 특성 선택'],
+    [/\.hist\(bins=/, 'Alcohol 히스토그램'],
+    [/sns\.histplot[\s\S]*sns\.boxplot/, '클래스별 분포 시각화'],
+    [/sns\.scatterplot/, 'Alcohol·Flavanoids 산점도'],
+    [/sns\.pairplot/, '상위 상관 특성 Pairplot'],
+    [/np\.random\.seed/, '결측치 생성'],
+    [/missing_count[\s\S]*color_intensity_median/, '결측치 현황과 대체값 계산'],
+    [/\.fillna\([\s\S]*malic_acid_q1/, '결측치 대체와 사분위수 계산'],
+    [/malic_acid_iqr/, 'IQR 이상치 탐지와 제거'],
+    [/(?:wine_dataframe_clean[\s\S]*sns\.boxplot|sns\.boxplot[\s\S]*wine_dataframe_clean)/, '이상치 제거 전후 시각화'],
+    [/train_test_split/, '학습·테스트 데이터 분할'],
+    [/StandardScaler/, 'StandardScaler 전처리'],
+    [/LogisticRegression/, '로지스틱 회귀 학습과 평가'],
+    [/cross_val_score/, '교차검증과 혼동행렬'],
+    [/classification_report/, '분류 보고서와 ROC 데이터 준비'],
+    [/roc_curve\(/, 'ROC 곡선과 AUC 평가'],
+    [/PCA\([\s\S]*KMeans\(/, 'PCA 차원 축소와 K-Means 군집화'],
+    [/load_dotenv\([\s\S]*os\.environ/, 'API 환경변수 설정'],
+    [/ChatOpenAI\(/, 'LangChain LLM 클라이언트 초기화'],
+    [/최고의 서비스였습니다/, 'Few-shot LLM 호출'],
+    [/단계별로 생각해봅시다/, 'Chain-of-Thought LLM 호출'],
+    [/감성을 '긍정' 또는 '부정'/, 'Zero-shot LLM 호출'],
+    [/client = OpenAI\(/, 'GMS API 클라이언트 초기화'],
+    [/chat\.completions\.create/, '생성 파라미터 기반 LLM 호출'],
+    [/review_response_format\s*=/, 'JSON Schema 응답 형식 정의'],
+    [/response_format=review_response_format/, '구조화 출력 LLM 호출'],
+    [/json\.loads[\s\S]*personas\s*=/, '응답 파싱과 합성 조건 정의'],
+    [/json\.loads/, 'JSON 응답 파싱'],
+    [/json\.dump\(/, '합성 리뷰 JSON 저장'],
+    [/PyMuPDFLoader\("data\//, '단일 PDF 문서 로드'],
+    [/glob\.glob\("data\/\*\.pdf"\)/, '여러 PDF 문서 일괄 로드'],
+    [/def keyword_search/, '키워드 검색 함수 구현'],
+    [/queries\s*=.*총알배송/, '키워드별 검색 결과 비교'],
+    [/OpenAIEmbeddings\(/, '텍스트 임베딩 생성'],
+    [/Chroma\.from_documents/, 'Chroma 벡터 데이터베이스 생성'],
+    [/\.as_retriever\(/, 'Retriever 의미 검색 구성'],
+    [/for size in \[200, 500, 1000\]/, '청크 크기별 분할 비교'],
+    [/RecursiveCharacterTextSplitter\(/, '재귀적 문서 청킹'],
+    [/class RAGState\(/, 'RAG 상태 스키마 정의'],
+    [/def retrieve\(/, 'RAG 검색 노드 구현'],
+    [/def generate\(/, 'RAG 생성 노드 구현'],
+    [/StateGraph\(RAGState\)/, 'RAG StateGraph 조립'],
+    [/ChatPromptTemplate\.from_template/, '문서 기반 LLM 응답 생성'],
+    [/results\.append\(/, '페르소나·상품별 리뷰 생성'],
   ];
-  const concept = rules.find(([pattern]) => pattern.test(text))?.[1] || idBase.replace(/^\d+-/, '').replaceAll('-', ' ');
-  if (concept === 'Wine 데이터셋 로드') return concept;
-  const detail = contents[0].replace(/해봅시다[.!]?$/u, '').replace(/하세요[.!]?$/u, '').replace(/[.!?]+$/u, '').trim().slice(0, 30);
-  return detail && !concept.includes(detail) ? `${concept}: ${detail}` : concept;
+  return rules.find(([pattern]) => pattern.test(solution))?.[1] || idBase.replace(/^\d+-/, '').replaceAll('-', ' ');
 }
 
 function lcsMatchedAnswerIndexes(problem, answer) {
@@ -231,11 +261,34 @@ function markdownContext(cells, codeIndex, problemSource) {
   const requirements = text.split('\n').filter((line) => /^\s*[-*]\s+/.test(line)).map((line) => cleanMarkdown(line.replace(/^\s*[-*]\s+/, ''))).filter(isLearningText).slice(0, 5);
   const todo = problemSource.split(/\r?\n/).map((line) => line.match(/^\s*#\s*(TODO[^\n]*)/i)?.[1] || '').map(cleanMarkdown).filter((line) => line && !/^TODO\s*\d*(?:-\d+)?\s*:?$/i.test(line)).join(' ');
   const prose = cleanMarkdown(text.replace(/^#{1,6}\s+.*$/gm, '').replace(/^\s*[-*]\s+/gm, '')).slice(0, 700);
-  const content = [todo, prose].find(isLearningText) || (title ? `TODO: ${title}` : 'TODO 지시 사항에 맞게 코드를 완성하세요.');
+  const content = normalizePrintInstruction([todo, prose].find(isLearningText) || (title ? `TODO: ${title}` : 'TODO 지시 사항에 맞게 코드를 완성하세요.'));
   return { title, requirements, content };
 }
 
 function sanitizeCode(source) { return source.split(/\r?\n/).filter((line) => !/^\s*(?:#|%|!)/.test(line)).map(stripInlineComment).join('\n').replace(/\n{3,}/g, '\n\n').trim(); }
+function removePrintStatements(code) {
+  const lines = code.split(/\r?\n/); const kept = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    if (!/^\s*print\s*\(/.test(lines[index])) { kept.push(lines[index]); continue; }
+    let depth = parenthesisDelta(lines[index]);
+    while (depth > 0 && index + 1 < lines.length) { index += 1; depth += parenthesisDelta(lines[index]); }
+  }
+  let result = kept;
+  let changed = true;
+  while (changed) {
+    changed = false;
+    result = result.filter((line, index) => {
+      if (!/:\s*$/.test(line.trimEnd())) return true;
+      const indent = line.match(/^\s*/)[0].length;
+      const next = result.slice(index + 1).find((candidate) => candidate.trim());
+      if (!next || next.match(/^\s*/)[0].length <= indent) { changed = true; return false; }
+      return true;
+    });
+  }
+  return result.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+function parenthesisDelta(line) { let quote = ''; let escaped = false; let delta = 0; for (const char of line) { if (escaped) { escaped = false; continue; } if (char === '\\') { escaped = true; continue; } if (quote) { if (char === quote) quote = ''; continue; } if (char === '"' || char === "'") { quote = char; continue; } if (char === '(') delta += 1; else if (char === ')') delta -= 1; } return delta; }
+function normalizePrintInstruction(value) { return value.replace(/출력해봅시다/g, '구해봅시다').replace(/출력하세요/g, '구하세요').replace(/출력하여/g, '구하여').replace(/출력하고/g, '구하고').replace(/출력/g, '확인'); }
 function stripInlineComment(line) { let quote = ''; let escaped = false; for (let index = 0; index < line.length; index += 1) { const char = line[index]; if (escaped) { escaped = false; continue; } if (char === '\\') { escaped = true; continue; } if (quote) { if (char === quote) quote = ''; continue; } if (char === '"' || char === "'") { quote = char; continue; } if (char === '#') return line.slice(0, index).trimEnd(); } return line.trimEnd(); }
 function tokenize(code) { return [...code.matchAll(tokenPattern)].map((match) => ({ value: match[0], start: match.index, end: match.index + match[0].length })); }
 function cleanMarkdown(value) { return value.replace(/<[^>]+>/g, ' ').replace(/!\[[^\]]*\]\([^)]*\)/g, ' ').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`>#]/g, '').replace(/\s+/g, ' ').trim(); }
