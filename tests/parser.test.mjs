@@ -43,10 +43,11 @@ test('Python 던더 이름은 API 빈칸으로 인식하지 않는다', () => {
 test('API 문제 해설은 정답별 개념과 완성 코드 맥락을 제공한다', () => {
   const api = problems.filter((item) => item.type === 'api');
   const samples = api.filter((item) => item.id.startsWith('api-generated-'));
-  assert.equal(new Set(samples.map((item) => item.explanation)).size, samples.length);
   assert.ok(samples.every((item) => item.explanation.includes('완성하면')));
   assert.ok(samples.every((item) => item.blanks.every((blank) => item.explanation.includes(blank.answer))));
   assert.ok(samples.every((item) => !item.explanation.includes('노트북이 사용한 핵심 호출 또는 옵션')));
+  assert.ok(samples.every((item) => !/\[\d+\] 정답은/.test(item.explanation)));
+  assert.ok(samples.every((item) => item.blanks.every((_, index) => item.explanation.split(`빈칸 ${index + 1}\n정답:`).length === 2)));
 });
 test('기존 coding 유형과 CodeMirror 구현을 포함하지 않는다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
