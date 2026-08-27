@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27T15:29:14.807Z",
+  "generatedAt": "2026-08-27T23:44:07.078Z",
   "problems": [
     {
       "id": "flow-generated-001",
@@ -5053,6 +5053,14 @@
     },
     {
       "id": "assembly-1-1-02-05",
+      "normalSlotIds": [
+        "slot-3",
+        "slot-9",
+        "slot-16",
+        "slot-18",
+        "slot-25",
+        "slot-27"
+      ],
       "unit": "1-1",
       "type": "assembly",
       "title": "이상치 제거 전후 시각화",
@@ -6522,6 +6530,20 @@
     },
     {
       "id": "assembly-2-2-07-02",
+      "normalSlotIds": [
+        "slot-2",
+        "slot-5",
+        "slot-7",
+        "slot-10",
+        "slot-14",
+        "slot-19",
+        "slot-23",
+        "slot-28",
+        "slot-33",
+        "slot-38",
+        "slot-47",
+        "slot-51"
+      ],
       "unit": "2-2",
       "type": "assembly",
       "title": "JSON Schema 응답 형식 정의",
@@ -6945,6 +6967,13 @@
     },
     {
       "id": "assembly-2-2-07-06",
+      "normalSlotIds": [
+        "slot-1",
+        "slot-2",
+        "slot-3",
+        "slot-6",
+        "slot-8"
+      ],
       "unit": "2-2",
       "type": "assembly",
       "title": "합성 리뷰 JSON 저장",
@@ -7612,6 +7641,12 @@
     },
     {
       "id": "assembly-4-1-12-02",
+      "normalSlotIds": [
+        "slot-4",
+        "slot-5",
+        "slot-6",
+        "slot-8"
+      ],
       "unit": "4-1",
       "type": "assembly",
       "title": "청크 크기별 분할 비교",
@@ -7886,6 +7921,16 @@
     },
     {
       "id": "assembly-4-1-13-04",
+      "normalSlotIds": [
+        "slot-6",
+        "slot-7",
+        "slot-9",
+        "slot-11",
+        "slot-13",
+        "slot-16",
+        "slot-18",
+        "slot-19"
+      ],
       "unit": "4-1",
       "type": "assembly",
       "title": "RAG StateGraph 조립",

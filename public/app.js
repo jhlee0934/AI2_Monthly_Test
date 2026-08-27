@@ -92,7 +92,24 @@ function renderAssembly(problem) {
   selectAssemblySlot(state.assemblySlotId);
   if (saved.submitted) showAssemblyFeedback(problem, saved);
 }
-function assemblySpec(problem) { return state.assemblyDifficulty === 'hard' ? buildHardAssembly(problem) : problem; }
+function assemblySpec(problem) { return state.assemblyDifficulty === 'hard' ? buildHardAssembly(problem) : buildNormalDifficultyAssembly(problem); }
+function buildNormalDifficultyAssembly(problem) {
+  if (!problem.normalSlotIds?.length) return problem;
+  const selectedIds = new Set(problem.normalSlotIds);
+  const slots = problem.slots.filter((slot) => selectedIds.has(slot.id));
+  const slotNumbers = new Map(slots.map((slot, index) => [slot.id, index + 1]));
+  const markerPattern = /_{2,}\[(\d+)\]/g;
+  let skeleton = ''; let cursor = 0;
+  for (const match of problem.skeleton.matchAll(markerPattern)) {
+    skeleton += problem.skeleton.slice(cursor, match.index);
+    const slot = problem.slots[Number(match[1]) - 1];
+    skeleton += slotNumbers.has(slot?.id) ? `____[${slotNumbers.get(slot.id)}]` : (slot?.answer || match[0]);
+    cursor = match.index + match[0].length;
+  }
+  const allAnswers = new Set(problem.slots.map((slot) => slot.answer));
+  const tokens = [...new Set(slots.map((slot) => slot.answer)), ...problem.tokens.filter((token) => !allAnswers.has(token))];
+  return { ...problem, skeleton: skeleton + problem.skeleton.slice(cursor), slots, tokens };
+}
 function assemblySaved(problem) { return state.progress[problem.id]?.assemblyModes?.[state.assemblyDifficulty] || {}; }
 function saveAssemblyMode(problem, patch, rerender = false) { const current = state.progress[problem.id] || {}; const modes = current.assemblyModes || {}; const next = { ...(modes[state.assemblyDifficulty] || {}), ...patch }; update(problem.id, { assemblyModes: { ...modes, [state.assemblyDifficulty]: next }, submitted: Boolean(next.submitted), status: next.status || 'unanswered' }, rerender); return next; }
 function syncDifficultyButtons() { document.querySelectorAll('[data-assembly-difficulty]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.assemblyDifficulty === state.assemblyDifficulty))); }

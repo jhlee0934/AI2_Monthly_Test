@@ -1301,6 +1301,14 @@
     },
     {
       "id": "assembly-1-1-02-05",
+      "normalSlotIds": [
+        "slot-3",
+        "slot-9",
+        "slot-16",
+        "slot-18",
+        "slot-25",
+        "slot-27"
+      ],
       "unit": "1-1",
       "type": "assembly",
       "title": "이상치 제거 전후 시각화",

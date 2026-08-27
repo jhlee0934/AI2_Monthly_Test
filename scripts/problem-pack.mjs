@@ -74,6 +74,10 @@ export function validateProblems(problems) {
       }
       if (!Array.isArray(problem.tokens) || !problem.tokens.length || problem.tokens.some((token) => typeof token !== 'string' || !token.trim())) errors.push(`${at}: assembly 문제의 tokens에는 비어 있지 않은 문자열이 필요합니다.`);
       else if (Array.isArray(problem.slots) && problem.slots.some((slot) => slot?.answer && !problem.tokens.includes(slot.answer))) errors.push(`${at}: 모든 슬롯 정답은 tokens에 포함되어야 합니다.`);
+      if (problem.normalSlotIds != null) {
+        const slotIds = new Set(Array.isArray(problem.slots) ? problem.slots.map((slot) => slot?.id) : []);
+        if (!Array.isArray(problem.normalSlotIds) || !problem.normalSlotIds.length || problem.normalSlotIds.some((id) => typeof id !== 'string' || !slotIds.has(id)) || new Set(problem.normalSlotIds).size !== problem.normalSlotIds.length) errors.push(`${at}: normalSlotIds에는 중복 없이 유효한 슬롯 ID가 필요합니다.`);
+      }
       const markers = typeof problem.skeleton === 'string' ? [...problem.skeleton.matchAll(/_{2,}\[(\d+)\]/g)] : [];
       if (Array.isArray(problem.slots) && markers.length !== problem.slots.length) errors.push(`${at}: skeleton 빈칸 수와 slots 수가 일치해야 합니다.`);
     }

@@ -159,7 +159,9 @@ npm run build
 
 - `flow`: `acceptedAnswers`, `keywords`
 - `api`: `skeleton`, `blanks`; 각 blank는 `id`, `answer`, `choices` 사용
-- `assembly`: `skeleton`, `slots`, `tokens`, 선택적 `protectedRanges`, `source`
+- `assembly`: `skeleton`, `slots`, `tokens`, 선택적 `normalSlotIds`, `protectedRanges`, `source`
+
+`normalSlotIds`가 있으면 보통 난이도에서는 해당 슬롯만 조립하고 나머지는 완성 코드로 제공한다. 어려움 난이도는 이 목록과 관계없이 `solution`의 보호되지 않은 토큰 전체를 조립한다.
 
 API와 assembly의 스켈레톤 슬롯은 `____[1]`, `____[2]` 형식을 사용한다. 각 정답은 해당 선택지 또는 토큰 목록에 반드시 포함되어야 한다.
 

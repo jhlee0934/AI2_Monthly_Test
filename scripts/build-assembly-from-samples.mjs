@@ -7,6 +7,31 @@ const samplesRoot = path.join(root, 'samples');
 const outputRoot = path.join(root, 'problems', 'assembly');
 const tokenPattern = /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g;
 const keywords = new Set(['import', 'from', 'as', 'def', 'return', 'for', 'in', 'if', 'else', 'elif', 'with', 'try', 'except', 'class', 'lambda', 'True', 'False', 'None', 'and', 'or', 'not', 'is']);
+const normalSlotSelectorsByTitle = new Map([
+  ['이상치 제거 전후 시각화', [
+    ['subplots', 1], ['boxplot', 1], ['set_title', 1],
+    ['boxplot', 2], ['set_title', 2], ['tight_layout', 1],
+  ]],
+  ['JSON Schema 응답 형식 정의', [
+    ['"json_schema"', 1], ['"customer_reviews"', 1], ['True', 1],
+    ['"object"', 1], ['"array"', 1], ['"object"', 2],
+    ['"string"', 1], ['"integer"', 1], ['"string"', 2], ['"string"', 3],
+    ['False', 1], ['False', 2],
+  ]],
+  ['합성 리뷰 JSON 저장', [
+    ['open', 1], ['"synthetic_reviews.json"', 1], ['"w"', 1],
+    ['dump', 1], ['False', 1],
+  ]],
+  ['청크 크기별 분할 비교', [
+    ['RecursiveCharacterTextSplitter', 1], ['chunk_size', 1],
+    ['chunk_overlap', 1], ['split_documents', 1],
+  ]],
+  ['RAG StateGraph 조립', [
+    ['StateGraph', 2], ['add_node', 1], ['add_node', 2],
+    ['add_edge', 1], ['add_edge', 2], ['add_edge', 3],
+    ['compile', 1], ['invoke', 1],
+  ]],
+]);
 
 if (!fs.existsSync(samplesRoot)) throw new Error('samples 폴더를 찾을 수 없습니다.');
 
@@ -54,9 +79,9 @@ for (const problemFile of problemFiles) {
     const contents = items.map((item) => conciseInstruction(stripTodoPrefix(item.context.content)));
     const solution = items.map((item, index) => `# TODO ${index + 1}: ${contents[index]}\n${item.answerCode}`).join('\n\n');
     const protectedRanges = [...commentRanges(solution), ...promptRanges(solution)].sort((a, b) => a.start - b.start);
-    const { skeleton, slots } = buildNormalAssembly('', solution, protectedRanges);
     const id = `assembly-${unit}-${String(problemFiles.indexOf(problemFile) + 1).padStart(2, '0')}-${String(groupIndex + 1).padStart(2, '0')}`;
     const title = conceptTitle(idBase, contents, solution);
+    const { skeleton, slots } = buildNormalAssembly('', solution, protectedRanges, normalSlotSelectorsByTitle.get(title));
     const requirements = [...new Set(items.flatMap((item) => item.context.requirements))];
     generated.push({
       id, unit, type: 'assembly', title,
@@ -78,14 +103,18 @@ for (const unit of [...new Set(generated.map((problem) => problem.unit))].sort((
 }
 console.log(`${problemFiles.length}개 문제 노트북을 ${generated.length}개 TODO 조립 문제로 변환했습니다.`);
 
-function buildNormalAssembly(problemCode, answerCode, protectedRanges = []) {
+function buildNormalAssembly(problemCode, answerCode, protectedRanges = [], slotSelectors) {
   const problemTokens = tokenize(problemCode);
   const answerTokens = tokenize(answerCode);
   const matched = lcsMatchedAnswerIndexes(problemTokens.map((token) => token.value), answerTokens.map((token) => token.value));
   const canBlank = (token) => !protectedRanges.some((range) => token.start >= range.start && token.start < range.end);
-  let targetIndexes = answerTokens.map((token, index) => ({ token, index })).filter(({ token, index }) => !matched.has(index) && canBlank(token)).map(({ index }) => index);
-  if (!problemTokens.length || !targetIndexes.length) targetIndexes = normalTargetIndexes(answerCode, answerTokens).filter((index) => canBlank(answerTokens[index]));
-  if (!targetIndexes.length) targetIndexes = answerTokens.map((token, index) => ({ token, index })).filter(({ token }) => canBlank(token)).map(({ index }) => index);
+  let targetIndexes;
+  if (slotSelectors) targetIndexes = selectTargetIndexes(answerTokens, slotSelectors, canBlank);
+  else {
+    targetIndexes = answerTokens.map((token, index) => ({ token, index })).filter(({ token, index }) => !matched.has(index) && canBlank(token)).map(({ index }) => index);
+    if (!problemTokens.length || !targetIndexes.length) targetIndexes = normalTargetIndexes(answerCode, answerTokens).filter((index) => canBlank(answerTokens[index]));
+    if (!targetIndexes.length) targetIndexes = answerTokens.map((token, index) => ({ token, index })).filter(({ token }) => canBlank(token)).map(({ index }) => index);
+  }
   const targetSet = new Set(targetIndexes); const slots = []; let skeleton = ''; let cursor = 0;
   answerTokens.forEach((token, index) => {
     if (!targetSet.has(index)) return;
@@ -95,6 +124,19 @@ function buildNormalAssembly(problemCode, answerCode, protectedRanges = []) {
   });
   skeleton += answerCode.slice(cursor);
   return { skeleton, slots };
+}
+
+function selectTargetIndexes(tokens, selectors, canBlank) {
+  return selectors.map(([answer, occurrence]) => {
+    let currentOccurrence = 0;
+    const index = tokens.findIndex((token) => {
+      if (!canBlank(token) || token.value !== answer) return false;
+      currentOccurrence += 1;
+      return currentOccurrence === occurrence;
+    });
+    if (index < 0) throw new Error(`보통 난이도 슬롯을 찾을 수 없습니다: ${answer} (${occurrence}번째)`);
+    return index;
+  });
 }
 
 function normalTargetIndexes(code, tokens) {

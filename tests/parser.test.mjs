@@ -77,6 +77,21 @@ test('TODO 코드 조립 문제는 클릭 가능한 토큰과 슬롯 계약을 �
   assert.ok(prompted.length > 0);
   assert.ok(prompted.every((item) => item.skeleton.includes('prompt = ') && !item.slots.some((slot) => /다음 문장|리뷰를 작성|자료를 기반/.test(slot.answer))));
 });
+test('긴 조립 문제의 보통 난이도는 핵심 개념 슬롯만 남긴다', () => {
+  const expectedSlots = new Map([
+    ['이상치 제거 전후 시각화', ['subplots', 'boxplot', 'set_title', 'boxplot', 'set_title', 'tight_layout']],
+    ['JSON Schema 응답 형식 정의', ['"json_schema"', '"customer_reviews"', 'True', '"object"', '"array"', '"object"', '"string"', '"integer"', '"string"', '"string"', 'False', 'False']],
+    ['합성 리뷰 JSON 저장', ['open', '"synthetic_reviews.json"', '"w"', 'dump', 'False']],
+    ['청크 크기별 분할 비교', ['RecursiveCharacterTextSplitter', 'chunk_size', 'chunk_overlap', 'split_documents']],
+    ['RAG StateGraph 조립', ['StateGraph', 'add_node', 'add_node', 'add_edge', 'add_edge', 'add_edge', 'compile', 'invoke']],
+  ]);
+  for (const [title, answers] of expectedSlots) {
+    const problem = problems.find((item) => item.type === 'assembly' && item.title === title);
+    assert.ok(problem, `${title} 문제를 찾을 수 없습니다.`);
+    const normalSlots = problem.normalSlotIds?.length ? problem.slots.filter((slot) => problem.normalSlotIds.includes(slot.id)) : problem.slots;
+    assert.deepEqual(normalSlots.map((slot) => slot.answer), answers);
+  }
+});
 test('세 번째 탭은 클릭 방식의 TODO 코드 조립 UI를 사용한다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
   const html = fs.readFileSync(path.resolve('public/index.html'), 'utf8');
@@ -86,6 +101,7 @@ test('세 번째 탭은 클릭 방식의 TODO 코드 조립 UI를 사용한다',
   assert.match(client, /class="code-token"/);
   assert.doesNotMatch(client, /dragstart|drop|draggable=/);
   assert.match(client, /assemblyDifficulty: 'normal'/);
+  assert.match(client, /function buildNormalDifficultyAssembly\(/);
   assert.match(client, /function buildHardAssembly\(/);
   assert.match(client, /problem\.protectedRanges\?\.some/);
   assert.match(client, /키워드.*변수·클래스.*메서드·속성.*값·문자열/);
