@@ -1,0 +1,81 @@
+{
+  "problems": [
+    {
+      "id": "flow-ch01-001",
+      "unit": "1-2",
+      "type": "flow",
+      "title": "PyTorch 학습 루프",
+      "content": "PyTorch 학습 루프에서 기울기를 초기화해야 하는 이유와 역전파 이후에 파라미터를 갱신해야 하는 이유를 설명하세요.",
+      "requirements": [
+        "이전 배치에서 누적된 기울기의 영향을 설명한다.",
+        "역전파와 파라미터 갱신의 관계를 설명한다."
+      ],
+      "acceptedAnswers": [
+        "PyTorch의 기울기는 기본적으로 누적되므로 optimizer.zero_grad()로 이전 배치의 기울기를 초기화해야 한다. 현재 손실에 대해 loss.backward()로 기울기를 계산한 다음 optimizer.step()으로 그 기울기를 사용해 파라미터를 갱신한다."
+      ],
+      "keywords": [
+        "optimizer.zero_grad()",
+        "loss.backward()",
+        "optimizer.step()"
+      ],
+      "solution": "PyTorch에서는 기울기가 누적되므로 각 배치 시작 시 optimizer.zero_grad()로 이전 기울기를 초기화한다. loss.backward()가 현재 손실의 기울기를 계산한 뒤 optimizer.step()이 그 기울기로 파라미터를 갱신한다.",
+      "explanation": "초기화를 생략하면 이전 배치의 기울기가 더해지고, 역전파 전에 optimizer.step()을 호출하면 현재 손실에서 계산한 기울기를 반영할 수 없습니다.",
+      "example": ""
+    },
+    {
+      "id": "api-ch01-001",
+      "unit": "1-2",
+      "type": "api",
+      "title": "PyTorch 학습 루프",
+      "content": "빈칸을 채워 학습 코드를 완성하세요.",
+      "requirements": [],
+      "skeleton": "optimizer.zero_grad()\noutputs = model(inputs)\nloss = criterion(outputs, labels)\n____[1]\n____[2]",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "loss.backward()",
+          "choices": [
+            "loss.backward()",
+            "loss.item()",
+            "model.eval()",
+            "optimizer.zero_grad()"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "optimizer.step()",
+          "choices": [
+            "optimizer.step()",
+            "optimizer.zero_grad()",
+            "loss.detach()",
+            "model.train()"
+          ]
+        }
+      ],
+      "solution": "optimizer.zero_grad()\noutputs = model(inputs)\nloss = criterion(outputs, labels)\nloss.backward()\noptimizer.step()",
+      "explanation": "역전파로 기울기를 계산한 뒤 optimizer가 파라미터를 갱신합니다.",
+      "example": ""
+    },
+    {
+      "id": "coding-ch01-001",
+      "unit": "1-2",
+      "type": "coding",
+      "title": "모델 평가 함수",
+      "content": "평가 모드에서 기울기 계산 없이 전체 샘플의 정확도를 반환하는 evaluate 함수를 완성하세요.",
+      "requirements": [
+        "함수 시그니처를 변경하지 않는다.",
+        "model.eval()로 평가 모드로 전환한다.",
+        "torch.no_grad() 안에서 추론한다.",
+        "전체 샘플 정확도를 float로 반환한다."
+      ],
+      "constraints": [
+        "제공된 import만 사용한다.",
+        "외부 API나 네트워크를 사용하지 않는다."
+      ],
+      "skeleton": "import torch\n\ndef evaluate(model, loader, device):\n    # 코드를 작성하세요.\n    pass",
+      "example": "반환값: 0.0 이상 1.0 이하의 float",
+      "solution": "",
+      "explanation": "loader는 (inputs, labels) 배치를 반환하고 model은 클래스별 logits를 반환합니다."
+    }
+  ]
+}

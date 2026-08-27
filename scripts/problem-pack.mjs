@@ -51,7 +51,7 @@ export function validateProblems(problems) {
     if (problem.constraints != null && (!Array.isArray(problem.constraints) || problem.constraints.some((item) => typeof item !== 'string'))) errors.push(`${at}: constraints는 문자열 배열이어야 합니다.`);
     for (const field of ['skeleton', 'example', 'solution', 'explanation']) if (problem[field] != null && typeof problem[field] !== 'string') errors.push(`${at}: ${field}는 문자열이어야 합니다.`);
     if (problem.type === 'flow') {
-      if (!Array.isArray(problem.keywords) || !problem.keywords.length) errors.push(`${at}: flow 문제에는 keywords가 한 개 이상 필요합니다.`);
+      if (!Array.isArray(problem.keywords) || !problem.keywords.length) errors.push(`${at}: 개념 확인 주관식(flow) 문제에는 keywords가 한 개 이상 필요합니다.`);
       if (!Array.isArray(problem.acceptedAnswers)) errors.push(`${at}: acceptedAnswers는 배열이어야 합니다.`);
     }
     if (problem.type === 'api') {

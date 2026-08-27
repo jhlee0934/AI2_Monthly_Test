@@ -6,3 +6,4 @@ public/app.bundle.js.map
 .env.*
 !.env.example
 npm-debug.log*
+samples/

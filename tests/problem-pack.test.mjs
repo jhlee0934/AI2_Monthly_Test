@@ -16,8 +16,9 @@ test('세 문제 유형 템플릿이 공통 검증을 통과한다', () => {
 
 test('기본 문제 팩을 독립 데이터로 불러온다', () => {
   const pack = loadProblemPack(path.join(root, 'problem-packs', 'monthly-ai'), path.join(root, 'problem-packs'));
+  const source = JSON.parse(fs.readFileSync(path.join(root, 'problems', 'exam_questions.json'), 'utf8'));
   assert.equal(pack.manifest.id, 'monthly-ai');
-  assert.equal(pack.problems.length, 111);
+  assert.equal(pack.problems.length, source.problems.length);
 });
 
 test('중복 ID와 빈칸 정답 선택지 누락을 거부한다', () => {

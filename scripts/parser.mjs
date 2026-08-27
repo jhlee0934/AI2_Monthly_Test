@@ -6,6 +6,7 @@ const TYPE_MAP = {
   '02_API빈칸': 'api',
   '03_실전코딩': 'coding',
 };
+export const BLANK_MARKER_PATTERN = /_{2,}\[(\d+)\]/g;
 
 const clean = (value = '') => value
   .replace(/<a id="[^"]+"><\/a>/g, '')
@@ -50,16 +51,11 @@ function splitQuestions(markdown) {
   });
 }
 
-function extractNumberedAnswers(answer) {
-  return [...answer.matchAll(/[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩]\s*`([^`]+)`/g)].map((m) => m[1]);
-}
-
 function extractTemplateAnswers(skeleton, solution) {
   const result = new Map();
   const solutionLines = solution.split('\n');
-  let anonymous = 0;
   for (const sourceLine of skeleton.split('\n')) {
-    const placeholders = [...sourceLine.matchAll(/_{2,}(?:\[(\d+)\])?|([①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮])/g)];
+    const placeholders = [...sourceLine.matchAll(BLANK_MARKER_PATTERN)];
     if (!placeholders.length) continue;
     let pattern = '^\\s*';
     let cursor = 0;
@@ -71,7 +67,7 @@ function extractTemplateAnswers(skeleton, solution) {
     const regex = new RegExp(pattern);
     const found = solutionLines.map((line) => line.match(regex)).find(Boolean);
     if (found) placeholders.forEach((blank, index) => {
-      const key = blank[1] || blank[2] || `anonymous-${anonymous++}`;
+      const key = blank[1];
       if (!result.has(key)) result.set(key, found[index + 1].trim());
     });
   }
@@ -95,6 +91,13 @@ function distractors(answer, pool) {
 }
 
 export function parseProblems(root) {
+  const jsonProblems = fs.readdirSync(root, { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+    .map((entry) => path.join(entry.parentPath, entry.name)).sort()
+    .flatMap((file) => {
+      const payload = JSON.parse(fs.readFileSync(file, 'utf8'));
+      return Array.isArray(payload) ? payload : payload.problems ?? [payload];
+    });
   const files = fs.readdirSync(root, { recursive: true, withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
     .map((entry) => path.join(entry.parentPath, entry.name)).sort();
@@ -119,23 +122,20 @@ export function parseProblems(root) {
         title: part.title || titleMatch?.[1]?.trim() || markdown.match(/^#\s+(.+?)(?::\s*(?:구현 흐름|API 빈칸|실전 코딩))?$/m)?.[1] || `문제 ${part.number}`,
         content: problemText, requirements,
         skeleton, example, solution, explanation, source: relative,
-        explicitAnswers: extractNumberedAnswers(part.answer),
       });
     }
   }
-  const answerPool = unique(raw.filter((q) => q.type === 'api').flatMap((q) => [
-    ...q.explicitAnswers, ...extractTemplateAnswers(q.skeleton, q.solution),
-  ]));
-  return raw.map((q) => {
-    const { explicitAnswers, ...problem } = q;
+  const answerPool = unique(raw.filter((q) => q.type === 'api').flatMap((q) => extractTemplateAnswers(q.skeleton, q.solution)));
+  const markdownProblems = raw.map((q) => {
     if (q.type === 'api') {
-      const answers = q.explicitAnswers.length ? q.explicitAnswers : extractTemplateAnswers(q.skeleton, q.solution);
-      return { ...problem, blanks: answers.map((answer, index) => ({ id: String(index + 1), answer, choices: distractors(answer, answerPool) })) };
+      const answers = extractTemplateAnswers(q.skeleton, q.solution);
+      return { ...q, blanks: answers.map((answer, index) => ({ id: String(index + 1), answer, choices: distractors(answer, answerPool) })) };
     }
     if (q.type === 'flow') {
       const keywords = inlineKeywords(`${q.explanation}\n${q.requirements.join('\n')}`);
-      return { ...problem, acceptedAnswers: q.solution ? [q.solution] : [], keywords };
+      return { ...q, acceptedAnswers: q.solution ? [q.solution] : [], keywords };
     }
-    return problem;
+    return q;
   });
+  return [...jsonProblems, ...markdownProblems];
 }

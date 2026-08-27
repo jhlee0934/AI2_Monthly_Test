@@ -5,14 +5,28 @@
   <a class="skip" href="#problem">문제로 바로가기</a>
   <header><div><p class="eyebrow" id="packTitle">문제 자료 불러오는 중</p><h1>월말평가 연습실</h1><p id="packDescription">단원별 핵심 문제를 풀고 바로 확인하세요.</p></div><details class="api-settings-dropdown"><summary>AI 코드 검토 설정</summary><section class="global-api-settings" aria-label="AI 코드 검토 설정"><label>OpenAI API 키<input id="globalApiKey" type="password" placeholder="sk-…" autocomplete="off" spellcheck="false"></label><label>검토 모델<input id="globalModel" type="text" value="gpt-5.4-mini" list="modelSuggestions" autocomplete="off" spellcheck="false"><datalist id="modelSuggestions"><option value="gpt-5.4-mini"></option><option value="gpt-5.4-nano"></option></datalist></label><small>API 키는 마스킹되며 현재 탭에서만 유지됩니다.</small></section></details><div class="progress-card" aria-live="polite"><strong id="progressText">0 / 0 완료</strong><div class="bar"><span id="progressBar"></span></div></div></header>
   <main>
-    <nav class="tabs" aria-label="문제 유형"><button data-type="flow" aria-selected="true">구현 흐름 문제</button><button data-type="api">API 빈칸 문제</button><button data-type="coding">실전 코딩 문제</button></nav>
+    <nav class="tabs" aria-label="문제 유형"><button data-type="flow" aria-selected="true">개념 확인 주관식</button><button data-type="api">API 빈칸 문제</button><button data-type="coding">실전 코딩 문제</button></nav>
     <section class="toolbar" aria-label="풀이 설정"><label class="shuffle"><input id="shuffleChoices" type="checkbox"> 선택지 섞기</label><button id="resetAll" class="ghost">풀이 초기화</button></section>
     <div id="loading" class="notice">문제 자료를 불러오는 중입니다…</div>
     <div id="workspace" class="workspace" hidden>
       <aside><div class="list-head"><strong id="listTitle">문제 목록</strong><span id="count"></span></div><div id="problemList" class="problem-list"></div></aside>
-      <article id="problem" tabindex="-1"><div class="problem-meta"><span id="unitBadge"></span><span id="statusBadge"></span></div><p id="position" class="position"></p><h2 id="title"></h2><div id="content"></div><div id="answerArea"></div><div id="feedback" aria-live="polite"></div><div class="nav-buttons"><button id="previous" class="ghost">← 이전 문제</button><button id="next">다음 문제 →</button></div></article>
+      <article id="problem" tabindex="-1"><div class="problem-meta"><span id="unitBadge"></span><span id="statusBadge"></span></div><p id="position" class="position"></p><h2 id="title"></h2><div id="content"></div><div id="answerArea"></div><div id="feedback" aria-live="polite"></div><div class="report-row"><button id="reportProblem" class="report-button" type="button">문제 신고</button></div><div class="nav-buttons"><button id="previous" class="ghost">← 이전 문제</button><button id="next">다음 문제 →</button></div></article>
     </div>
   </main>
+  <dialog id="reportDialog" class="report-dialog" aria-labelledby="reportTitle">
+    <form id="reportForm">
+      <div class="dialog-head"><h2 id="reportTitle">문제 신고</h2><button id="closeReport" class="icon-button" type="button" aria-label="신고 창 닫기">×</button></div>
+      <p id="reportProblemLabel" class="report-problem-label"></p>
+      <label for="reportCategory">신고 유형</label>
+      <select id="reportCategory" required><option value="content-error">문제 내용 오류</option><option value="wrong-answer">정답 오류</option><option value="grading-error">채점 오류</option><option value="insufficient-explanation">해설 부족</option><option value="typo">오탈자</option><option value="ui-error">화면·기능 오류</option><option value="other">기타</option></select>
+      <label for="reportMessage">신고 내용</label>
+      <textarea id="reportMessage" rows="6" minlength="5" maxlength="2000" required placeholder="어떤 부분이 잘못되었는지 구체적으로 알려주세요."></textarea>
+      <label class="report-honeypot" aria-hidden="true">웹사이트<input id="reportWebsite" type="text" tabindex="-1" autocomplete="off"></label>
+      <p class="report-privacy">문제 ID와 입력한 신고 내용이 공개 GitHub Issue로 전송됩니다. 개인정보, API 키, 작성 중인 코드는 입력하지 마세요.</p>
+      <div id="reportStatus" class="report-status" aria-live="polite"></div>
+      <div class="dialog-actions"><button id="cancelReport" class="ghost" type="button">취소</button><button id="submitReport" type="submit">신고 접수</button></div>
+    </form>
+  </dialog>
   <template id="errorTemplate"><div class="notice error"><strong>문제를 표시할 수 없습니다.</strong><p></p><button onclick="location.reload()">다시 시도</button></div></template>
   <script type="module" src="/app.bundle.js"></script>
 </body></html>
