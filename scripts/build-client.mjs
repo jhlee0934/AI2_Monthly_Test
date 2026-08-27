@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 
 export async function buildClient(root) {
+  fs.rmSync(path.join(root, 'public', 'app.bundle.js.map'), { force: true });
   await build({
     stdin: {
       contents: fs.readFileSync(path.join(root, 'public', 'app.js'), 'utf8'),

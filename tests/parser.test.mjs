@@ -69,15 +69,14 @@ test('문제 목록은 단원별 접기·펼치기 구조를 사용한다', () =
   assert.match(client, /unit\.localeCompare\(b\.unit, 'ko', \{ numeric: true \}\)/);
   assert.doesNotMatch(client, /\$\{index \+ 1\}\. \$\{escapeHtml\(item\.title\)\}/);
 });
-test('문제 신고는 서버 API를 통하고 GitHub 토큰을 클라이언트에 포함하지 않는다', () => {
+test('GitHub Pages 정적 배포는 상대 경로 데이터만 사용하고 신고 기능을 포함하지 않는다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
   const html = fs.readFileSync(path.resolve('public/index.html'), 'utf8');
   const server = fs.readFileSync(path.resolve('server.mjs'), 'utf8');
-  assert.match(client, /fetch\('\/api\/reports'/);
-  assert.match(html, /id="reportDialog"/);
-  assert.match(server, /process\.env\.GITHUB_REPORT_TOKEN/);
-  assert.match(server, /REPORT_CATEGORIES/);
-  assert.doesNotMatch(`${client}\n${html}`, /GITHUB_REPORT_TOKEN|gh[pousr]_[A-Za-z0-9]/);
+  assert.match(client, /fetch\('\.\/data\/problems\.json'/);
+  assert.match(html, /href="\.\/styles\.css"/);
+  assert.match(html, /src="\.\/app\.bundle\.js"/);
+  assert.doesNotMatch(`${client}\n${html}\n${server}`, /\/api\/reports|reportDialog/);
 });
 
 function validateSampleIds(items) {

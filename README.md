@@ -91,7 +91,7 @@ npm.cmd run dev
 
 | 요청 | 동작 |
 | --- | --- |
-| `GET /api/problems` | 활성 팩을 로드·검증하고 공개 매니페스트와 문제 배열 반환 |
+| `./data/problems.json` | GitHub Pages에서 읽는 정적 문제 팩 |
 | `GET`, `HEAD /*` | `dist/` 또는 `public/` 정적 파일 제공 |
 
 활성 팩은 `.env`의 `PROBLEM_PACK`이 우선이며, 없으면 `problem-pack.config.json`의 `activePack`을 사용한다. 팩 이름과 내부 경로는 허용된 문제 팩 디렉터리를 벗어나지 못하도록 검사한다.
@@ -109,7 +109,7 @@ rate limit은 프로세스 메모리에만 있어 재시작 시 초기화되고 
 
 ### GitHub 문제 신고
 
-각 문제 하단의 `문제 신고` 버튼은 `POST /api/reports`를 호출한다. 서버는 현재 활성 팩에서 문제 ID를 다시 확인한 뒤 GitHub REST API로 익명 이슈를 생성한다. 토큰은 브라우저에 전달되지 않는다.
+GitHub Pages 배포에서는 문제 신고 기능을 제공하지 않는다.
 
 1. GitHub에서 대상 저장소 하나에만 접근하는 fine-grained personal access token을 만든다.
 2. Repository permissions의 `Issues`만 `Read and write`로 설정하고 만료 기간을 지정한다.
@@ -164,7 +164,7 @@ npm run dev
 ### 브라우저 요청
 
 ```text
-브라우저 → GET /api/problems
+브라우저 → GET ./data/problems.json
         → 활성 pack.json 확인
         → 문제 파일 로드 및 검증
         → { pack, problems } 반환
@@ -269,10 +269,10 @@ npm.cmd run build
 
 `tests/parser.test.mjs`는 실제 원본 변환 결과와 클라이언트 계약을 검사한다.
 
-- 세 유형 생성 여부와 ID 중복
+- 두 유형 생성 여부와 ID 중복
 - API 빈칸의 정답/선택지 정합성
 - 원본 Markdown 구조 문법 제거
-- 공통 API 설정, 접근성 속성, 단원 접기 UI 회귀
+- 정적 데이터 경로, 접근성 속성, 단원 접기 UI 회귀
 
 `tests/problem-pack.test.mjs`는 템플릿 검증, 기본 팩 로딩, 잘못된 문제 거부를 검사한다. API 해설 품질 테스트는 각 해설에 정답별 개념과 완성 코드 맥락이 포함되기를 요구한다.
 
@@ -283,10 +283,15 @@ npm.cmd run build
 - `dist/` 존재 여부가 정적 파일 선택을 결정하므로 배포 전 `npm run build`를 실행한다.
 - 정답 데이터도 클라이언트로 전송되므로 보안이 필요한 실제 시험의 정답 저장소로 사용할 수 없다.
 
+## GitHub Pages 배포
+
+정적 사이트는 `./data/problems.json`을 읽으므로 저장소 하위 주소에서도 동작한다. `.github/workflows/deploy-pages.yml`은 `main` 브랜치 push 시 테스트와 빌드를 수행하고 `dist/`를 GitHub Pages에 배포한다.
+
+저장소의 `Settings → Pages → Build and deployment → Source`를 `GitHub Actions`로 설정한 뒤 `main`에 push한다. 예상 주소는 `https://jhlee0934.github.io/AI2_Monthly_Test/`이다. 현재 정적 배포판에는 문제 신고 기능이 없다.
+
 ## UI 조작
 
 - 단원 제목: 문제 목록 접기·펼치기
 - `Alt + ←`, `Alt + →`: 이전·다음 문제
-- 블록 초기화: 문제의 `initialWorkspace`로 복원
 - 선택지 섞기: API 선택지 표시 순서 변경
 - 풀이 초기화: 현재 팩의 답안과 채점 결과 삭제

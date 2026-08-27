@@ -26,7 +26,6 @@ const server = http.createServer(async (request, response) => {
       const pack = loadActiveProblemPack(root);
       return json(response, 200, { pack: publicManifest(pack.manifest), problems: pack.problems });
     }
-    if (request.method === 'POST' && url.pathname === '/api/reports') return await createProblemReport(request, response);
     if (request.method !== 'GET' && request.method !== 'HEAD') return json(response, 405, { error: '지원하지 않는 요청입니다.' });
     return serveStatic(url.pathname, response, request.method === 'HEAD');
   } catch (error) {

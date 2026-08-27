@@ -2,21 +2,15 @@ const STORAGE_KEY = 'monthly-ai-practice:v1';
 const state = { problems: [], packId: 'monthly-ai', type: 'flow', current: 0, progress: loadProgress('monthly-ai'), shuffle: false, collapsedUnits: new Set() };
 const $ = (selector) => document.querySelector(selector);
 const els = { workspace: $('#workspace'), loading: $('#loading'), list: $('#problemList'), content: $('#content'), answer: $('#answerArea'), feedback: $('#feedback') };
-const reportDialog = $('#reportDialog');
 
 document.querySelectorAll('.tabs button').forEach((button) => button.addEventListener('click', () => { state.type = button.dataset.type; state.current = 0; document.querySelectorAll('.tabs button').forEach((item) => item.setAttribute('aria-selected', item === button)); render(); }));
 $('#shuffleChoices').addEventListener('change', (event) => { state.shuffle = event.target.checked; renderProblem(); });
 $('#previous').addEventListener('click', () => move(-1)); $('#next').addEventListener('click', () => move(1));
 $('#resetAll').addEventListener('click', () => { if (confirm('저장된 모든 답안과 채점 결과를 초기화할까요?')) { state.progress = {}; saveProgress(); render(); } });
-$('#reportProblem').addEventListener('click', openProblemReport);
-$('#closeReport').addEventListener('click', closeProblemReport);
-$('#cancelReport').addEventListener('click', closeProblemReport);
-$('#reportForm').addEventListener('submit', submitProblemReport);
-reportDialog.addEventListener('click', (event) => { if (event.target === reportDialog) closeProblemReport(); });
 document.addEventListener('keydown', (event) => { if (event.altKey && event.key === 'ArrowLeft') move(-1); if (event.altKey && event.key === 'ArrowRight') move(1); });
 
 try {
-  const response = await fetch('/api/problems');
+  const response = await fetch('./data/problems.json');
   if (!response.ok) throw new Error('문제 자료 요청에 실패했습니다.');
   const payload = await response.json();
   if (!Array.isArray(payload.problems)) throw new Error('문제 자료 형식이 올바르지 않습니다.');
@@ -73,23 +67,6 @@ function renderApi(problem) {
 }
 function gradeApi(problem) { const selections = collectSelections(problem); if (Object.keys(selections).length < problem.blanks.length) return message('모든 빈칸의 답을 선택해 주세요.', 'error'); const results = problem.blanks.map((blank) => selections[blank.id] === blank.answer); const saved = { selections, results, submitted: true, status: results.every(Boolean) ? 'correct' : 'incorrect' }; update(problem.id, saved); showApiFeedback(problem, saved); }
 function showApiFeedback(problem, saved) { const resultArea = $('#blankResults'); if (resultArea) resultArea.innerHTML = (saved.results || []).map((correct, index) => `<span class="blank-result ${correct ? 'correct' : 'incorrect'}">빈칸 ${index + 1}: ${correct ? '정답' : `오답 · 정답은 ${escapeHtml(problem.blanks[index].answer)}`}</span>`).join(''); els.feedback.innerHTML = `<div class="feedback ${saved.status}"><h3>${statusLabel(saved.status)}</h3><details open><summary>문제 설명과 정답 코드</summary>${code(problem.solution)}${markdown(problem.explanation)}</details></div>`; }
-function currentProblem() { return filtered()[state.current]; }
-function openProblemReport() { const problem = currentProblem(); if (!problem) return; $('#reportProblemLabel').textContent = `${problem.unit} · ${problem.title} (${problem.id})`; $('#reportMessage').value = ''; $('#reportWebsite').value = ''; $('#reportStatus').textContent = ''; $('#reportStatus').className = 'report-status'; $('#submitReport').disabled = false; reportDialog.showModal(); $('#reportCategory').focus(); }
-function closeProblemReport() { if (reportDialog.open) reportDialog.close(); }
-async function submitProblemReport(event) {
-  event.preventDefault();
-  const problem = currentProblem(); if (!problem) return;
-  const button = $('#submitReport'); const status = $('#reportStatus');
-  button.disabled = true; button.textContent = '접수 중…'; status.textContent = 'GitHub에 문제 신고를 등록하고 있습니다…'; status.className = 'report-status loading';
-  try {
-    const response = await fetch('/api/reports', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ packId: state.packId, problemId: problem.id, category: $('#reportCategory').value, message: $('#reportMessage').value, website: $('#reportWebsite').value }) });
-    const result = await response.json(); if (!response.ok) throw new Error(result.error || '신고 접수에 실패했습니다.');
-    status.textContent = ''; status.className = 'report-status success'; status.append(document.createTextNode(result.message || '문제 신고가 접수되었습니다.'));
-    if (typeof result.issueUrl === 'string' && result.issueUrl.startsWith('https://github.com/')) { const link = document.createElement('a'); link.href = result.issueUrl; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = ' 생성된 이슈 보기'; status.append(link); }
-    $('#reportMessage').value = '';
-  } catch (error) { status.textContent = error.message; status.className = 'report-status error'; button.disabled = false; }
-  finally { button.textContent = '신고 접수'; }
-}
 function collectSelections(problem) { const result = {}; problem.blanks.forEach((blank) => { const selected = document.querySelector(`select[data-blank-id="${blank.id}"]`); if (selected?.value) result[blank.id] = selected.value; }); return result; }
 function renderBlankCode(problem, selections) {
   const markerIndexes = new Map();
