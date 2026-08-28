@@ -5,105 +5,109 @@
       "unit": "5-1",
       "type": "flow",
       "title": "PEFT 필요성",
-      "content": "PEFT 필요성에서 `adapter`와 `requires_grad=True`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `adapter`와 `requires_grad=True`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다."
-      ],
-      "keywords": [
-        "adapter",
-        "requires_grad=True"
-      ],
+      "content": "PEFT 필요성에서 `adapter`와 `requires_grad=True`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다.",
       "explanation": "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `adapter`와 `requires_grad=True`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다.",
+        "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다.",
+        "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다.",
+        "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다."
+      ],
+      "answer": "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다."
     },
     {
       "id": "flow-generated-018",
       "unit": "5-1",
       "type": "flow",
       "title": "LoRA 원리",
-      "content": "LoRA 원리에서 `동결`와 `저랭크`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `동결`와 `저랭크`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다."
-      ],
-      "keywords": [
-        "동결",
-        "저랭크"
-      ],
+      "content": "LoRA 원리에서 `동결`와 `저랭크`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다.",
       "explanation": "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `동결`와 `저랭크`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다.",
+        "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다.",
+        "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다.",
+        "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다."
+      ],
+      "answer": "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다."
     },
     {
       "id": "flow-generated-027",
       "unit": "5-1",
       "type": "flow",
       "title": "LoRA rank와 alpha",
-      "content": "LoRA rank와 alpha에서 `r`와 `파라미터 수`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `r`와 `파라미터 수`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다."
-      ],
-      "keywords": [
-        "r",
-        "파라미터 수"
-      ],
+      "content": "LoRA rank와 alpha에서 `r`와 `파라미터 수`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다.",
       "explanation": "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `r`와 `파라미터 수`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다.",
+        "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다.",
+        "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다.",
+        "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다."
+      ],
+      "answer": "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다."
     },
     {
       "id": "flow-generated-036",
       "unit": "5-1",
       "type": "flow",
       "title": "LoRA와 QLoRA",
-      "content": "LoRA와 QLoRA에서 `4-bit`와 `base model 고정`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `4-bit`와 `base model 고정`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다."
-      ],
-      "keywords": [
-        "4-bit",
-        "base model 고정"
-      ],
+      "content": "LoRA와 QLoRA에서 `4-bit`와 `base model 고정`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다.",
       "explanation": "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `4-bit`와 `base model 고정`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다.",
+        "동결된 가중치 변화량을 작은 rank의 두 행렬 곱으로 표현하고 그 행렬만 학습해 적은 파라미터로 모델을 적응시킵니다.",
+        "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다.",
+        "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다."
+      ],
+      "answer": "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다."
     },
     {
       "id": "flow-generated-045",
       "unit": "5-1",
       "type": "flow",
       "title": "Chat Template",
-      "content": "Chat Template에서 `role`와 `구분 토큰`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `role`와 `구분 토큰`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다."
-      ],
-      "keywords": [
-        "role",
-        "구분 토큰"
-      ],
+      "content": "Chat Template에서 `role`와 `구분 토큰`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다.",
       "explanation": "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `role`와 `구분 토큰`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다.",
+        "둘 다 adapter를 학습하지만 QLoRA는 base model을 4-bit 등으로 양자화해 고정하고 보통 FP16 계열 adapter만 학습해 메모리를 더 줄입니다.",
+        "r은 저랭크 adapter의 표현 용량과 파라미터 수를 정하고 lora_alpha는 보통 alpha/r 비율로 adapter 업데이트의 스케일을 조절합니다.",
+        "전체 base model 대신 소수의 adapter 파라미터만 requires_grad=True로 두어 기울기와 optimizer state가 필요한 학습 파라미터 수를 크게 줄입니다."
+      ],
+      "answer": "모델이 학습한 role 및 구분 토큰 구조와 추론 입력 구조를 맞춰 사용자와 assistant 경계를 올바르게 해석하게 합니다."
+    },
+    {
+      "id": "flow-sample-071",
+      "unit": "5-1",
+      "type": "flow",
+      "title": "학습·추론 Chat Template",
+      "content": "학습과 추론에서 add_generation_prompt 설정을 다르게 사용하는 이유로 옳은 것을 고르세요.",
+      "requirements": [],
+      "choices": [
+        "학습에서는 vocabulary를 늘리기 위해 True, 추론에서는 토큰화를 끄기 위해 False를 사용합니다.",
+        "학습 데이터에는 assistant 정답이 이미 있어 False를 사용하고, 추론에서는 모델 응답 시작 위치를 알려 주기 위해 True를 사용합니다.",
+        "True는 LoRA rank를 두 배로 만들고 False는 adapter를 동결합니다.",
+        "두 단계 모두 assistant 응답이 이미 포함되므로 항상 False만 사용해야 합니다."
+      ],
+      "answer": "학습 데이터에는 assistant 정답이 이미 있어 False를 사용하고, 추론에서는 모델 응답 시작 위치를 알려 주기 위해 True를 사용합니다.",
+      "solution": "학습 데이터에는 assistant 정답이 이미 있어 False를 사용하고, 추론에서는 모델 응답 시작 위치를 알려 주기 위해 True를 사용합니다.",
+      "explanation": "생성 프롬프트는 추론 시 assistant 턴의 시작을 표시하며 학습 정답이 포함된 데이터에는 불필요합니다.",
+      "example": "",
+      "source": "samples/chapter_5_1_ws/(실습-문제) 5-1_PEFT 파라미터 효율적 튜닝.ipynb"
     }
   ]
 }

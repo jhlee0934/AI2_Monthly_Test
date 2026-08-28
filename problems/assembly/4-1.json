@@ -1004,6 +1004,49 @@
       "explanation": "정답 노트북의 TODO 4 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_4-1_RAG 파이프라인/문제/Ch.4-1_006_RAG 파이프라인.ipynb"
+    },
+    {
+      "id": "assembly-sample-4-1-01",
+      "unit": "4-1",
+      "type": "assembly",
+      "title": "Retriever top_k 조립",
+      "content": "Vector Store에서 top_k 설정을 가진 Retriever를 구성하고 검색하세요.",
+      "requirements": [
+        "핵심 API, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "retriever = vectorstore.____[1](____[2]={____[3]: top_k})\ndocuments = retriever.____[4](query)",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "as_retriever"
+        },
+        {
+          "id": "slot-2",
+          "answer": "search_kwargs"
+        },
+        {
+          "id": "slot-3",
+          "answer": "\"k\""
+        },
+        {
+          "id": "slot-4",
+          "answer": "invoke"
+        }
+      ],
+      "tokens": [
+        "as_retriever",
+        "search_kwargs",
+        "\"k\"",
+        "invoke",
+        "None",
+        "transform"
+      ],
+      "solution": "retriever = vectorstore.as_retriever(search_kwargs={\"k\": top_k})\ndocuments = retriever.invoke(query)",
+      "protectedRanges": [],
+      "explanation": "샘플 노트북의 완성 코드를 기준으로 핵심 호출 흐름을 조립합니다.",
+      "example": "",
+      "source": "samples/chapter_4_1_hw/(과제-문제) 4-1_RAG 기반 Customer Service AI 에이전트 개발.ipynb",
+      "origin": "sample-generated"
     }
   ]
 }

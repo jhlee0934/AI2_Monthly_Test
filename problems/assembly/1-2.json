@@ -1,0 +1,52 @@
+{
+  "problems": [
+    {
+      "id": "assembly-sample-1-2-01",
+      "unit": "1-2",
+      "type": "assembly",
+      "title": "훈련 DataLoader 조립",
+      "content": "TensorDataset과 섞인 훈련 DataLoader를 구성하세요.",
+      "requirements": [
+        "핵심 API, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "train_ds = ____[1](X_train_t, y_train_t)\ntrain_loader = ____[2](train_ds, ____[3]=BATCH_SIZE, ____[4]=____[5])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "TensorDataset"
+        },
+        {
+          "id": "slot-2",
+          "answer": "DataLoader"
+        },
+        {
+          "id": "slot-3",
+          "answer": "batch_size"
+        },
+        {
+          "id": "slot-4",
+          "answer": "shuffle"
+        },
+        {
+          "id": "slot-5",
+          "answer": "True"
+        }
+      ],
+      "tokens": [
+        "TensorDataset",
+        "DataLoader",
+        "batch_size",
+        "shuffle",
+        "True",
+        "None",
+        "transform"
+      ],
+      "solution": "train_ds = TensorDataset(X_train_t, y_train_t)\ntrain_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)",
+      "protectedRanges": [],
+      "explanation": "샘플 노트북의 완성 코드를 기준으로 핵심 호출 흐름을 조립합니다.",
+      "example": "",
+      "source": "samples/chapter_1_2_ws/(실습-문제) 1-2_MLP 구현.ipynb",
+      "origin": "sample-generated"
+    }
+  ]
+}

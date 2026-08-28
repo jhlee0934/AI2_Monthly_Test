@@ -154,6 +154,51 @@
       "example": "",
       "id": "api-generated-029",
       "type": "api"
+    },
+    {
+      "id": "api-sample-047",
+      "unit": "2-2",
+      "type": "api",
+      "title": "Responses API 번역 호출",
+      "content": "전체 과정 중 Responses API에 모델·입력·지시문을 전달하고 텍스트 결과를 사용하는 단계를 완성하세요.",
+      "requirements": [],
+      "skeleton": "response = client.____[1].____[2](\n    model=\"gpt-5-mini\",\n    input=test_question,\n    instructions=ZERO_SHOT_PROMPT,\n)\nzero_shot_result = {\"korean\": response.____[3]}",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "responses",
+          "choices": [
+            "responses",
+            "chat",
+            "completions",
+            "embeddings"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "create",
+          "choices": [
+            "create",
+            "invoke",
+            "parse",
+            "compile"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "output_text",
+          "choices": [
+            "output_text",
+            "content",
+            "text",
+            "message"
+          ]
+        }
+      ],
+      "solution": "response = client.responses.create(\n    model=\"gpt-5-mini\",\n    input=test_question,\n    instructions=ZERO_SHOT_PROMPT,\n)\nzero_shot_result = {\"korean\": response.output_text}",
+      "explanation": "`responses.create`에 입력과 instructions를 전달하고 반환 객체의 `output_text`를 번역 결과로 사용합니다.",
+      "example": "",
+      "source": "samples/chapter_2_2_hw/(과제-문제) 2-2_합성 데이터 생성 과제.ipynb"
     }
   ]
 }

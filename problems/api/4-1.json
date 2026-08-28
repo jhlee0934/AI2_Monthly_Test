@@ -234,6 +234,61 @@
       "example": "",
       "id": "api-generated-031",
       "type": "api"
+    },
+    {
+      "id": "api-sample-050",
+      "unit": "4-1",
+      "type": "api",
+      "title": "PDF 문서 일괄 로드",
+      "content": "전체 과정 중 PDF 경로별 loader를 만들고 문서를 하나의 목록에 누적하는 단계를 완성하세요.",
+      "requirements": [],
+      "skeleton": "all_documents = []\nfor pdf_path in glob.____[1](\"data/*.pdf\"):\n    loader = ____[2](pdf_path)\n    documents = loader.____[3]()\n    all_documents.____[4](documents)",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "glob",
+          "choices": [
+            "glob",
+            "find",
+            "walk",
+            "listdir"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "PyMuPDFLoader",
+          "choices": [
+            "PyMuPDFLoader",
+            "TextLoader",
+            "DirectoryLoader",
+            "PDFParser"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "load",
+          "choices": [
+            "load",
+            "invoke",
+            "read",
+            "parse"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "extend",
+          "choices": [
+            "extend",
+            "append",
+            "update",
+            "add"
+          ]
+        }
+      ],
+      "solution": "all_documents = []\nfor pdf_path in glob.glob(\"data/*.pdf\"):\n    loader = PyMuPDFLoader(pdf_path)\n    documents = loader.load()\n    all_documents.extend(documents)",
+      "explanation": "`glob`으로 PDF 경로를 찾고 각 `PyMuPDFLoader.load` 결과를 `extend`해 단일 문서 목록으로 합칩니다.",
+      "example": "",
+      "source": "samples/chapter_4_1_ws/(실습-문제) 4-1_RAG 기반 Customer Service AI 에이전트 개발.ipynb"
     }
   ]
 }

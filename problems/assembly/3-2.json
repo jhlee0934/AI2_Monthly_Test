@@ -1,0 +1,42 @@
+{
+  "problems": [
+    {
+      "id": "assembly-sample-3-2-01",
+      "unit": "3-2",
+      "type": "assembly",
+      "title": "Stable Diffusion 로드 조립",
+      "content": "Stable Diffusion 파이프라인을 불러와 장치로 이동하세요.",
+      "requirements": [
+        "핵심 API, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "pipe = ____[1].____[2](model_id, torch_dtype=torch.float16)\npipe = pipe.____[3](device)",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "StableDiffusionPipeline"
+        },
+        {
+          "id": "slot-2",
+          "answer": "from_pretrained"
+        },
+        {
+          "id": "slot-3",
+          "answer": "to"
+        }
+      ],
+      "tokens": [
+        "StableDiffusionPipeline",
+        "from_pretrained",
+        "to",
+        "None",
+        "transform"
+      ],
+      "solution": "pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)\npipe = pipe.to(device)",
+      "protectedRanges": [],
+      "explanation": "샘플 노트북의 완성 코드를 기준으로 핵심 호출 흐름을 조립합니다.",
+      "example": "",
+      "source": "samples/chapter_3_2_hw/(과제-문제) 3-2_이미지 생성 및 평가와 모델 학습.ipynb",
+      "origin": "sample-generated"
+    }
+  ]
+}

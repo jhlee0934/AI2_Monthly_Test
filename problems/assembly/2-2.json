@@ -996,6 +996,44 @@
       "explanation": "정답 노트북의 TODO 10 구현입니다. 함수 호출 대상, 메서드, 인자 이름과 반환값 사용 위치를 함께 확인하세요.",
       "example": "",
       "source": "Ch_2-2_합성 데이터와 프롬프팅/문제/Ch.2-2_003_합성 데이터 생성.ipynb"
+    },
+    {
+      "id": "assembly-sample-2-2-01",
+      "unit": "2-2",
+      "type": "assembly",
+      "title": "Responses 번역 호출 조립",
+      "content": "Responses API 호출과 출력 텍스트 사용을 조립하세요.",
+      "requirements": [
+        "핵심 API, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "response = client.____[1].____[2](model=\"gpt-5-mini\", input=test_question, instructions=ZERO_SHOT_PROMPT)\nresult = {\"korean\": response.____[3]}",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "responses"
+        },
+        {
+          "id": "slot-2",
+          "answer": "create"
+        },
+        {
+          "id": "slot-3",
+          "answer": "output_text"
+        }
+      ],
+      "tokens": [
+        "responses",
+        "create",
+        "output_text",
+        "None",
+        "transform"
+      ],
+      "solution": "response = client.responses.create(model=\"gpt-5-mini\", input=test_question, instructions=ZERO_SHOT_PROMPT)\nresult = {\"korean\": response.output_text}",
+      "protectedRanges": [],
+      "explanation": "샘플 노트북의 완성 코드를 기준으로 핵심 호출 흐름을 조립합니다.",
+      "example": "",
+      "source": "samples/chapter_2_2_hw/(과제-문제) 2-2_합성 데이터 생성 과제.ipynb",
+      "origin": "sample-generated"
     }
   ]
 }

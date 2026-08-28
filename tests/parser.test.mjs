@@ -5,10 +5,10 @@ import fs from 'node:fs';
 import { BLANK_MARKER_PATTERN, loadProjectProblems } from '../scripts/parser.mjs';
 
 const problems = loadProjectProblems(path.resolve('.'));
-test('원본 문제는 지원하는 세 문제 유형만 포함한다', () => {
+test('원본 문제는 지원하는 네 문제 유형만 포함한다', () => {
   assert.ok(problems.length > 0);
-  assert.ok(problems.every((item) => ['flow', 'api', 'assembly'].includes(item.type)));
-  assert.ok(['flow', 'api', 'assembly'].every((type) => problems.some((item) => item.type === type)));
+  assert.ok(problems.every((item) => ['assessment', 'flow', 'api', 'assembly'].includes(item.type)));
+  assert.ok(['assessment', 'flow', 'api', 'assembly'].every((type) => problems.some((item) => item.type === type)));
 });
 test('ID가 중복되지 않는다', () => assert.equal(new Set(problems.map((item) => item.id)).size, problems.length));
 test('난이도 분류를 생성하지 않는다', () => assert.ok(problems.every((item) => !('difficulty' in item))));
@@ -22,9 +22,30 @@ test('API 문제에는 채점 가능한 빈칸이 있다', () => {
   assert.ok(api.every((item) => item.blanks.length > 0));
   assert.ok(api.every((item) => item.blanks.every((blank) => blank.answer && blank.choices.includes(blank.answer))));
 });
+test('개념 확인 문제는 단일 정답 4지선다형이다', () => {
+  const flow = problems.filter((item) => item.type === 'flow');
+  assert.ok(flow.length > 0);
+  assert.ok(flow.every((item) => item.choices.length === 4 && new Set(item.choices).size === 4));
+  assert.ok(flow.every((item) => item.choices.includes(item.answer) && item.solution === item.answer));
+  assert.ok(flow.every((item) => !('acceptedAnswers' in item) && !('keywords' in item)));
+  assert.ok(flow.every((item) => !item.requirements.includes('정답이 하나인 선택지를 고른다.')));
+  const positions = flow.map((item) => item.choices.indexOf(item.answer));
+  assert.ok([0, 1, 2, 3].every((position) => positions.filter((item) => item === position).length >= Math.floor(flow.length / 4)));
+  const displayPositions = [...flow].sort((a, b) => a.unit.localeCompare(b.unit, 'ko', { numeric: true })).map((item) => item.choices.indexOf(item.answer));
+  assert.ok(displayPositions.every((position, index) => index < 2 || position !== displayPositions[index - 1] || position !== displayPositions[index - 2]));
+});
+test('과목평가 탭은 제시된 60개 토픽의 객관식 100문제를 제공한다', () => {
+  const assessment = problems.filter((item) => item.type === 'assessment');
+  assert.equal(assessment.length, 100);
+  assert.equal(new Set(assessment.map((item) => item.topic)).size, 60);
+  assert.ok(assessment.every((item) => item.requirements.length === 0));
+  assert.ok(assessment.every((item) => item.choices.length === 4 && new Set(item.choices).size === 4));
+  assert.ok(assessment.every((item) => item.choices.includes(item.answer) && item.solution === item.answer));
+  assert.deepEqual([0, 1, 2, 3].map((position) => assessment.filter((item) => item.choices.indexOf(item.answer) === position).length), [25, 25, 25, 25]);
+});
 test('문제 파일은 개념형과 중복 통합된 API 문제의 출제 규칙을 따른다', () => {
   const sample = problems;
-  assert.ok(sample.filter((item) => item.type === 'flow').every((item) => item.keywords.length >= 1 && item.keywords.length <= 2));
+  assert.ok(sample.filter((item) => item.type === 'flow').every((item) => item.choices.length === 4 && item.choices.includes(item.answer)));
   assert.ok(sample.filter((item) => item.type === 'api').every((item) => item.content.includes('전체 과정 중') || item.id === 'api-generated-001'));
   assert.ok(sample.filter((item) => item.type === 'api').every((item) => item.blanks.length >= 1 && item.blanks.length <= 5));
   const solutions = sample.filter((item) => item.type === 'api').map((item) => item.solution.replace(/\s+/g, ' ').trim());
@@ -32,7 +53,7 @@ test('문제 파일은 개념형과 중복 통합된 API 문제의 출제 규칙
   assert.deepEqual(validateSampleIds(sample), []);
 });
 test('문제 원본은 유형별·단원별 파일로 분리되어 있다', () => {
-  for (const type of ['flow', 'api', 'assembly']) {
+  for (const type of ['assessment', 'flow', 'api', 'assembly']) {
     const directory = path.resolve('problems', type);
     const files = fs.readdirSync(directory).filter((file) => file.endsWith('.json')).sort();
     assert.ok(files.length > 0);
@@ -40,7 +61,7 @@ test('문제 원본은 유형별·단원별 파일로 분리되어 있다', () =
       const items = JSON.parse(fs.readFileSync(path.join(directory, file), 'utf8')).problems;
       assert.ok(items.length > 0);
       assert.ok(items.every((item) => item.type === type));
-      assert.ok(items.every((item) => item.unit === path.basename(file, '.json')));
+      if (type !== 'assessment') assert.ok(items.every((item) => item.unit === path.basename(file, '.json')));
     }
   }
   assert.equal(fs.existsSync(path.resolve('problems/exam_questions.json')), false);
@@ -54,10 +75,22 @@ test('1-1과 5-2 신규 문제는 유형별 출제 수와 빈칸 계약을 만�
     assert.ok(api.every((item) => !item.blanks.reduce((code, blank, index) => code.replace(`____[${index + 1}]`, blank.answer), item.skeleton).includes('____[')));
   }
 });
+test('samples 노트북에서 세 유형의 추가 문제를 단원별로 생성한다', () => {
+  const sampleDerived = problems.filter((item) => item.id.includes('-sample-'));
+  assert.equal(sampleDerived.length, 27);
+  for (const type of ['flow', 'api', 'assembly']) assert.equal(sampleDerived.filter((item) => item.type === type).length, 9);
+  assert.ok(sampleDerived.every((item) => item.source.startsWith('samples/') && item.source.endsWith('.ipynb')));
+  assert.ok(sampleDerived.every((item) => fs.existsSync(path.resolve(item.source))));
+});
 test('TODO 코드 조립 문제는 클릭 가능한 토큰과 슬롯 계약을 만족한다', () => {
   const assembly = problems.filter((item) => item.type === 'assembly');
-  assert.equal(assembly.length, 46);
-  assert.ok(assembly.every((item) => item.source.includes('/문제/') && item.source.endsWith('.ipynb')));
+  const sampleGenerated = assembly.filter((item) => item.origin === 'sample-generated');
+  const existing = assembly.filter((item) => item.origin !== 'sample-generated');
+  assert.equal(assembly.length, 55);
+  assert.equal(existing.length, 46);
+  assert.equal(sampleGenerated.length, 9);
+  assert.ok(existing.every((item) => item.source.includes('/문제/') && item.source.endsWith('.ipynb')));
+  assert.ok(sampleGenerated.every((item) => item.source.startsWith('samples/') && item.source.endsWith('.ipynb')));
   assert.ok(assembly.every((item) => item.slots.length >= 1));
   assert.ok(assembly.every((item) => [...item.skeleton.matchAll(BLANK_MARKER_PATTERN)].length === item.slots.length));
   assert.ok(assembly.every((item) => item.slots.every((slot) => item.tokens.includes(slot.answer))));
@@ -92,9 +125,10 @@ test('긴 조립 문제의 보통 난이도는 핵심 개념 슬롯만 남긴다
     assert.deepEqual(normalSlots.map((slot) => slot.answer), answers);
   }
 });
-test('세 번째 탭은 클릭 방식의 TODO 코드 조립 UI를 사용한다', () => {
+test('네 번째 탭은 클릭 방식의 TODO 코드 조립 UI를 사용한다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
   const html = fs.readFileSync(path.resolve('public/index.html'), 'utf8');
+  const styles = fs.readFileSync(path.resolve('public/styles.css'), 'utf8');
   assert.match(html, /data-type="assembly"[^>]*>TODO 코드 조립/);
   assert.match(client, /function renderAssembly\(/);
   assert.match(client, /function placeAssemblyToken\(/);
@@ -117,6 +151,8 @@ test('세 번째 탭은 클릭 방식의 TODO 코드 조립 UI를 사용한다',
   assert.match(client, /function nextEmptyAssemblySlot\(/);
   assert.match(client, /정답 코드는 모두 맞힌 뒤/);
   assert.match(client, /const resultClass = result === true/);
+  assert.match(client, /item\.origin !== 'sample-generated' \? 'legacy-assembly'/);
+  assert.match(styles, /\.problem-link\.legacy-assembly>span\{color:/);
 });
 test('Python 던더 이름은 API 빈칸으로 인식하지 않는다', () => {
   assert.deepEqual([...`def __init__(self):\n    ____[1]\n    return ①`.matchAll(BLANK_MARKER_PATTERN)].map((match) => match[0]), ['____[1]']);
@@ -157,15 +193,28 @@ test('문제 목록은 단원별 접기·펼치기 구조를 사용한다', () =
   assert.match(client, /unit\.localeCompare\(b\.unit, 'ko', \{ numeric: true \}\)/);
   assert.doesNotMatch(client, /\$\{index \+ 1\}\. \$\{escapeHtml\(item\.title\)\}/);
 });
-test('모바일에서는 세 문제 탭과 본문이 화면 폭 안에서 축소된다', () => {
+test('모바일에서는 화면 밀도를 높이고 TODO 코드를 상하좌우로 스크롤한다', () => {
   const styles = fs.readFileSync(path.resolve('public/styles.css'), 'utf8');
-  assert.match(styles, /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(styles, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
   assert.match(styles, /\.tabs button\{[^}]*font-size:clamp\(/);
-  assert.match(styles, /main\{padding:0 10px 34px\}/);
+  assert.match(styles, /body\{font-size:clamp\(13px,3\.4vw,15px\)\}/);
+  assert.match(styles, /main\{padding:0 6px 28px\}/);
   assert.match(styles, /@media\(max-width:380px\)/);
   assert.match(styles, /\.token-group>div\{display:flex;flex-wrap:wrap;overflow-x:visible/);
-  assert.match(styles, /\.code-token\{flex:0 1 auto;[^}]*min-height:34px/);
-  assert.match(styles, /\.token-bank\{max-height:min\(38vh,320px\);[^}]*overflow-y:auto/);
+  assert.match(styles, /\.token-group h4\{margin:0 0 2px;font-size:\.68rem\}/);
+  assert.match(styles, /\.code-token\{flex:0 1 auto;[^}]*min-height:30px/);
+  assert.match(styles, /\.token-bank\{max-height:min\(34vh,280px\);gap:5px;[^}]*overflow-y:auto/);
+  assert.match(styles, /\.assembly-code\{max-height:min\(46vh,360px\);[^}]*overflow:auto;[^}]*font-size:11px/);
+});
+test('가장 왼쪽 과목평가 탭은 라디오 선택 방식의 객관식을 사용한다', () => {
+  const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');
+  const html = fs.readFileSync(path.resolve('public/index.html'), 'utf8');
+  assert.match(html, /data-type="assessment"[^>]*aria-selected="true"[^>]*>과목평가 문제토픽/);
+  assert.ok(html.indexOf('data-type="assessment"') < html.indexOf('data-type="flow"'));
+  assert.match(client, /type="radio" name="flowChoice"/);
+  assert.match(client, /selection === problem\.answer/);
+  assert.match(client, /function orderedFlowChoices\(/);
+  assert.doesNotMatch(client, /acceptedAnswers|problem\.keywords|id="flowAnswer"/);
 });
 test('GitHub Pages 정적 배포는 상대 경로 데이터만 사용하고 신고 기능을 포함하지 않는다', () => {
   const client = fs.readFileSync(path.resolve('public/app.js'), 'utf8');

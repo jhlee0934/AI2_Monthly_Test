@@ -1,0 +1,52 @@
+{
+  "problems": [
+    {
+      "id": "assembly-sample-5-1-01",
+      "unit": "5-1",
+      "type": "assembly",
+      "title": "추론 Chat Template 조립",
+      "content": "추론용 메시지에 생성 프롬프트를 추가해 텍스트로 변환하세요.",
+      "requirements": [
+        "핵심 API, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "text = tokenizer.____[1](messages, ____[2]=____[3], ____[4]=____[5])",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "apply_chat_template"
+        },
+        {
+          "id": "slot-2",
+          "answer": "tokenize"
+        },
+        {
+          "id": "slot-3",
+          "answer": "False"
+        },
+        {
+          "id": "slot-4",
+          "answer": "add_generation_prompt"
+        },
+        {
+          "id": "slot-5",
+          "answer": "True"
+        }
+      ],
+      "tokens": [
+        "apply_chat_template",
+        "tokenize",
+        "False",
+        "add_generation_prompt",
+        "True",
+        "None",
+        "transform"
+      ],
+      "solution": "text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)",
+      "protectedRanges": [],
+      "explanation": "샘플 노트북의 완성 코드를 기준으로 핵심 호출 흐름을 조립합니다.",
+      "example": "",
+      "source": "samples/chapter_5_1_ws/(실습-문제) 5-1_PEFT 파라미터 효율적 튜닝.ipynb",
+      "origin": "sample-generated"
+    }
+  ]
+}

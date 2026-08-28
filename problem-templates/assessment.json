@@ -1,0 +1,14 @@
+{
+  "id": "assessment-topic-001",
+  "unit": "기초 ML",
+  "type": "assessment",
+  "topic": "평가 토픽",
+  "title": "평가 토픽 핵심 개념",
+  "content": "평가 토픽에 관한 설명으로 가장 적절한 것은?",
+  "requirements": [],
+  "choices": ["정답 설명", "오답 설명 1", "오답 설명 2", "오답 설명 3"],
+  "answer": "정답 설명",
+  "solution": "정답 설명",
+  "explanation": "정답 근거와 각 오답이 틀린 이유를 설명한다.",
+  "example": ""
+}

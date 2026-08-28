@@ -133,6 +133,51 @@
       "example": "",
       "id": "api-generated-025",
       "type": "api"
+    },
+    {
+      "id": "api-sample-051",
+      "unit": "4-2(1)",
+      "type": "api",
+      "title": "LLM Tool 바인딩",
+      "content": "전체 과정 중 LLM에 도구 목록을 바인딩하고 모델이 만든 tool call을 실행할 노드를 구성하세요.",
+      "requirements": [],
+      "skeleton": "tools = [search_policy, process_refund]\nllm_with_tools = llm.____[1](tools)\ntool_node = ____[2](tools)\nresponse = llm_with_tools.____[3](messages)",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "bind_tools",
+          "choices": [
+            "bind_tools",
+            "with_structured_output",
+            "assign",
+            "pipe"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "ToolNode",
+          "choices": [
+            "ToolNode",
+            "StateGraph",
+            "ToolMessage",
+            "Runnable"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "invoke",
+          "choices": [
+            "invoke",
+            "compile",
+            "execute",
+            "run"
+          ]
+        }
+      ],
+      "solution": "tools = [search_policy, process_refund]\nllm_with_tools = llm.bind_tools(tools)\ntool_node = ToolNode(tools)\nresponse = llm_with_tools.invoke(messages)",
+      "explanation": "`bind_tools`가 도구 스키마를 LLM에 제공하고 `ToolNode`가 선택된 호출을 실행하며 `invoke`가 메시지를 전달합니다.",
+      "example": "",
+      "source": "samples/chapter_4_2_1_ws/(실습-문제) 4-2(1)_ReAct 기반 Agent 서비스 개발.ipynb"
     }
   ]
 }

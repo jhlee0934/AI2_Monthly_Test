@@ -66,6 +66,51 @@
       "example": "",
       "id": "api-generated-003",
       "type": "api"
+    },
+    {
+      "id": "api-sample-046",
+      "unit": "2-1",
+      "type": "api",
+      "title": "BPE 토큰 경계 정규식",
+      "content": "전체 과정 중 선택한 BPE 토큰 쌍을 정확한 토큰 경계에서 병합하는 단계를 완성하세요.",
+      "requirements": [],
+      "skeleton": "bigram = re.____[1](\" \".join(pair))\npattern = re.____[2](r\"(?<!\\S)\" + bigram + r\"(?!\\S)\")\nnew_word = pattern.____[3](\"\".join(pair), word)",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "escape",
+          "choices": [
+            "escape",
+            "compile",
+            "sub",
+            "findall"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "compile",
+          "choices": [
+            "compile",
+            "escape",
+            "match",
+            "split"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "sub",
+          "choices": [
+            "sub",
+            "search",
+            "match",
+            "findall"
+          ]
+        }
+      ],
+      "solution": "bigram = re.escape(\" \".join(pair))\npattern = re.compile(r\"(?<!\\S)\" + bigram + r\"(?!\\S)\")\nnew_word = pattern.sub(\"\".join(pair), word)",
+      "explanation": "`escape`로 토큰 문자열을 안전하게 만들고 경계 패턴을 `compile`한 뒤 `sub`로 선택한 쌍만 병합합니다.",
+      "example": "",
+      "source": "samples/chapter_2_1_hw/(과제-문제) 2-1_토큰화 임베딩 심화 과제.ipynb"
     }
   ]
 }

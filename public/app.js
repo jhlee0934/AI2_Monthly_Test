@@ -1,5 +1,5 @@
 const STORAGE_KEY = 'monthly-ai-practice:v1';
-const state = { problems: [], packId: 'monthly-ai', type: 'flow', current: 0, progress: loadProgress('monthly-ai'), shuffle: false, collapsedUnits: new Set(), assemblySlotId: null, assemblyDifficulty: 'normal' };
+const state = { problems: [], packId: 'monthly-ai', type: 'assessment', current: 0, progress: loadProgress('monthly-ai'), shuffle: false, collapsedUnits: new Set(), assemblySlotId: null, assemblyDifficulty: 'normal' };
 const $ = (selector) => document.querySelector(selector);
 const els = { workspace: $('#workspace'), loading: $('#loading'), list: $('#problemList'), content: $('#content'), answer: $('#answerArea'), feedback: $('#feedback') };
 
@@ -20,6 +20,7 @@ try {
   state.packId = payload.pack?.id || 'default';
   state.progress = loadProgress(state.packId);
   state.problems = payload.problems;
+  discardLegacyFlowProgress();
   els.loading.hidden = true; els.workspace.hidden = false; render();
 } catch (error) { showFatal(error.message); }
 
@@ -30,7 +31,7 @@ function render() {
   if (items[state.current]) state.collapsedUnits.delete(`${state.type}:${items[state.current].unit}`);
   $('#count').textContent = `${items.length}개`;
   const groups = [...new Set(items.map((item) => item.unit))].map((unit) => ({ unit, entries: items.map((item, index) => ({ item, index })).filter((entry) => entry.item.unit === unit) }));
-  els.list.innerHTML = items.length ? groups.map(({ unit, entries }) => { const key = `${state.type}:${unit}`; const isOpen = !state.collapsedUnits.has(key); const panelId = `unit-${hash(key)}`; return `<section class="unit-group ${isOpen ? 'open' : ''}" data-unit-key="${escapeHtml(key)}"><button class="unit-summary" type="button" aria-expanded="${isOpen}" aria-controls="${panelId}"><span>${escapeHtml(unit)} 단원</span><small>${entries.length}문제</small></button><div class="unit-panel" id="${panelId}"><div class="unit-problems">${entries.map(({ item, index }) => `<button class="problem-link ${index === state.current ? 'active' : ''}" data-index="${index}" data-problem-id="${escapeHtml(item.id)}"><span>${escapeHtml(item.title)}</span>${problemStatusMark(item.id)}</button>`).join('')}</div></div></section>`; }).join('') : '<div class="empty">등록된 문제가 없습니다.</div>';
+  els.list.innerHTML = items.length ? groups.map(({ unit, entries }) => { const key = `${state.type}:${unit}`; const isOpen = !state.collapsedUnits.has(key); const panelId = `unit-${hash(key)}`; return `<section class="unit-group ${isOpen ? 'open' : ''}" data-unit-key="${escapeHtml(key)}"><button class="unit-summary" type="button" aria-expanded="${isOpen}" aria-controls="${panelId}"><span>${escapeHtml(unit)} 단원</span><small>${entries.length}문제</small></button><div class="unit-panel" id="${panelId}"><div class="unit-problems">${entries.map(({ item, index }) => `<button class="problem-link ${index === state.current ? 'active' : ''} ${item.type === 'assembly' && item.origin !== 'sample-generated' ? 'legacy-assembly' : ''}" data-index="${index}" data-problem-id="${escapeHtml(item.id)}"><span>${escapeHtml(item.title)}</span>${problemStatusMark(item.id)}</button>`).join('')}</div></div></section>`; }).join('') : '<div class="empty">등록된 문제가 없습니다.</div>';
   els.list.querySelectorAll('.unit-summary').forEach((button) => button.addEventListener('click', () => { const group = button.closest('.unit-group'); const key = group.dataset.unitKey; const willOpen = !group.classList.contains('open'); group.classList.toggle('open', willOpen); button.setAttribute('aria-expanded', String(willOpen)); if (willOpen) state.collapsedUnits.delete(key); else state.collapsedUnits.add(key); }));
   els.list.querySelectorAll('.problem-link').forEach((button) => button.addEventListener('click', () => { state.current = Number(button.dataset.index); render(); $('#problem').focus(); }));
   renderProgress(); renderProblem();
@@ -38,28 +39,28 @@ function render() {
 function renderProblem() {
   const items = filtered(); const problem = items[state.current];
   if (!problem) { $('#problem').hidden = true; return; } $('#problem').hidden = false;
-  $('#unitBadge').textContent = problem.unit; $('#statusBadge').textContent = statusLabel(statusOf(problem.id)); $('#statusBadge').className = `status ${statusOf(problem.id)}`;
+  $('#unitBadge').textContent = problem.topic || problem.unit; $('#statusBadge').textContent = statusLabel(statusOf(problem.id)); $('#statusBadge').className = `status ${statusOf(problem.id)}`;
   $('#position').textContent = `${state.current + 1} / ${items.length}`; $('#title').textContent = problem.title;
   els.content.innerHTML = `${markdown(problem.content)}${problem.requirements.length ? `<section><h3>문제 요구사항</h3><ul>${problem.requirements.map((item) => `<li>${inline(item)}</li>`).join('')}</ul></section>` : ''}${problem.constraints?.length ? `<section><h3>제약 조건</h3><ul>${problem.constraints.map((item) => `<li>${inline(item)}</li>`).join('')}</ul></section>` : ''}${problem.skeleton && problem.type === 'flow' ? `<section><h3>제공 코드 또는 스켈레톤</h3>${code(problem.skeleton)}</section>` : ''}${problem.example ? `<section><h3>예시 입력·출력</h3>${code(problem.example)}</section>` : ''}`;
   els.feedback.innerHTML = '';
-  if (problem.type === 'flow') renderFlow(problem); else if (problem.type === 'api') renderApi(problem); else renderAssembly(problem);
+  if (problem.type === 'flow' || problem.type === 'assessment') renderFlow(problem); else if (problem.type === 'api') renderApi(problem); else renderAssembly(problem);
   $('#previous').disabled = state.current === 0; $('#next').disabled = state.current === items.length - 1;
 }
 function renderFlow(problem) {
   const saved = state.progress[problem.id] || {};
-  els.answer.innerHTML = `<section><label for="flowAnswer"><h3>내 답안</h3></label><textarea id="flowAnswer" rows="10" placeholder="핵심 개념과 판단 근거를 서술하세요.">${escapeHtml(saved.answer || '')}</textarea><button id="submitFlow">답안 제출</button></section>`;
-  $('#flowAnswer').addEventListener('input', (event) => update(problem.id, { answer: event.target.value, status: saved.status === 'unanswered' ? 'unanswered' : undefined }, false));
-  $('#submitFlow').addEventListener('click', () => gradeFlow(problem, $('#flowAnswer').value)); if (saved.submitted) showFlowFeedback(problem, saved);
+  const choices = orderedFlowChoices(problem);
+  els.answer.innerHTML = `<section><fieldset><legend>정답을 하나 선택하세요.</legend>${choices.map((choice, index) => `<label class="choice"><input type="radio" name="flowChoice" value="${escapeHtml(choice)}" ${saved.selection === choice ? 'checked' : ''}><span>${index + 1}. ${escapeHtml(choice)}</span></label>`).join('')}</fieldset><button id="submitFlow">정답 제출</button></section>`;
+  els.answer.querySelectorAll('input[name="flowChoice"]').forEach((input) => input.addEventListener('change', () => update(problem.id, { selection: input.value }, false)));
+  $('#submitFlow').addEventListener('click', () => gradeFlow(problem)); if (saved.submitted) showFlowFeedback(problem, saved);
 }
-function gradeFlow(problem, answer) {
-  if (!answer.trim()) return message('답안을 먼저 입력해 주세요.', 'error');
-  const normalized = normalize(answer); const exact = problem.acceptedAnswers.some((item) => normalize(item) === normalized);
-  const hits = problem.keywords.filter((keyword) => normalized.includes(normalize(keyword))); const ratio = problem.keywords.length ? hits.length / problem.keywords.length : 0;
-  const status = exact || ratio >= .75 ? 'correct' : ratio >= .35 ? 'partial' : 'incorrect';
-  const missing = problem.keywords.filter((item) => !hits.includes(item)); const saved = { answer, submitted: true, status, missing };
+function gradeFlow(problem) {
+  const selection = els.answer.querySelector('input[name="flowChoice"]:checked')?.value;
+  if (!selection) return message('정답을 먼저 선택해 주세요.', 'error');
+  const saved = { selection, submitted: true, status: selection === problem.answer ? 'correct' : 'incorrect' };
   update(problem.id, saved); showFlowFeedback(problem, saved);
 }
-function showFlowFeedback(problem, saved) { els.feedback.innerHTML = `<div class="feedback ${saved.status}"><h3>${statusLabel(saved.status)}</h3>${saved.missing?.length && saved.status !== 'correct' ? `<p>다시 확인할 핵심 개념: ${saved.missing.map((item) => `<code>${escapeHtml(item)}</code>`).join(', ')}</p>` : ''}<details open><summary>모범 답안과 해설</summary>${problem.solution ? code(problem.solution) : '<p>원문에 별도 모범 답안이 없습니다.</p>'}${markdown(problem.explanation)}</details></div>`; }
+function showFlowFeedback(problem, saved) { els.feedback.innerHTML = `<div class="feedback ${saved.status}"><h3>${statusLabel(saved.status)}</h3>${saved.status === 'incorrect' ? `<p>선택한 답: ${escapeHtml(saved.selection)}</p>` : ''}<details open><summary>정답과 해설</summary><p><strong>정답:</strong> ${escapeHtml(problem.answer)}</p>${markdown(problem.explanation)}</details></div>`; }
+function orderedFlowChoices(problem) { if (!state.shuffle) return problem.choices; return [...problem.choices].sort((a, b) => hash(`${problem.id}${a}`) - hash(`${problem.id}${b}`)); }
 function renderApi(problem) {
   const saved = state.progress[problem.id] || { selections: {} };
   const blanks = problem.blanks || [];
@@ -80,7 +81,7 @@ function renderAssembly(problem) {
   const groups = groupAssemblyTokens(spec);
   const activeIndex = Math.max(0, spec.slots.findIndex((slot) => slot.id === state.assemblySlotId));
   const filledCount = spec.slots.filter((slot) => selections[slot.id]).length;
-  els.answer.innerHTML = `<section class="assembly"><div class="assembly-head"><div><h3>TODO 코드 조립</h3><p>채울 슬롯을 누른 뒤 코드 조각을 선택하세요. 선택 후 다음 빈 슬롯으로 자동 이동합니다.</p></div></div>${state.assemblyDifficulty === 'hard' ? '<p class="difficulty-note">어려움: 제공된 프롬프트를 제외한 완성 코드의 키워드·변수·메서드·값을 모두 직접 배치합니다.</p>' : ''}<div class="slot-navigator"><strong id="assemblySlotProgress">현재 슬롯 ${activeIndex + 1} / ${spec.slots.length}</strong><span>입력 ${filledCount} / ${spec.slots.length}</span><div><button type="button" id="previousAssemblySlot" class="ghost" aria-label="이전 코드 슬롯">← 이전</button><button type="button" id="nextAssemblySlot" class="ghost" aria-label="다음 코드 슬롯">다음 →</button></div></div><pre class="assembly-code" tabindex="0" aria-label="가로로 스크롤할 수 있는 코드 조립 영역"><code>${renderAssemblyCode(spec, selections, saved)}</code></pre><div class="slot-help"><button type="button" id="revealAssemblySlot" class="ghost">선택 슬롯 정답 보기</button><small>확인한 슬롯은 제출 시 오답으로 처리됩니다.</small></div><div class="token-bank" aria-label="사용 가능한 코드 조각">${groups.map(({ label, tokens }) => `<section class="token-group"><h4>${label}</h4><div>${tokens.map((token) => `<button type="button" class="code-token" data-token="${escapeHtml(token)}"><code>${escapeHtml(token)}</code></button>`).join('')}</div></section>`).join('')}</div><div class="assembly-actions"><div><button type="button" id="clearAssembly" class="ghost">선택 슬롯 비우기</button><button type="button" id="resetAssembly" class="ghost" ${filledCount ? '' : 'disabled'}>전체 비우기</button></div><button type="button" id="submitAssembly">코드 확인</button></div><div id="assemblyResults" class="blank-results"></div></section>`;
+  els.answer.innerHTML = `<section class="assembly"><div class="assembly-head"><div><h3>TODO 코드 조립</h3><p>채울 슬롯을 누른 뒤 코드 조각을 선택하세요. 선택 후 다음 빈 슬롯으로 자동 이동합니다.</p></div></div>${state.assemblyDifficulty === 'hard' ? '<p class="difficulty-note">어려움: 제공된 프롬프트를 제외한 완성 코드의 키워드·변수·메서드·값을 모두 직접 배치합니다.</p>' : ''}<div class="slot-navigator"><strong id="assemblySlotProgress">현재 슬롯 ${activeIndex + 1} / ${spec.slots.length}</strong><span>입력 ${filledCount} / ${spec.slots.length}</span><div><button type="button" id="previousAssemblySlot" class="ghost" aria-label="이전 코드 슬롯">← 이전</button><button type="button" id="nextAssemblySlot" class="ghost" aria-label="다음 코드 슬롯">다음 →</button></div></div><pre class="assembly-code" tabindex="0" aria-label="상하좌우로 스크롤할 수 있는 코드 조립 영역"><code>${renderAssemblyCode(spec, selections, saved)}</code></pre><div class="slot-help"><button type="button" id="revealAssemblySlot" class="ghost">선택 슬롯 정답 보기</button><small>확인한 슬롯은 제출 시 오답으로 처리됩니다.</small></div><div class="token-bank" aria-label="사용 가능한 코드 조각">${groups.map(({ label, tokens }) => `<section class="token-group"><h4>${label}</h4><div>${tokens.map((token) => `<button type="button" class="code-token" data-token="${escapeHtml(token)}"><code>${escapeHtml(token)}</code></button>`).join('')}</div></section>`).join('')}</div><div class="assembly-actions"><div><button type="button" id="clearAssembly" class="ghost">선택 슬롯 비우기</button><button type="button" id="resetAssembly" class="ghost" ${filledCount ? '' : 'disabled'}>전체 비우기</button></div><button type="button" id="submitAssembly">코드 확인</button></div><div id="assemblyResults" class="blank-results"></div></section>`;
   els.answer.querySelectorAll('.assembly-slot').forEach((button) => button.addEventListener('click', () => selectAssemblySlot(button.dataset.slotId)));
   els.answer.querySelectorAll('.code-token').forEach((button) => button.addEventListener('click', () => placeAssemblyToken(problem, button.dataset.token)));
   $('#clearAssembly').addEventListener('click', () => clearAssemblySlot(problem));
@@ -161,7 +162,7 @@ function groupAssemblyTokens(spec) {
 }
 function selectAssemblySlot(id) { if (!id) return; state.assemblySlotId = id; const slots = [...els.answer.querySelectorAll('.assembly-slot')]; slots.forEach((button) => button.classList.toggle('selected', button.dataset.slotId === id)); const index = slots.findIndex((button) => button.dataset.slotId === id); const progress = $('#assemblySlotProgress'); if (progress && index >= 0) progress.textContent = `현재 슬롯 ${index + 1} / ${slots.length}`; requestAnimationFrame(() => ensureAssemblySlotVisible(slots[index])); }
 function moveAssemblySlot(spec, amount) { const index = spec.slots.findIndex((slot) => slot.id === state.assemblySlotId); const next = Math.min(spec.slots.length - 1, Math.max(0, index + amount)); selectAssemblySlot(spec.slots[next]?.id); }
-function ensureAssemblySlotVisible(slot) { const codeArea = slot?.closest('.assembly-code'); if (!slot || !codeArea) return; const slotBox = slot.getBoundingClientRect(); const codeBox = codeArea.getBoundingClientRect(); if (slotBox.left < codeBox.left + 16 || slotBox.right > codeBox.right - 16) codeArea.scrollTo({ left: codeArea.scrollLeft + slotBox.left - codeBox.left - codeBox.width / 2 + slotBox.width / 2, behavior: 'smooth' }); }
+function ensureAssemblySlotVisible(slot) { const codeArea = slot?.closest('.assembly-code'); if (!slot || !codeArea) return; const slotBox = slot.getBoundingClientRect(); const codeBox = codeArea.getBoundingClientRect(); let left = codeArea.scrollLeft; let top = codeArea.scrollTop; if (slotBox.left < codeBox.left + 12 || slotBox.right > codeBox.right - 12) left += slotBox.left - codeBox.left - codeBox.width / 2 + slotBox.width / 2; if (slotBox.top < codeBox.top + 12 || slotBox.bottom > codeBox.bottom - 12) top += slotBox.top - codeBox.top - codeBox.height / 2 + slotBox.height / 2; if (left !== codeArea.scrollLeft || top !== codeArea.scrollTop) codeArea.scrollTo({ left, top, behavior: 'smooth' }); }
 function placeAssemblyToken(problem, token) {
   const spec = assemblySpec(problem); const saved = assemblySaved(problem);
   const current = spec.slots.find((slot) => slot.id === state.assemblySlotId) || spec.slots.find((slot) => !saved.selections?.[slot.id]);
@@ -239,7 +240,7 @@ function move(amount) { const items = filtered(); const next = state.current + a
 function progressKey(packId) { return packId === 'monthly-ai' ? STORAGE_KEY : `${STORAGE_KEY}:${packId}`; }
 function loadProgress(packId) { try { return JSON.parse(localStorage.getItem(progressKey(packId))) || {}; } catch { return {}; } }
 function saveProgress() { localStorage.setItem(progressKey(state.packId), JSON.stringify(state.progress)); }
-function normalize(value) { return value.toLowerCase().replace(/\s+/g, '').replace(/["'`;]/g, ''); }
+function discardLegacyFlowProgress() { let changed = false; state.problems.filter((problem) => problem.type === 'flow').forEach((problem) => { const saved = state.progress[problem.id]; if (saved?.answer != null && saved.selection == null) { delete state.progress[problem.id]; changed = true; } }); if (changed) saveProgress(); }
 function hash(value) { return [...value].reduce((total, char) => (total * 31 + char.charCodeAt(0)) >>> 0, 7); }
 function escapeHtml(value = '') { return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]); }
 function inline(value = '') { return escapeHtml(value).replace(/`([^`]+)`/g, '<code>$1</code>'); }

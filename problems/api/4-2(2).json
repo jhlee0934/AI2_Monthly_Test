@@ -123,6 +123,51 @@
       "example": "",
       "id": "api-generated-032",
       "type": "api"
+    },
+    {
+      "id": "api-sample-052",
+      "unit": "4-2(2)",
+      "type": "api",
+      "title": "Reflection 조건부 분기",
+      "content": "전체 과정 중 reflection 결과에 따라 종료하거나 worker를 다시 실행하는 조건부 엣지를 구성하세요.",
+      "requirements": [],
+      "skeleton": "workflow_reflection.____[1](\n    \"reflection\",\n    should_continue_reflection,\n    {\"end\": ____[2], \"worker\": \"worker\"},\n)\napp_reflection = workflow_reflection.____[3]()",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "add_conditional_edges",
+          "choices": [
+            "add_conditional_edges",
+            "add_edge",
+            "add_node",
+            "set_entry_point"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "END",
+          "choices": [
+            "END",
+            "START",
+            "None",
+            "\"end\""
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "compile",
+          "choices": [
+            "compile",
+            "invoke",
+            "build",
+            "run"
+          ]
+        }
+      ],
+      "solution": "workflow_reflection.add_conditional_edges(\n    \"reflection\",\n    should_continue_reflection,\n    {\"end\": END, \"worker\": \"worker\"},\n)\napp_reflection = workflow_reflection.compile()",
+      "explanation": "`add_conditional_edges`가 분기 함수의 결과를 END 또는 worker에 매핑하고 `compile`이 실행 가능한 그래프를 만듭니다.",
+      "example": "",
+      "source": "samples/chapter_4_2_2_ws/(실습-문제) 4-2(2)_Multi-Agent 대표 패턴 학습.ipynb"
     }
   ]
 }

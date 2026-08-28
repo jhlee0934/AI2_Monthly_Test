@@ -1,0 +1,52 @@
+{
+  "problems": [
+    {
+      "id": "assembly-sample-3-1-01",
+      "unit": "3-1",
+      "type": "assembly",
+      "title": "ResNet Head 교체 조립",
+      "content": "backbone을 동결하고 새 Linear 분류기를 연결하세요.",
+      "requirements": [
+        "핵심 API, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "for param in model.____[1]():\n    param.____[2] = ____[3]\nmodel.fc = nn.____[4](model.fc.____[5], num_classes)",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "parameters"
+        },
+        {
+          "id": "slot-2",
+          "answer": "requires_grad"
+        },
+        {
+          "id": "slot-3",
+          "answer": "False"
+        },
+        {
+          "id": "slot-4",
+          "answer": "Linear"
+        },
+        {
+          "id": "slot-5",
+          "answer": "in_features"
+        }
+      ],
+      "tokens": [
+        "parameters",
+        "requires_grad",
+        "False",
+        "Linear",
+        "in_features",
+        "None",
+        "transform"
+      ],
+      "solution": "for param in model.parameters():\n    param.requires_grad = False\nmodel.fc = nn.Linear(model.fc.in_features, num_classes)",
+      "protectedRanges": [],
+      "explanation": "샘플 노트북의 완성 코드를 기준으로 핵심 호출 흐름을 조립합니다.",
+      "example": "",
+      "source": "samples/chapter_3_1_ws/(실습-문제) 3-1_Transfer Learning 기반의 CNN 모델 학습.ipynb",
+      "origin": "sample-generated"
+    }
+  ]
+}

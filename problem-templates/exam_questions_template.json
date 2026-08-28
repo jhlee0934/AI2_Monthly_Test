@@ -2,9 +2,9 @@
   "problems": [
     {
       "id": "flow-example-001", "unit": "단원", "type": "flow", "title": "개념 확인 문제",
-      "content": "개념의 원리와 사용 이유를 설명하세요.", "requirements": ["핵심 원리를 설명한다."],
-      "acceptedAnswers": ["완전한 모범 답안"], "keywords": ["핵심 키워드"],
-      "solution": "완전한 모범 답안", "explanation": "정답의 근거와 흔한 실수를 설명합니다.", "example": ""
+      "content": "개념의 원리와 사용 이유로 옳은 것을 고르세요.", "requirements": [],
+      "choices": ["올바른 설명", "인접 개념을 설명한 오답", "순서를 뒤바꾼 오답", "효과를 반대로 설명한 오답"],
+      "answer": "올바른 설명", "solution": "올바른 설명", "explanation": "정답의 근거와 각 오답이 틀린 이유를 설명합니다.", "example": ""
     },
     {
       "id": "api-example-001", "unit": "단원", "type": "api", "title": "API 빈칸 문제",

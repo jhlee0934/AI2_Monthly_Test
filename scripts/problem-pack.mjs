@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const TYPES = new Set(['flow', 'api', 'assembly']);
+const TYPES = new Set(['assessment', 'flow', 'api', 'assembly']);
 
 export function loadActiveProblemPack(root) {
   const configPath = path.join(root, 'problem-pack.config.json');
@@ -45,14 +45,17 @@ export function validateProblems(problems) {
     for (const field of ['id', 'unit', 'type', 'title']) if (typeof problem[field] !== 'string' || !problem[field].trim()) errors.push(`${at}: ${field}는 비어 있지 않은 문자열이어야 합니다.`);
     if (typeof problem.content !== 'string') errors.push(`${at}: content는 문자열이어야 합니다.`);
     if (problem.id) { if (ids.has(problem.id)) errors.push(`${at}: ID '${problem.id}'가 중복됩니다.`); ids.add(problem.id); }
-    if (!TYPES.has(problem.type)) errors.push(`${at}: type은 flow, api 또는 assembly여야 합니다.`);
+    if (!TYPES.has(problem.type)) errors.push(`${at}: type은 assessment, flow, api 또는 assembly여야 합니다.`);
     if (!Array.isArray(problem.requirements)) errors.push(`${at}: requirements는 문자열 배열이어야 합니다.`);
     else if (problem.requirements.some((item) => typeof item !== 'string')) errors.push(`${at}: requirements의 모든 항목은 문자열이어야 합니다.`);
     if (problem.constraints != null && (!Array.isArray(problem.constraints) || problem.constraints.some((item) => typeof item !== 'string'))) errors.push(`${at}: constraints는 문자열 배열이어야 합니다.`);
     for (const field of ['skeleton', 'example', 'solution', 'explanation']) if (problem[field] != null && typeof problem[field] !== 'string') errors.push(`${at}: ${field}는 문자열이어야 합니다.`);
-    if (problem.type === 'flow') {
-      if (!Array.isArray(problem.keywords) || !problem.keywords.length) errors.push(`${at}: 개념 확인 주관식(flow) 문제에는 keywords가 한 개 이상 필요합니다.`);
-      if (!Array.isArray(problem.acceptedAnswers)) errors.push(`${at}: acceptedAnswers는 배열이어야 합니다.`);
+    if (problem.type === 'flow' || problem.type === 'assessment') {
+      if (!Array.isArray(problem.choices) || problem.choices.length !== 4 || problem.choices.some((choice) => typeof choice !== 'string' || !choice.trim()) || new Set(problem.choices).size !== 4) errors.push(`${at}: 개념 확인 객관식(flow) 문제에는 중복 없는 문자열 선택지 4개가 필요합니다.`);
+      if (typeof problem.answer !== 'string' || !problem.answer.trim()) errors.push(`${at}: 개념 확인 객관식(flow) 문제에는 문자열 answer가 필요합니다.`);
+      else if (Array.isArray(problem.choices) && !problem.choices.includes(problem.answer)) errors.push(`${at}: flow choices에 answer가 포함되어야 합니다.`);
+      if ('acceptedAnswers' in problem || 'keywords' in problem) errors.push(`${at}: 객관식 flow 문제에는 주관식 전용 필드를 사용할 수 없습니다.`);
+      if (problem.type === 'assessment' && (typeof problem.topic !== 'string' || !problem.topic.trim())) errors.push(`${at}: assessment 문제에는 topic이 필요합니다.`);
     }
     if (problem.type === 'api') {
       if (!Array.isArray(problem.blanks) || !problem.blanks.length) errors.push(`${at}: api 문제에는 blanks가 한 개 이상 필요합니다.`);
@@ -63,6 +66,7 @@ export function validateProblems(problems) {
       });
     }
     if (problem.type === 'assembly') {
+      if (problem.origin != null && problem.origin !== 'sample-generated') errors.push(`${at}: assembly origin은 sample-generated만 사용할 수 있습니다.`);
       if (!Array.isArray(problem.slots) || !problem.slots.length) errors.push(`${at}: assembly 문제에는 slots가 한 개 이상 필요합니다.`);
       else {
         const slotIds = new Set();

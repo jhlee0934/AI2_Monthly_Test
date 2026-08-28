@@ -242,6 +242,51 @@
       "example": "",
       "id": "api-generated-033",
       "type": "api"
+    },
+    {
+      "id": "api-sample-053",
+      "unit": "5-1",
+      "type": "api",
+      "title": "SFT 유효 배치 구성",
+      "content": "전체 과정 중 장치당 배치와 gradient accumulation을 함께 설정해 유효 배치 크기를 구성하세요.",
+      "requirements": [],
+      "skeleton": "train_cfg = ____[1](\n    output_dir=\"outputs-text2sql\",\n    per_device_train_batch_size=____[2],\n    gradient_accumulation_steps=____[3],\n    learning_rate=5e-5,\n    max_steps=100,\n)",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "SFTConfig",
+          "choices": [
+            "SFTConfig",
+            "LoraConfig",
+            "TrainingArguments",
+            "SFTTrainer"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "1",
+          "choices": [
+            "1",
+            "2",
+            "4",
+            "8"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "4",
+          "choices": [
+            "4",
+            "1",
+            "2",
+            "8"
+          ]
+        }
+      ],
+      "solution": "train_cfg = SFTConfig(\n    output_dir=\"outputs-text2sql\",\n    per_device_train_batch_size=1,\n    gradient_accumulation_steps=4,\n    learning_rate=5e-5,\n    max_steps=100,\n)",
+      "explanation": "`SFTConfig`에서 장치당 배치 1과 누적 단계 4를 조합해 매 스텝의 메모리 부담을 낮추면서 유효 배치를 구성합니다.",
+      "example": "",
+      "source": "samples/chapter_5_1_hw/(과제-문제) 5-1_PEFT 파라미터 효율적 튜닝.ipynb"
     }
   ]
 }

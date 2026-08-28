@@ -5,126 +5,127 @@
       "unit": "2-1",
       "type": "flow",
       "title": "토큰화와 임베딩",
-      "content": "토큰화와 임베딩에서 `토큰 ID`와 `vocabulary`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `토큰 ID`와 `vocabulary`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "토크나이저가 문자열을 vocabulary의 토큰 ID 시퀀스로 바꾸고 nn.Embedding이 각 정수 ID를 학습 가능한 고정 차원 벡터로 조회합니다."
-      ],
-      "keywords": [
-        "토큰 ID",
-        "vocabulary"
-      ],
+      "content": "토큰화와 임베딩에서 `토큰 ID`와 `vocabulary`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "토크나이저가 문자열을 vocabulary의 토큰 ID 시퀀스로 바꾸고 nn.Embedding이 각 정수 ID를 학습 가능한 고정 차원 벡터로 조회합니다.",
       "explanation": "토크나이저가 문자열을 vocabulary의 토큰 ID 시퀀스로 바꾸고 nn.Embedding이 각 정수 ID를 학습 가능한 고정 차원 벡터로 조회합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `토큰 ID`와 `vocabulary`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "빈도가 높은 인접 쌍을 새 토큰으로 추가해 vocabulary는 확장되고 자주 등장하는 문자열은 더 적은 토큰으로 표현됩니다.",
+        "토크나이저가 문자열을 vocabulary의 토큰 ID 시퀀스로 바꾸고 nn.Embedding이 각 정수 ID를 학습 가능한 고정 차원 벡터로 조회합니다.",
+        "decoder state와 각 encoder state의 점수를 계산해 softmax 가중치를 만들고, 그 가중치로 encoder states를 가중합해 context vector를 얻습니다.",
+        "차원이 커질수록 내적 크기가 커져 softmax가 포화되는 것을 줄이고 안정적인 기울기를 유지하기 위해 sqrt(head_dim)으로 스케일링합니다."
+      ],
+      "answer": "토크나이저가 문자열을 vocabulary의 토큰 ID 시퀀스로 바꾸고 nn.Embedding이 각 정수 ID를 학습 가능한 고정 차원 벡터로 조회합니다."
     },
     {
       "id": "flow-generated-011",
       "unit": "2-1",
       "type": "flow",
       "title": "BPE 병합",
-      "content": "BPE 병합에서 `인접 토큰 쌍`와 `병합`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `인접 토큰 쌍`와 `병합`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "빈도가 높은 인접 쌍을 새 토큰으로 추가해 vocabulary는 확장되고 자주 등장하는 문자열은 더 적은 토큰으로 표현됩니다."
-      ],
-      "keywords": [
-        "인접 토큰 쌍",
-        "병합"
-      ],
+      "content": "BPE 병합에서 `인접 토큰 쌍`와 `병합`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "빈도가 높은 인접 쌍을 새 토큰으로 추가해 vocabulary는 확장되고 자주 등장하는 문자열은 더 적은 토큰으로 표현됩니다.",
       "explanation": "빈도가 높은 인접 쌍을 새 토큰으로 추가해 vocabulary는 확장되고 자주 등장하는 문자열은 더 적은 토큰으로 표현됩니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `인접 토큰 쌍`와 `병합`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "차원이 커질수록 내적 크기가 커져 softmax가 포화되는 것을 줄이고 안정적인 기울기를 유지하기 위해 sqrt(head_dim)으로 스케일링합니다.",
+        "hidden_states는 모든 time step의 출력을 담고 h_n은 마지막 계층의 최종 은닉 상태입니다. 단방향 1계층에서는 hidden_states의 마지막 time step과 h_n이 대응합니다.",
+        "빈도가 높은 인접 쌍을 새 토큰으로 추가해 vocabulary는 확장되고 자주 등장하는 문자열은 더 적은 토큰으로 표현됩니다.",
+        "시작 토큰은 첫 생성 step의 입력을 제공하고, 종료 토큰은 가변 길이 생성을 멈추는 조건을 제공합니다."
+      ],
+      "answer": "빈도가 높은 인접 쌍을 새 토큰으로 추가해 vocabulary는 확장되고 자주 등장하는 문자열은 더 적은 토큰으로 표현됩니다."
     },
     {
       "id": "flow-generated-020",
       "unit": "2-1",
       "type": "flow",
       "title": "RNN 출력 상태",
-      "content": "RNN 출력 상태에서 `모든 time step`와 `최종 은닉 상태`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `모든 time step`와 `최종 은닉 상태`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "hidden_states는 모든 time step의 출력을 담고 h_n은 마지막 계층의 최종 은닉 상태입니다. 단방향 1계층에서는 hidden_states의 마지막 time step과 h_n이 대응합니다."
-      ],
-      "keywords": [
-        "모든 time step",
-        "최종 은닉 상태"
-      ],
+      "content": "RNN 출력 상태에서 `모든 time step`와 `최종 은닉 상태`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "hidden_states는 모든 time step의 출력을 담고 h_n은 마지막 계층의 최종 은닉 상태입니다. 단방향 1계층에서는 hidden_states의 마지막 time step과 h_n이 대응합니다.",
       "explanation": "hidden_states는 모든 time step의 출력을 담고 h_n은 마지막 계층의 최종 은닉 상태입니다. 단방향 1계층에서는 hidden_states의 마지막 time step과 h_n이 대응합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `모든 time step`와 `최종 은닉 상태`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "decoder state와 각 encoder state의 점수를 계산해 softmax 가중치를 만들고, 그 가중치로 encoder states를 가중합해 context vector를 얻습니다.",
+        "시작 토큰은 첫 생성 step의 입력을 제공하고, 종료 토큰은 가변 길이 생성을 멈추는 조건을 제공합니다.",
+        "토크나이저가 문자열을 vocabulary의 토큰 ID 시퀀스로 바꾸고 nn.Embedding이 각 정수 ID를 학습 가능한 고정 차원 벡터로 조회합니다.",
+        "hidden_states는 모든 time step의 출력을 담고 h_n은 마지막 계층의 최종 은닉 상태입니다. 단방향 1계층에서는 hidden_states의 마지막 time step과 h_n이 대응합니다."
+      ],
+      "answer": "hidden_states는 모든 time step의 출력을 담고 h_n은 마지막 계층의 최종 은닉 상태입니다. 단방향 1계층에서는 hidden_states의 마지막 time step과 h_n이 대응합니다."
     },
     {
       "id": "flow-generated-029",
       "unit": "2-1",
       "type": "flow",
       "title": "디코더 시작·종료 토큰",
-      "content": "디코더 시작·종료 토큰에서 `첫 입력`와 `종료 조건`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `첫 입력`와 `종료 조건`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "시작 토큰은 첫 생성 step의 입력을 제공하고, 종료 토큰은 가변 길이 생성을 멈추는 조건을 제공합니다."
-      ],
-      "keywords": [
-        "첫 입력",
-        "종료 조건"
-      ],
+      "content": "디코더 시작·종료 토큰에서 `첫 입력`와 `종료 조건`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "시작 토큰은 첫 생성 step의 입력을 제공하고, 종료 토큰은 가변 길이 생성을 멈추는 조건을 제공합니다.",
       "explanation": "시작 토큰은 첫 생성 step의 입력을 제공하고, 종료 토큰은 가변 길이 생성을 멈추는 조건을 제공합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `첫 입력`와 `종료 조건`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "시작 토큰은 첫 생성 step의 입력을 제공하고, 종료 토큰은 가변 길이 생성을 멈추는 조건을 제공합니다.",
+        "decoder state와 각 encoder state의 점수를 계산해 softmax 가중치를 만들고, 그 가중치로 encoder states를 가중합해 context vector를 얻습니다.",
+        "차원이 커질수록 내적 크기가 커져 softmax가 포화되는 것을 줄이고 안정적인 기울기를 유지하기 위해 sqrt(head_dim)으로 스케일링합니다.",
+        "빈도가 높은 인접 쌍을 새 토큰으로 추가해 vocabulary는 확장되고 자주 등장하는 문자열은 더 적은 토큰으로 표현됩니다."
+      ],
+      "answer": "시작 토큰은 첫 생성 step의 입력을 제공하고, 종료 토큰은 가변 길이 생성을 멈추는 조건을 제공합니다."
     },
     {
       "id": "flow-generated-038",
       "unit": "2-1",
       "type": "flow",
       "title": "Luong Attention",
-      "content": "Luong Attention에서 `score`와 `softmax`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `score`와 `softmax`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "decoder state와 각 encoder state의 점수를 계산해 softmax 가중치를 만들고, 그 가중치로 encoder states를 가중합해 context vector를 얻습니다."
-      ],
-      "keywords": [
-        "score",
-        "softmax"
-      ],
+      "content": "Luong Attention에서 `score`와 `softmax`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "decoder state와 각 encoder state의 점수를 계산해 softmax 가중치를 만들고, 그 가중치로 encoder states를 가중합해 context vector를 얻습니다.",
       "explanation": "decoder state와 각 encoder state의 점수를 계산해 softmax 가중치를 만들고, 그 가중치로 encoder states를 가중합해 context vector를 얻습니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `score`와 `softmax`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "hidden_states는 모든 time step의 출력을 담고 h_n은 마지막 계층의 최종 은닉 상태입니다. 단방향 1계층에서는 hidden_states의 마지막 time step과 h_n이 대응합니다.",
+        "decoder state와 각 encoder state의 점수를 계산해 softmax 가중치를 만들고, 그 가중치로 encoder states를 가중합해 context vector를 얻습니다.",
+        "토크나이저가 문자열을 vocabulary의 토큰 ID 시퀀스로 바꾸고 nn.Embedding이 각 정수 ID를 학습 가능한 고정 차원 벡터로 조회합니다.",
+        "빈도가 높은 인접 쌍을 새 토큰으로 추가해 vocabulary는 확장되고 자주 등장하는 문자열은 더 적은 토큰으로 표현됩니다."
+      ],
+      "answer": "decoder state와 각 encoder state의 점수를 계산해 softmax 가중치를 만들고, 그 가중치로 encoder states를 가중합해 context vector를 얻습니다."
     },
     {
       "id": "flow-generated-047",
       "unit": "2-1",
       "type": "flow",
       "title": "Scaled Dot-Product",
-      "content": "Scaled Dot-Product에서 `sqrt(head_dim)`와 `softmax`의 의미 또는 역할을 중심으로 간단히 설명하세요. 관련 없는 개념까지 나열할 필요는 없습니다.",
-      "requirements": [
-        "답변에 `sqrt(head_dim)`와 `softmax`을(를) 포함한다.",
-        "핵심 결론과 이유를 2~4문장으로 설명한다."
-      ],
-      "acceptedAnswers": [
-        "차원이 커질수록 내적 크기가 커져 softmax가 포화되는 것을 줄이고 안정적인 기울기를 유지하기 위해 sqrt(head_dim)으로 스케일링합니다."
-      ],
-      "keywords": [
-        "sqrt(head_dim)",
-        "softmax"
-      ],
+      "content": "Scaled Dot-Product에서 `sqrt(head_dim)`와 `softmax`의 의미 또는 역할을 올바르게 설명한 것을 고르세요.",
+      "requirements": [],
       "solution": "차원이 커질수록 내적 크기가 커져 softmax가 포화되는 것을 줄이고 안정적인 기울기를 유지하기 위해 sqrt(head_dim)으로 스케일링합니다.",
       "explanation": "차원이 커질수록 내적 크기가 커져 softmax가 포화되는 것을 줄이고 안정적인 기울기를 유지하기 위해 sqrt(head_dim)으로 스케일링합니다. 코드의 입력·출력과 호출 시점을 함께 설명해야 하며 API 이름만 나열하면 충분하지 않습니다.\n\n이 문항은 `sqrt(head_dim)`와 `softmax`만 핵심 채점 기준으로 사용합니다.",
-      "example": ""
+      "example": "",
+      "choices": [
+        "hidden_states는 모든 time step의 출력을 담고 h_n은 마지막 계층의 최종 은닉 상태입니다. 단방향 1계층에서는 hidden_states의 마지막 time step과 h_n이 대응합니다.",
+        "토크나이저가 문자열을 vocabulary의 토큰 ID 시퀀스로 바꾸고 nn.Embedding이 각 정수 ID를 학습 가능한 고정 차원 벡터로 조회합니다.",
+        "차원이 커질수록 내적 크기가 커져 softmax가 포화되는 것을 줄이고 안정적인 기울기를 유지하기 위해 sqrt(head_dim)으로 스케일링합니다.",
+        "시작 토큰은 첫 생성 step의 입력을 제공하고, 종료 토큰은 가변 길이 생성을 멈추는 조건을 제공합니다."
+      ],
+      "answer": "차원이 커질수록 내적 크기가 커져 softmax가 포화되는 것을 줄이고 안정적인 기울기를 유지하기 위해 sqrt(head_dim)으로 스케일링합니다."
+    },
+    {
+      "id": "flow-sample-064",
+      "unit": "2-1",
+      "type": "flow",
+      "title": "BPE 병합의 토큰 경계",
+      "content": "BPE 병합 정규식에서 앞뒤 토큰 경계를 확인하는 이유로 옳은 것을 고르세요.",
+      "requirements": [],
+      "choices": [
+        "병합할 때마다 전체 vocabulary를 알파벳순으로 다시 정렬하기 위해서입니다.",
+        "문자열 일부가 우연히 일치한 경우까지 병합하지 않고, 공백으로 구분된 정확한 인접 토큰 쌍만 치환하기 위해서입니다.",
+        "빈도가 낮은 토큰 쌍을 우선 선택하도록 정규식 점수를 계산하기 위해서입니다.",
+        "모든 단어 끝 토큰을 삭제해 문장 길이를 일정하게 만들기 위해서입니다."
+      ],
+      "answer": "문자열 일부가 우연히 일치한 경우까지 병합하지 않고, 공백으로 구분된 정확한 인접 토큰 쌍만 치환하기 위해서입니다.",
+      "solution": "문자열 일부가 우연히 일치한 경우까지 병합하지 않고, 공백으로 구분된 정확한 인접 토큰 쌍만 치환하기 위해서입니다.",
+      "explanation": "경계 조건은 선택한 bigram이 더 긴 문자열 내부에서 부분 일치하는 것을 막습니다.",
+      "example": "",
+      "source": "samples/chapter_2_1_hw/(과제-문제) 2-1_토큰화 임베딩 심화 과제.ipynb"
     }
   ]
 }

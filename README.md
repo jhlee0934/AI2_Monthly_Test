@@ -34,7 +34,7 @@ npm.cmd run dev
 .
 ├─ .github/workflows/deploy-pages.yml # 테스트·빌드·GitHub Pages 배포
 ├─ public/                             # 개발 서버가 제공하는 정적 사이트
-│  ├─ index.html                       # 화면 골격과 세 문제 탭
+│  ├─ index.html                       # 화면 골격과 네 문제 탭
 │  ├─ app.js                           # 상태, 렌더링, 채점, 조립 난이도
 │  ├─ app.bundle.js                    # 생성물, Git 추적 제외
 │  ├─ styles.css                       # 공통·모바일 스타일
@@ -67,15 +67,18 @@ npm.cmd run dev
 
 ## 문제 데이터
 
-기본 문제 팩은 총 152문제다.
+기본 문제 팩은 총 279문제다.
 
 | 화면 탭 | `type` | 개수 | 입력과 채점 |
 | --- | --- | ---: | --- |
-| 개념 확인 | `flow` | 62 | 서술 답안의 핵심 키워드 포함 비율 |
-| API 빈칸 | `api` | 44 | 선택한 토큰과 빈칸 정답 비교 |
-| TODO 코드 조립 | `assembly` | 46 | 클릭해 배치한 토큰과 슬롯 정답 비교 |
+| 과목평가 문제토픽 | `assessment` | 100 | 선택한 답과 단일 정답 비교 |
+| 개념 확인 객관식 | `flow` | 71 | 선택한 답과 단일 정답 비교 |
+| API 빈칸 | `api` | 53 | 선택한 토큰과 빈칸 정답 비교 |
+| TODO 코드 조립 | `assembly` | 55 | 클릭해 배치한 토큰과 슬롯 정답 비교 |
 
 `scripts/parser.mjs`는 `problems/` 아래 JSON을 유형·단원 순으로 합친다. 레거시 Markdown 파서도 남아 있지만 현재 기본 원본은 모두 JSON이다. 통합 결과는 `scripts/problem-pack.mjs`의 `validateProblems()`를 통과해야 저장된다.
+
+과목평가 문제를 다시 생성할 때는 `npm.cmd run assessment:data`를 실행한다.
 
 `npm run data`는 다음 두 파일을 덮어쓴다.
 
@@ -88,6 +91,13 @@ npm.cmd run dev
 
 ```powershell
 npm.cmd run assembly:data
+npm.cmd run data
+```
+
+현재 `samples/chapter_*` 노트북에서 선별한 추가 문제는 다음 명령으로 ID 기준 갱신할 수 있다. 이 문제의 `source`에는 근거 노트북 경로가 기록되고, 새 조립 문제에는 `origin: "sample-generated"`가 붙는다.
+
+```powershell
+npm.cmd run samples:data
 npm.cmd run data
 ```
 
@@ -157,7 +167,7 @@ npm run build
 
 유형별 추가 필드는 다음과 같다.
 
-- `flow`: `acceptedAnswers`, `keywords`
+- `flow`: `choices`, `answer`; 중복 없는 4지선다와 단일 정답 사용
 - `api`: `skeleton`, `blanks`; 각 blank는 `id`, `answer`, `choices` 사용
 - `assembly`: `skeleton`, `slots`, `tokens`, 선택적 `normalSlotIds`, `protectedRanges`, `source`
 

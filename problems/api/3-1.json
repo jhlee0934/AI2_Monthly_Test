@@ -247,6 +247,61 @@
       "example": "",
       "id": "api-generated-035",
       "type": "api"
+    },
+    {
+      "id": "api-sample-048",
+      "unit": "3-1",
+      "type": "api",
+      "title": "ResNet 분류 Head 교체",
+      "content": "전체 과정 중 사전학습 ResNet의 기존 파라미터를 동결하고 새 클래스 수에 맞는 분류 Head를 구성하세요.",
+      "requirements": [],
+      "skeleton": "for param in model.____[1]():\n    param.____[2] = False\nmodel.fc = nn.____[3](model.fc.____[4], num_classes)",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "parameters",
+          "choices": [
+            "parameters",
+            "modules",
+            "children",
+            "buffers"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "requires_grad",
+          "choices": [
+            "requires_grad",
+            "training",
+            "grad",
+            "is_leaf"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "Linear",
+          "choices": [
+            "Linear",
+            "Sequential",
+            "Conv2d",
+            "ReLU"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "in_features",
+          "choices": [
+            "in_features",
+            "out_features",
+            "num_features",
+            "hidden_size"
+          ]
+        }
+      ],
+      "solution": "for param in model.parameters():\n    param.requires_grad = False\nmodel.fc = nn.Linear(model.fc.in_features, num_classes)",
+      "explanation": "기존 파라미터의 기울기를 끄고 `fc.in_features`를 입력 크기로 사용하는 새 `Linear` 분류기를 연결합니다.",
+      "example": "",
+      "source": "samples/chapter_3_1_ws/(실습-문제) 3-1_Transfer Learning 기반의 CNN 모델 학습.ipynb"
     }
   ]
 }

@@ -1,0 +1,42 @@
+{
+  "problems": [
+    {
+      "id": "assembly-sample-2-1-01",
+      "unit": "2-1",
+      "type": "assembly",
+      "title": "BPE 경계 병합 조립",
+      "content": "토큰 경계를 지키는 BPE 병합 정규식을 구성하세요.",
+      "requirements": [
+        "핵심 API, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "bigram = re.____[1](\" \".join(pair))\npattern = re.____[2](r\"(?<!\\S)\" + bigram + r\"(?!\\S)\")\nnew_word = pattern.____[3](\"\".join(pair), word)",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "escape"
+        },
+        {
+          "id": "slot-2",
+          "answer": "compile"
+        },
+        {
+          "id": "slot-3",
+          "answer": "sub"
+        }
+      ],
+      "tokens": [
+        "escape",
+        "compile",
+        "sub",
+        "None",
+        "transform"
+      ],
+      "solution": "bigram = re.escape(\" \".join(pair))\npattern = re.compile(r\"(?<!\\S)\" + bigram + r\"(?!\\S)\")\nnew_word = pattern.sub(\"\".join(pair), word)",
+      "protectedRanges": [],
+      "explanation": "샘플 노트북의 완성 코드를 기준으로 핵심 호출 흐름을 조립합니다.",
+      "example": "",
+      "source": "samples/chapter_2_1_hw/(과제-문제) 2-1_토큰화 임베딩 심화 과제.ipynb",
+      "origin": "sample-generated"
+    }
+  ]
+}

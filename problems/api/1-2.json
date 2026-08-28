@@ -361,6 +361,61 @@
       "example": "",
       "id": "api-generated-034",
       "type": "api"
+    },
+    {
+      "id": "api-sample-045",
+      "unit": "1-2",
+      "type": "api",
+      "title": "TensorDataset과 DataLoader 배치 구성",
+      "content": "전체 과정 중 텐서를 Dataset으로 묶고 훈련 배치를 섞어 로드하는 단계를 완성하세요.",
+      "requirements": [],
+      "skeleton": "train_ds = ____[1](X_train_t, y_train_t)\ntrain_loader = ____[2](train_ds, ____[3]=BATCH_SIZE, ____[4]=True)\nx_batch, y_batch = next(iter(train_loader))",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "TensorDataset",
+          "choices": [
+            "TensorDataset",
+            "DataLoader",
+            "Dataset",
+            "Sequential"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "DataLoader",
+          "choices": [
+            "DataLoader",
+            "TensorDataset",
+            "ModuleList",
+            "Sampler"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "batch_size",
+          "choices": [
+            "batch_size",
+            "shuffle",
+            "num_workers",
+            "drop_last"
+          ]
+        },
+        {
+          "id": "blank-4",
+          "answer": "shuffle",
+          "choices": [
+            "shuffle",
+            "batch_size",
+            "training",
+            "random"
+          ]
+        }
+      ],
+      "solution": "train_ds = TensorDataset(X_train_t, y_train_t)\ntrain_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)\nx_batch, y_batch = next(iter(train_loader))",
+      "explanation": "`TensorDataset`이 텐서를 샘플로 묶고 `DataLoader`가 batch_size와 shuffle 정책으로 배치를 만듭니다.",
+      "example": "",
+      "source": "samples/chapter_1_2_ws/(실습-문제) 1-2_MLP 구현.ipynb"
     }
   ]
 }

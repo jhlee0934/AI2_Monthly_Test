@@ -1,0 +1,42 @@
+{
+  "problems": [
+    {
+      "id": "assembly-sample-4-2-1-01",
+      "unit": "4-2(1)",
+      "type": "assembly",
+      "title": "ReAct 순환 엣지 조립",
+      "content": "agent 조건 분기와 tools에서 agent로 돌아오는 ReAct 순환을 구성하세요.",
+      "requirements": [
+        "핵심 API, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "workflow_react.____[1](\"agent\", should_continue_react)\nworkflow_react.____[2](\"tools\", \"agent\")\nagent_react = workflow_react.____[3]()",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "add_conditional_edges"
+        },
+        {
+          "id": "slot-2",
+          "answer": "add_edge"
+        },
+        {
+          "id": "slot-3",
+          "answer": "compile"
+        }
+      ],
+      "tokens": [
+        "add_conditional_edges",
+        "add_edge",
+        "compile",
+        "None",
+        "transform"
+      ],
+      "solution": "workflow_react.add_conditional_edges(\"agent\", should_continue_react)\nworkflow_react.add_edge(\"tools\", \"agent\")\nagent_react = workflow_react.compile()",
+      "protectedRanges": [],
+      "explanation": "샘플 노트북의 완성 코드를 기준으로 핵심 호출 흐름을 조립합니다.",
+      "example": "",
+      "source": "samples/chapter_4_2_1_ws/(실습-문제) 4-2(1)_ReAct 기반 Agent 서비스 개발.ipynb",
+      "origin": "sample-generated"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "problems": [
+    {
+      "id": "assembly-sample-4-2-2-01",
+      "unit": "4-2(2)",
+      "type": "assembly",
+      "title": "Reflection 분기 조립",
+      "content": "reflection 결과를 END 또는 worker로 연결하고 그래프를 컴파일하세요.",
+      "requirements": [
+        "핵심 API, 메서드, 인자와 값을 배치한다."
+      ],
+      "skeleton": "workflow.____[1](\"reflection\", should_continue, {\"end\": ____[2], \"worker\": \"worker\"})\napp = workflow.____[3]()",
+      "slots": [
+        {
+          "id": "slot-1",
+          "answer": "add_conditional_edges"
+        },
+        {
+          "id": "slot-2",
+          "answer": "END"
+        },
+        {
+          "id": "slot-3",
+          "answer": "compile"
+        }
+      ],
+      "tokens": [
+        "add_conditional_edges",
+        "END",
+        "compile",
+        "None",
+        "transform"
+      ],
+      "solution": "workflow.add_conditional_edges(\"reflection\", should_continue, {\"end\": END, \"worker\": \"worker\"})\napp = workflow.compile()",
+      "protectedRanges": [],
+      "explanation": "샘플 노트북의 완성 코드를 기준으로 핵심 호출 흐름을 조립합니다.",
+      "example": "",
+      "source": "samples/chapter_4_2_2_ws/(실습-문제) 4-2(2)_Multi-Agent 대표 패턴 학습.ipynb",
+      "origin": "sample-generated"
+    }
+  ]
+}

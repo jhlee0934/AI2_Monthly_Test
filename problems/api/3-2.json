@@ -200,6 +200,51 @@
       "example": "",
       "id": "api-generated-023",
       "type": "api"
+    },
+    {
+      "id": "api-sample-049",
+      "unit": "3-2",
+      "type": "api",
+      "title": "Stable Diffusion 파이프라인 로드",
+      "content": "전체 과정 중 사전학습 Stable Diffusion 파이프라인을 불러와 연산 장치로 이동하는 단계를 완성하세요.",
+      "requirements": [],
+      "skeleton": "pipe = ____[1].____[2](model_id, torch_dtype=torch.float16)\npipe = pipe.____[3](device)\nimage = pipe(prompt=positive_prompt, negative_prompt=negative_prompt).images[0]",
+      "blanks": [
+        {
+          "id": "blank-1",
+          "answer": "StableDiffusionPipeline",
+          "choices": [
+            "StableDiffusionPipeline",
+            "CLIPModel",
+            "AutoModel",
+            "Image"
+          ]
+        },
+        {
+          "id": "blank-2",
+          "answer": "from_pretrained",
+          "choices": [
+            "from_pretrained",
+            "load",
+            "create",
+            "from_config"
+          ]
+        },
+        {
+          "id": "blank-3",
+          "answer": "to",
+          "choices": [
+            "to",
+            "eval",
+            "cuda",
+            "compile"
+          ]
+        }
+      ],
+      "solution": "pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)\npipe = pipe.to(device)\nimage = pipe(prompt=positive_prompt, negative_prompt=negative_prompt).images[0]",
+      "explanation": "`from_pretrained`로 파이프라인을 구성하고 `to(device)`로 이동한 뒤 positive/negative prompt를 함께 전달합니다.",
+      "example": "",
+      "source": "samples/chapter_3_2_hw/(과제-문제) 3-2_이미지 생성 및 평가와 모델 학습.ipynb"
     }
   ]
 }

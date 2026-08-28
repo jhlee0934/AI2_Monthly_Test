@@ -142,13 +142,38 @@ export function parseProblems(root) {
     }
     return q;
   });
-  return [...jsonProblems, ...markdownProblems];
+  return convertFlowToMultipleChoice([...jsonProblems, ...markdownProblems]);
 }
+
+function convertFlowToMultipleChoice(problems) {
+  const flows = problems.filter((problem) => problem.type === 'flow');
+  const answerOf = (problem) => problem.answer || problem.acceptedAnswers?.[0] || problem.solution || '';
+  let flowIndex = 0;
+  return problems.map((problem) => {
+    if (problem.type !== 'flow') return problem;
+    const currentIndex = flowIndex++;
+    if (Array.isArray(problem.choices) && problem.choices.length === 4 && problem.answer) return problem;
+    const answer = answerOf(problem);
+    const rankCandidates = (items) => unique(items).filter((candidate) => candidate && candidate !== answer)
+      .sort((a, b) => stableHash(`${problem.id}:${a}`) - stableHash(`${problem.id}:${b}`));
+    const sameUnit = rankCandidates(flows.filter((candidate) => candidate.id !== problem.id && candidate.unit === problem.unit).map(answerOf));
+    const otherUnits = rankCandidates(flows.filter((candidate) => candidate.id !== problem.id && candidate.unit !== problem.unit).map(answerOf));
+    const candidates = [...sameUnit, ...otherUnits];
+    const distractorChoices = candidates.slice(0, 3);
+    const choices = [...distractorChoices];
+    choices.splice(currentIndex % 4, 0, answer);
+    const { acceptedAnswers, keywords: flowKeywords, ...multipleChoice } = problem;
+    return { ...multipleChoice, content: multipleChoiceContent(problem.content), requirements: [], choices, answer, solution: problem.solution || answer };
+  });
+}
+
+function stableHash(value) { return [...value].reduce((total, char) => (total * 31 + char.charCodeAt(0)) >>> 0, 7); }
+function multipleChoiceContent(value) { return value.replace(/의 의미 또는 역할을 중심으로 간단히 설명하세요\. 관련 없는 개념까지 나열할 필요는 없습니다\.$/, '의 의미 또는 역할을 올바르게 설명한 것을 고르세요.').replace(/설명하세요\.$/, '설명한 것으로 옳은 것을 고르세요.').replace(/비교하세요\.$/, '비교한 것으로 옳은 것을 고르세요.').replace(/예로 드세요\.$/, '예로 든 것으로 옳은 것을 고르세요.'); }
 
 function problemSourceOrder(root, a, b) {
   const relativeA = path.relative(root, a).replaceAll('\\', '/');
   const relativeB = path.relative(root, b).replaceAll('\\', '/');
-  const typeOrder = (file) => file.startsWith('flow/') ? 0 : file.startsWith('api/') ? 1 : file.startsWith('assembly/') ? 2 : 3;
+  const typeOrder = (file) => file.startsWith('assessment/') ? 0 : file.startsWith('flow/') ? 1 : file.startsWith('api/') ? 2 : file.startsWith('assembly/') ? 3 : 4;
   return typeOrder(relativeA) - typeOrder(relativeB) || relativeA.localeCompare(relativeB, 'en', { numeric: true });
 }
 
