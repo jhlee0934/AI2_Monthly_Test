@@ -80,7 +80,8 @@ test('samples 노트북에서 세 유형의 추가 문제를 단원별로 생성
   assert.equal(sampleDerived.length, 27);
   for (const type of ['flow', 'api', 'assembly']) assert.equal(sampleDerived.filter((item) => item.type === type).length, 9);
   assert.ok(sampleDerived.every((item) => item.source.startsWith('samples/') && item.source.endsWith('.ipynb')));
-  assert.ok(sampleDerived.every((item) => fs.existsSync(path.resolve(item.source))));
+  // samples/는 원본 노트북이 큰 로컬 생성 자료라 Git에서 제외된다. 로컬에 있을 때만 실제 파일까지 검증한다.
+  if (fs.existsSync(path.resolve('samples'))) assert.ok(sampleDerived.every((item) => fs.existsSync(path.resolve(item.source))));
 });
 test('TODO 코드 조립 문제는 클릭 가능한 토큰과 슬롯 계약을 만족한다', () => {
   const assembly = problems.filter((item) => item.type === 'assembly');
