@@ -143,7 +143,8 @@ test('네 번째 탭은 클릭 방식의 TODO 코드 조립 UI를 사용한다',
   assert.doesNotMatch(client, /problem\.skeleton && problem\.type !== 'api'/);
   assert.match(html, /class="toolbar"[\s\S]*id="assemblyDifficultyControl"/);
   assert.match(client, /function revealAssemblySlot\(/);
-  assert.match(client, /!revealed\.includes\(slot\.id\)/);
+  assert.match(client, /const results = spec\.slots\.map\(\(slot\) => selections\[slot\.id\] === slot\.answer\)/);
+  assert.doesNotMatch(client, /!revealed\.includes\(slot\.id\)/);
   assert.match(client, /id="revealAssemblySlot"[\s\S]*class="token-bank"/);
   assert.match(client, /function ensureAssemblySlotVisible\(/);
   assert.match(client, /function moveAssemblySlot\(/);
